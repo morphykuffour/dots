@@ -1,5 +1,5 @@
 # dotfiles  
-Arch Linux installation with Luke Smith's dwm fork as the windows manger and Luke Smith's st fork as a terminal
+Arch Linux installation with dwm as the windows manger and Luke Smith's st fork as a terminal
 
 
 " include in nvim
