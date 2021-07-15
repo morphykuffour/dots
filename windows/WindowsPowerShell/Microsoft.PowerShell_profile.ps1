@@ -17,6 +17,9 @@ Set-PoshPrompt -Theme ys
 # Shows navigable menu of all options when hitting Tab
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 
+# CTRL - D to close pwsh
+Set-PSReadlineKeyHandler -Key ctrl+d -Function ViExit
+
 # Autocompletion for arrow keys
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
