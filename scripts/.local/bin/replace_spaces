@@ -14,3 +14,7 @@ do
   fi
 fi
 done
+
+
+# in current dir just use
+# for file in *; do mv "$file" `echo $file | tr ' ' '_'` ; done
