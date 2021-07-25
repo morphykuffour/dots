@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# run neofetch
-neofetch
-
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
 setopt interactive_comments
