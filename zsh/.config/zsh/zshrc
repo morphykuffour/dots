@@ -146,4 +146,3 @@ if [[ -n "$WSL_DISTRO_NAME" ]]; then
     autoload -Uz compinit
 compinit
 fi
->>>>>>> 28899e0c61cebe48b953e7541cd8227c8dc928f9
