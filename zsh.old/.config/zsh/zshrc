@@ -1,14 +1,21 @@
 #!/bin/sh
+emulate zsh
 
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
 setopt interactive_comments
+unsetopt case_glob
+
 stty stop undef		# Disable ctrl-s to freeze terminal.
 zle_highlight=('paste:none')
 
-# beeping is annoying
+# no beeping
 unsetopt BEEP
 
+
+## autoload vcs and colors
+autoload -Uz vcs_info
+autoload -U colors && colors
 
 # completions
 autoload -Uz compinit
@@ -21,39 +28,26 @@ _comp_options+=(globdots)		# Include hidden files.
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
 
-# Colors
-autoload -Uz colors && colors
-
-# Useful Functions
-source "$ZDOTDIR/zsh-functions"
-
-# Functions
-FPATH=$ZDOTDIR/zsh_functions/:$FPATH
-# Attempt to loop autloading of files
-autoload -Uz $ZDOTDIR/zsh_functions/*
-# autoload -Uz ${fpath[1]}/*(:t)
 
 # Normal files to source
-zsh_add_file "zsh-exports"
-zsh_add_file "zsh-vim-mode"
-zsh_add_file "zsh-aliases"
-zsh_add_file "zsh-prompt"
+# zsh_add_file "zsh-exports"
+# zsh_add_file "zsh-vim-mode"
+# zsh_add_file "zsh-aliases"
+# zsh_add_file "zsh-prompt"
 
 # Plugins
-zsh_add_plugin "zsh-users/zsh-autosuggestions"
-zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
-zsh_add_completion "esc/conda-zsh-completion" false
-# For more plugins: https://github.com/unixorn/awesome-zsh-plugins
-# More completions https://github.com/zsh-users/zsh-completions
+# zsh_add_plugin "zsh-users/zsh-autosuggestions"
+# zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 
 # Key-bindings
-bindkey -s '^o' 'ranger^M'
+bindkey -s '^o' 'lf^M'
 bindkey -s '^s' 'ncdu^M'
-bindkey -s '^f' 'nvim $(fzf)^M'
-bindkey -s '^v' 'nvim\n'
-bindkey -s '^z' 'zi^M'
+bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
+# bindkey -s '^q' 'zi^M'
+# bindkey -s '^n' 'nvim $(fzf)^M'
+# bindkey -s '^v' 'nvim\n'
+# bindkey -s '^z' 'zi^M'
 bindkey '^[[P' delete-char
 bindkey "^p" up-line-or-beginning-search # Up
 bindkey "^n" down-line-or-beginning-search # Down
@@ -71,13 +65,29 @@ bindkey -r "^d"
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 compinit
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# bindkey  '"\C-p": vim $(fzf);'
+
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
-# Better dircolors
-eval "$(dircolors ~/.dircolors)";
-eval "$(zoxide init zsh)"
+# Functions
+FPATH=$ZDOTDIR/zsh_functions/:$FPATH
+# Attempt to loop autloading of files
+autoload -Uz $ZDOTDIR/zsh_functions/*
+# autoload -Uz ${fpath[1]}/*(:t)
+source "$ZDOTDIR/zsh-functions"
+
+#  start tmux,
+# if [[ -z "$TMUX" && -z "$INSIDE_EMACS" && -z "$VIM" && -z "$SSH_TTY" ]]; then
+#     if [[ -z $( pgrep tmux$ ) ]] then
+#         s tmux
+#     fi
+# fi
+
 
 # history
 HISTFILE="$XDG_CACHE_HOME/zsh/history"
@@ -108,6 +118,7 @@ setopt hist_verify
 # Show timestamp in history
 setopt extended_history
 
+
 # zstyle
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*:matches' group 'yes'
@@ -129,3 +140,32 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
 zstyle ':completion:*' rehash true
 zmodload zsh/complist
+
+
+#
+# Smart URLs
+#
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
+
+
+# completion
+# options
+# Complete from both ends of a word.
+setopt complete_in_word
+# Move cursor to the end of a completed word.
+setopt always_to_end
+# Perform path search even on command names with slashes.
+setopt path_dirs
+# Show completion menu on a successive tab press.
+setopt auto_menu
+# Automatically list choices on ambiguous completion.
+setopt auto_list
+# If completed parameter is a directory, add a trailing slash.
+setopt auto_param_slash
+setopt no_complete_aliases
+# Do not autoselect the first completion entry.
+setopt menu_complete
+# Disable start/stop characters in shell editor.
+unsetopt flow_control
+

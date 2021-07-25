@@ -1,0 +1,11 @@
+#!/bin/zsh
+# dotfiles commit to github
+function dotFilesCommit() {
+    CURRENT=$(pwd)
+    cd ~/dotfiles
+    git add .
+    git commit -m 'dotfiles commit'
+    git push origin master
+    echo "Great Success!!"
+    cd $CURRENT
+}

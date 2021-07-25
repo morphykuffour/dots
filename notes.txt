@@ -1,0 +1,40 @@
+Arch Main Linux Setup
+
+1. Install OS(arch-install)
+2. Install git base-devel yay wget FUSE zsh vim stow npm
+3. clone down dotfiles repo
+4. Install neovim-nightly-bin vim-plug
+5. clone down nvim repo
+6. Install tldr
+7. Install tmux
+
+[nvim Installation]
+yay -S neovim-nightly-bin
+yay -S neovim-git  # more support 
+yay -S python-pynvim
+
+[vim-plug Installation]
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+[packer.nvim Installation]
+TODO
+  check github repo
+
+
+[npm Installation]
+yay -S npm
+
+[tldr Installation]
+npm  install tldr
+
+[python Installation]
+yay -S python python-pip pynvim 
+
+**Add Python support for nvim**
+pip3 install pynvim
+
+Arch WSL Linux Setup
+TODO
+  install  WSL Utilities
+
