@@ -9,23 +9,47 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias cd..="cd .."
-alias cd...="cd ../.."
-alias cd....="cd ../../.."
-alias cd.....="cd ../../../.."
 alias -- -="cd -"
-alias ~="cd ~"
-alias d="dirs -v"
 
+# ls
+alias la='ls -A'
+alias l='ls -CF'
+alias ll='ls -halF'
+alias ls='ls --classify --tabsize=0 --group-directories-first --literal --color=auto --show-control-chars --human-readable'
+
+# confirm before overwriting something
+# mv, rm, cp
+alias cp="cp -i -r -v"
+alias mv="mv -i -v"
+alias rm="rm -i -v"
+
+# Edit config files in nvim
+# $EDITOR=nvim 
+alias v='nvim'
+alias vim='nvim'
+alias vrc="$EDITOR  /home/morp/.config/nvim/init.vim"
+alias sv="sudo $EDITOR"
+alias ec="$EDITOR $HOME/.zshrc"
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# Networking. IP address, dig, DNS
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+# alias wget="curl -O"
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-
-# confirm before overwriting something
-alias cp="cp -i"
-alias mv='mv -i'
-alias rm='rm -i'
 
 # easier to read disk
 alias df='df -h'                          # human-readable sizes
@@ -114,55 +138,30 @@ alias lsd='ls -Fl ${colorflag} | grep "^d"'
 alias ls="command ls -F ${colorflag}"
 #}}}
 #}}}
+#{{{ volume control
+alias maxvol="amixer -c 0 -- set Master 100%"
+alias headphones="amixer -c 0 -- set Master 45%"
+alias mute="amixer -c 0 -- set Master mute"
+alias unmute="amixer -c 0 -- set Master on"
+#}}}
 
 # Set personal aliases
 alias dotfiles="cd $HOME/dotfiles"
-alias vrc='nvim /home/morp/.config/nvim/init.vim'
+alias zshrc="nvim ~/.zshrc"
+alias bashrc="nvim ~/.bashrc"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias nvimrc='nvim /home/morp/.config/nvim/init.vim'
 alias rd="rmdir"
+alias update="sudo apt update && sudo apt upgrade -y"
 alias ip='ip -color=auto'
 alias diff='diff --color=auto'
 alias grep='grep --color=auto'
 alias pip='pip3'
 alias python='python3'
-alias py="python3"
 alias weather='curl wttr.in'
-alias bat="\bat"
+alias lcthw="cd ~/Programs/CPrograms/LCTHW/"
+alias bat="batcat"
 alias lsb="lsb_release -a"
 alias nvdir="cd $HOME/.config/nvim"
 alias lua="lua5.2"
-alias h="history"
-alias vi="$EDITOR"
-alias vim="$EDITOR"
-alias v="$EDITOR"
-alias :e="$EDITOR ."
-alias e="$EDITOR"
-alias v.="$EDITOR ."
-alias t='tmux'
-alias :q='exit'
 
-# Edit config files
-alias zshrc="$EDITOR $ZDOTDIR/zshrc"
-alias vrc="$EDITOR  /home/morp/.config/nvim/init.vim"
-
-alias vim='nvim'
-alias sv="sudo $EDITOR"
-
-# system management aliases
-alias hibernate="systemctl suspend"
-alias pacman="yay"
-
-# utility commands
-alias q="exit"
-alias mypw="pwgen -c -n -s -y 16 -1"
-alias ndate="date \"+%d-%m-%y\""
-
-# easy reload of zsh stuff
-alias rl="exec zsh -l"
-
-# git configs
-alias g="git"
-alias gca="git commit --all --verbose"
-alias gco="git checkout"
-alias gs="git status --short"
-alias gpush="git push -u origin HEAD"
-alias gpull="git pull --rebase"
