@@ -1,0 +1,14 @@
+#!/bin/bash
+
+img=$1
+
+style_file=/usr/share/lightdm-webkit/themes/aqua/resources/css/style.css
+sudo cp -r  ./$img /usr/share/backgrounds/current
+
+# on line 46 
+# sed -i -E "46s/\/[^a-zA-Z]\/*.*jpg/$f_slash_img/" $style_file
+
+# regex also finds "/" too
+replacement="/$img"
+
+sudo sed -i -E --expression "46s#/[^a-zA-Z]/*.*jpg#/$img#" $style_file
