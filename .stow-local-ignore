@@ -3,7 +3,6 @@ dwmblocks/
 dwm
 st
 dmenu
-=======
 # ~./dotfiles/.stow.local.ignore: Files to be ignored by gnu 'stow'
 #
 # Comments and blank lines are allowed.
@@ -30,4 +29,3 @@ _darcs
 ^/README.*
 ^/LICENSE.*
 ^/COPYING
->>>>>>> 28899e0c61cebe48b953e7541cd8227c8dc928f9
