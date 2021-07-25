@@ -75,7 +75,6 @@ compinit
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
-<<<<<<< HEAD
 # Better dircolors
 eval "$(dircolors ~/.dircolors)";
 eval "$(zoxide init zsh)"
@@ -130,7 +129,8 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
 zstyle ':completion:*' rehash true
 zmodload zsh/complist
-=======
+
+
 # work around https://github.com/mintty/wsltty/issues/197
 if [[ -n "$WSL_DISTRO_NAME" ]]; then
     command -v cmd.exe > /dev/null || exit
