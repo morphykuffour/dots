@@ -138,6 +138,7 @@ alias :e="$EDITOR ."
 alias e="$EDITOR"
 alias v.="$EDITOR ."
 alias t='tmux'
+alias r=ranger-cd
 alias :q='exit'
 
 # Edit config files
