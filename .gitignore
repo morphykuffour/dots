@@ -1,6 +1,5 @@
-./alacritty
-./dwm
-./slock
-./x
-./zsh.old
+dwm/
+slock/
+x/
+zsh.old/
 
