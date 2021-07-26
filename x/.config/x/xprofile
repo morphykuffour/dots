@@ -3,9 +3,6 @@
 # Status Bar
 # dwmblocks &
 
-# Status Bar
-polybar &
-
 # Random Photo Every Login
 feh --bg-fill --randomize ~/Pictures/wallpapers/* &
 
