@@ -30,6 +30,7 @@ autoload -Uz colors && colors
 
 # Useful Functions
 source "$ZDOTDIR/zsh-functions"
+source "$ZDOTDIR/zsh_functions"
 
 # Functions
 FPATH=$ZDOTDIR/zsh_functions/:$FPATH
