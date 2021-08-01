@@ -38,3 +38,6 @@ Arch WSL Linux Setup
 TODO
   install  WSL Utilities
 
+
+aur/nvimpager-git 0.10.2.r1.gd2b89c5-1 (+4 0.23)
+    Use nvim as a pager to view manpages, diffs, etc with nvim's syntax highlighting
