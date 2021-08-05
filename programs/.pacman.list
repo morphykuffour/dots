@@ -167,3 +167,5 @@ zathura
 zoxide-bin
 zsh
 zsh-completions-git
+git-delta
+exa
