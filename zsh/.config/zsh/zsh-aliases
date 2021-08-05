@@ -17,6 +17,9 @@ alias -- -="cd -"
 alias ~="cd ~"
 alias d="dirs -v"
 
+# fuzzy search over your popularly visited directories
+# alias g="new_loc=\$(cat ~/.local/share/autojump/autojump.txt | sort -n | grep -Po '^[^\s]+\s+(\K.*)' | fzf +s -e) && cd \"\$new_loc\""
+
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -131,9 +134,7 @@ alias lsb="lsb_release -a"
 alias nvdir="cd $HOME/.config/nvim"
 alias lua="lua5.2"
 alias h="history"
-alias vi="$EDITOR"
-# alias vim="$EDITOR"
-alias v="$EDITOR"
+alias v="nvim"
 alias :e="$EDITOR ."
 alias e="$EDITOR"
 alias v.="$EDITOR ."
