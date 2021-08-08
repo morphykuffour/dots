@@ -1,5 +1,33 @@
 #!/bin/sh
-HISTFILE="$XDG_DATA_HOME"/zsh/history
+
+
+case "$(uname -r)" in
+
+    #'Arch Linux'
+    arch*)
+    HISTFILE="$XDG_DATA_HOME"/zsh/history
+    ;;
+
+    #'Linux'
+    Linux)
+    HISTFILE="$XDG_DATA_HOME"/zsh/history
+    ;;
+
+    #'Cygwin'
+    CYGWIN*|MINGW32*|MSYS*|MINGW*)
+    HISTFILE=/home/morp/.config/zsh/history
+    # echo 'MS Windows'
+    ;;
+
+    #'WSL2'
+    WSL*|micorsoft*)
+    HISTFILE=/home/morp/.config/zsh/history
+    ;;
+
+    #'Other OS' 
+    *)
+    ;;
+esac
 HISTSIZE=1000000
 SAVEHIST=1000000
 export PATH="$HOME/.local/bin":$PATH
