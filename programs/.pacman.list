@@ -169,3 +169,5 @@ zsh
 zsh-completions-git
 git-delta
 exa
+gdbgui
+man-pages #manpages-dev on debain

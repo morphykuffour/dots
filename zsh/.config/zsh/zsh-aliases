@@ -106,7 +106,9 @@ fi
 #}}}
 #{{{ pretty ls
 # List all files colorized in long format
-alias l="ls -Fl ${colorflag}"
+# alias l="ls -Fl ${colorflag}"
+alias l="exa --long --header --inode --git"
+alias ltree="exa --long --header --inode --git"
 alias ls-a="ls -Fa ${colorflag}"
 # List all files colorized in long format, including dot files
 alias la="ls -Fla ${colorflag}"
@@ -132,7 +134,7 @@ alias weather='curl wttr.in'
 alias bat="\bat"
 alias lsb="lsb_release -a"
 alias nvdir="cd $HOME/.config/nvim"
-alias lua="lua5.2"
+# alias lua="lua5.2"
 alias h="history"
 alias v="nvim"
 alias :e="$EDITOR ."
