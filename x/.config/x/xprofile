@@ -54,7 +54,7 @@ pasystray &
 setxkbmap -option caps:escape
 
 # swap escape and caps
-setxkbmap -option caps:swapescape
+# setxkbmap -option caps:swapescape
 
 # Other program settings:
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
