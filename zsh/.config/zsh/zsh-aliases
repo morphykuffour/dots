@@ -123,6 +123,7 @@ alias ls="command ls -F ${colorflag}"
 
 # Set personal aliases
 alias dotfiles="cd $HOME/dotfiles"
+alias explorer='/mnt/c/Windows/explorer.exe'
 alias vrc='nvim /home/morp/.config/nvim/init.vim'
 alias rd="rmdir"
 alias ip='ip -color=auto'
