@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Change your remote's URL from HTTPS to SSH with the git remote set-url command.
+git remote -v
+git remote set-url origin $@
+git remote -v 
