@@ -50,6 +50,9 @@ if [ $ubuntu_linux = 'Ubuntu' ] ; then # ubuntu
     sudo apt-get install dircolors
     sudo apt-get install tldr
     sudo apt-get install zsh
+    sudo apt-get install xclip
+    sudo apt-get install xsel
+    sudo apt install x11-apps -y    
 fi
 
 
