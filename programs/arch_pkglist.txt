@@ -170,5 +170,6 @@ zsh-completions-git
 git-delta
 exa
 gdbgui
+gdb
 man-pages #manpages-dev on debain
 qira #better debugging 
