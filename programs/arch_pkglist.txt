@@ -86,6 +86,7 @@ picom-ibhagwan-git
 popcorntime-bin
 pulseaudio-bluetooth
 pulsemixer
+python
 python-pip
 qt5ct
 ranger

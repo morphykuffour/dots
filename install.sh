@@ -53,6 +53,7 @@ if [ $ubuntu_linux = 'Ubuntu' ] ; then # ubuntu
     sudo apt-get install xclip
     sudo apt-get install xsel
     sudo apt install x11-apps -y    
+    sudo apt-get -y install python3-pip
 fi
 
 
