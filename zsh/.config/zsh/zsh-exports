@@ -1,40 +1,12 @@
 #!/bin/sh
 
-
-case "$(uname -r)" in
-
-    #'Arch Linux'
-    arch*)
-    HISTFILE="$XDG_DATA_HOME"/zsh/history
-    ;;
-
-    #'Linux'
-    Linux)
-    HISTFILE="$XDG_DATA_HOME"/zsh/history
-    ;;
-
-    #'Cygwin'
-    CYGWIN*|MINGW32*|MSYS*|MINGW*)
-    HISTFILE=/home/morp/.config/zsh/history
-    # echo 'MS Windows'
-    ;;
-
-    #'WSL2'
-    WSL*|micorsoft*)
-    HISTFILE=/home/morp/.config/zsh/history
-    ;;
-
-    #'Other OS' 
-    *)
-    ;;
-esac
+HISTFILE="$XDG_DATA_HOME"/zsh/history
 HISTSIZE=1000000
 SAVEHIST=1000000
 export PATH="$HOME/.local/bin":$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
-export PATH=$HOME/.miniconda/bin:$PATH
 export VISUAL=nvim
 export EDITOR=nvim
 
@@ -45,8 +17,5 @@ man() {
     env MANWIDTH=$width \
     man "$@"
 }
-
-# nvim as MANPAGER
-# export MANPAGER="/bin/sh -c \"col -b | nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 

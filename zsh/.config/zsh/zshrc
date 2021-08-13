@@ -79,8 +79,8 @@ autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
 # Better dircolors
-eval "$(dircolors ~/.dircolors)";
-eval "$(zoxide init zsh)"
+# eval "$(dircolors ~/.dircolors)";
+# eval "$(zoxide init zsh)"
 
 # history
 HISTFILE="$XDG_CACHE_HOME/zsh/history"
@@ -149,3 +149,8 @@ if [[ -n "$WSL_DISTRO_NAME" ]]; then
     autoload -Uz compinit
     compinit
 fi
+
+# mkdir /tmp/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=/tmp/LS_COLORS --strip=1
+# ( cd /tmp/LS_COLORS && sh install.sh )
+# To enable the colors, add the following line to your shell's start-up script:
+  . "/home/morp/.local/share/lscolors.sh" 
