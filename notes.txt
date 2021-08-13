@@ -58,3 +58,5 @@ Lua 5.3.5 Copyright (C) 1994-2018 Lua.org, PUC-Rio
 > require "socket"
 $ luarocks install --server=https://luarocks.org/manifests/luarocks <name>
 
+
+add [ALT] + [TAB] to switch between DWM widows
