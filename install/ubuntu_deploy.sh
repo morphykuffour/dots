@@ -11,14 +11,14 @@ fi
 
 if [[ $MOVE_CONFIG ]]; then
     echo "Moving config"
-    mv ~/.config ~/_temp_config
+    mv ~/.config ~/config.old
 fi
 
-ln -sv ~/dotfiles/xdg_config/ ~/.config
+cp -r ~/dotfiles/xdg_config/ ~/.config
 
 if [[ $MOVE_CONFIG ]]; then
-    cp -r ~/_temp_config/* ~/.config/
-    rm -rf ~/_temp_config
+    cp -r ~/config.old/* ~/.config/
+    rm -rf ~/config.old
 fi
 
 # zshenv
