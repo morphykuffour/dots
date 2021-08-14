@@ -13,22 +13,12 @@ git clone https://github.com/morphykuffour/dotfiles.git ~;
 cd ~/dotfiles;
 
 # Run this script to install necessary applications for Ubuntu
-sh ~/dotfiles/install/ubuntu_install_tools.sh;
+bash ~/dotfiles/install/ubuntu/install_tools.sh;
+bash ~/dotfiles/install/ubuntu/deploy.sh;
 
 # Run this script to install necessary applications for Arch Linux
-sh ~/dotfiles/install/arch_install_tools.sh;
-```
-
-Run `stow` to symlink everything or just select what you want
-
-```bash
-cd ~/dotfiles/xdg_config/
-stow */ # Everything (the '/' ignores the README)
-```
-
-```bash
-stow zsh # Just my zsh config
-stow gdb # Just my gdb config
+bash ~/dotfiles/install/arch/install_tools.sh;
+bash ~/dotfiles/install/arch/deploy.sh;
 ```
 
 ## Programs
