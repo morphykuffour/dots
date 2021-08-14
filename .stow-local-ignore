@@ -4,6 +4,7 @@ dwm/
 st/
 dmenu/
 nvim/
+font/
 \.svn
 \.git
 \.gitignore

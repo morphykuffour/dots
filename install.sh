@@ -27,7 +27,7 @@ sudo -u "$name" mkdir -p "/home/$name/.cache/zsh/"
 arch_linux=$(uname -r)
 if [ $arch_linux = 'arch' ] ; then # arch-linux
     #install packages from ~/dotfiles/programs/arch_pkglist.txt
-    pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort ~/dotfiles/programs/arch_pkglist.txt))
+    pacman -S --noconfirm --needed $(comm -12 <(pacman -Slq | sort) <(sort ~/dotfiles/programs/arch_pkglist.txt))
 
 # Start/restart PulseAudio.
 killall pulseaudio; sudo -u "$name" pulseaudio --start
