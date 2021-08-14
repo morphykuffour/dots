@@ -3,8 +3,7 @@
 set -e
 set -x
 
-mkdir -p ~/build
-mkdir -p ~/git
+mkdir -p ~/Programs
 
 if ! command -v gh &> /dev/null ; then
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
@@ -22,9 +21,9 @@ sudo apt-get install -y \
     xz-utils tk-dev libffi-dev manpages-dev liblzma-dev git
 
 # {{{ Neovim
-if ! [ -d $HOME/build/neovim ]; then
-    git clone https://github.com/neovim/neovim ~/build/neovim
-    cd ~/build/neovim/
+if ! [ -d $HOME/Programs/neovim ]; then
+    git clone https:/Programs/github.com/neovim/neovim ~/Programs/neovim
+    cd ~/Programs/neovim/
     make
     sudo make install
 fi
@@ -40,8 +39,8 @@ if ! [ -x "$(command -v cargo)" ]; then
 fi
 
 if ! command -v rust_analyzer &> /dev/null ; then
-    git clone https://github.com/rust-analyzer/rust-analyzer ~/build/rust-analyzer
-    cd ~/build/rust-analyzer
+    git clone https:/Programs/github.com/rust-analyzer/rust-analyzer ~/Progams/rust-analyzer
+    cd ~/Progams/rust-analyzer
     cargo xtask install --server
 fi
 
@@ -49,25 +48,24 @@ cargo install \
   git-trim \
   ripgrep \
   broot \
-  starship
 
-if ! [ -d ~/build/delta ]; then
-  git clone https://github.com/dandavison/delta ~/build/delta
+if ! [ -d ~/Programs/delta ]; then
+  git clone https://github.com/dandavison/delta ~/Programs/delta
 
-  cd ~/build/delta
+  cd ~/Programs/delta
   cargo install --path .
 fi
-
 
 # {{{ Zsh
 sudo apt install zsh -y
 
+name = morp
 # Make zsh the default shell
 chsh -s /bin/zsh "$name" >/dev/null 2>&1
 sudo -u "$name" mkdir -p "/home/$name/.cache/zsh/"
 
 # {{{ Github
-sudo apt install gh -y
+# sudo apt install gh -y
 
 # dircolors installation
 
