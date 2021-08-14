@@ -1,3 +1,5 @@
 gh
 qira #better debugging 
-diff-so-fancy
+delta
+rg #ripgrep
+
