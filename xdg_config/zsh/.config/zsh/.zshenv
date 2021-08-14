@@ -2,7 +2,6 @@
 
 # Most ${ENV_VAR} variables should be saved here.
 
-export PATH="{% for v in PATHS | from_json %}{{v.path |join(':')}}{% endfor %}"
 export MANPATH="/usr/local/man:$MANPATH"
 
 # XDG_Base_Directory_support

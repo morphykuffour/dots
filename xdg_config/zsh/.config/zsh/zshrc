@@ -34,7 +34,7 @@ source "$ZDOTDIR/zsh_functions"
 
 # Functions
 FPATH=$ZDOTDIR/zsh_functions/:$FPATH
-# Attempt to loop autloading of files
+# Attempt to loop autloading of custom functions
 autoload -Uz $ZDOTDIR/zsh_functions/*
 # autoload -Uz ${fpath[1]}/*(:t)
 
@@ -65,7 +65,7 @@ bindkey "^j" down-line-or-beginning-search # Down
 bindkey -r "^u"
 bindkey -r "^d"
 
-# FZF 
+# FZF
 # TODO update for mac
 [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
 [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
@@ -153,4 +153,4 @@ fi
 # mkdir /tmp/LS_COLORS && curl -L https://api.github.com/repos/trapd00r/LS_COLORS/tarball/master | tar xzf - --directory=/tmp/LS_COLORS --strip=1
 # ( cd /tmp/LS_COLORS && sh install.sh )
 # To enable the colors, add the following line to your shell's start-up script:
-  . "/home/morp/.local/share/lscolors.sh" 
+  . "/home/morp/.local/share/lscolors.sh"
