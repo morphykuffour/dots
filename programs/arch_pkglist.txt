@@ -174,3 +174,4 @@ gdbgui
 gdb
 man-pages #manpages-dev on debain
 qira #better debugging 
+diff-so-fancy

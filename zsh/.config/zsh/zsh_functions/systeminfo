@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Linux equivalent of systeminfo from pwsh
+
+neofetch
+lscpu
+# lsmem
+# lspci
+# lshw
+# /proc/cpuinfo
+# lsblk
+# df -h
