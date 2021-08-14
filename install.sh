@@ -56,12 +56,3 @@ if [ $ubuntu_linux = 'Ubuntu' ] ; then # ubuntu
     sudo apt-get -y install python3-pip
 fi
 
-
-
-# this should be done last
-cd ~/dotfiles; 
-stow gdb;
-stow zsh;
-
-stow tmux;
-ln -s ~/.config/tmux/.tmux.conf ~/.tmux.conf
