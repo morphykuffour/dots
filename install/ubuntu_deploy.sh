@@ -27,6 +27,7 @@ if [[ -f "~/.zshenv" ]]; then
 fi
 
 ln -fs $dots/xdg_config/tmux/.config/tmux $config/tmux/
+ln -fs $dots/git/gitconfig $HOME/.gitconfig
 
 # Font setup
 mkdir -p $HOME/.local/share/fonts
