@@ -1,5 +1,4 @@
-gh
-qira #better debugging 
+qira
 delta
-rg #ripgrep
-
+ripgrep
+manpages-dev 
