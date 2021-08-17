@@ -175,3 +175,5 @@ gdb
 man-pages on debain
 qira
 ripgrep
+ninja-build
+bat

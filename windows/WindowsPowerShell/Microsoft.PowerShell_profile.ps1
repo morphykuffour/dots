@@ -45,10 +45,7 @@ function explorer {
 }
 
 function edge {
-    # Old Edge
     # start microsoft-edge:
-    #
-    # New Chromioum Edge
     & "${env:ProgramFiles(x86)}\Microsoft\Edge Dev\Application\msedge.exe"
 }
 function settings {
