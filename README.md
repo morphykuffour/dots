@@ -1,26 +1,34 @@
 # dotfiles  
-Arch Linux installation with dwm as the windows manger
-
-Ubuntu WSL for windows 
+This main repo is for my arch linux dotfiles.
 
 ## Installing
 
 Clone into your `$HOME` directory or `~`
 
+You will need `git` and GNU `stow`
+
+Clone into your `$HOME` directory or `~`
+
 ```bash
-git clone https://github.com/morphykuffour/dotfiles.git ~;
+cd $HOME
+git clone --single-branch --branch main https://github.com/morphykuffour/dotfiles.git 
 
-cd ~/dotfiles;
 
-# Run this script to install necessary applications for Ubuntu
-bash ~/dotfiles/install/ubuntu/install_tools.sh;
-bash ~/dotfiles/install/ubuntu/deploy.sh;
+Run `stow` to symlink everything or just select what you want
 
-# Run this script to install necessary applications for Arch Linux
-bash ~/dotfiles/install/arch/install_tools.sh;
-bash ~/dotfiles/install/arch/deploy.sh;
+```bash
+stow */ # Everything (the '/' ignores the README)
 ```
 
+```bash
+stow zsh # Just my zsh config
+```
+
+# Run this script to install necessary applications for Arch Linux
+bash ~/dotfiles/install/install_tools.sh;
+bash ~/dotfiles/install/deploy.sh;
+
+```
 ## Programs
 
 An updated list of all the programs I use can be found in the `programs` directory
