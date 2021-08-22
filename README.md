@@ -18,7 +18,7 @@ stow */ # Everything (the '/' ignores the README)
 stow zsh # Just my zsh config
 ```
 
-# Run this script to install necessary applications for Arch Linux
+Run this script to install necessary applications for Arch Linux
 
 ```bash
 bash ~/dotfiles/install/install_tools.sh;
