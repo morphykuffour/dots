@@ -172,7 +172,7 @@ git-delta
 exa
 gdbgui
 gdb
-man-pages on debain
+man-pages #on debain
 qira
 ripgrep
 ninja-build
