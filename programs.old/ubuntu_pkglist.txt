@@ -1,6 +1,0 @@
-qira
-delta
-ripgrep
-manpages-dev 
-ninja-build
-bat
