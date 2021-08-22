@@ -55,3 +55,7 @@ $ luarocks install --server=https://luarocks.org/manifests/luarocks <name>
 
 
 add [ALT] + [TAB] to switch between DWM widows
+
+main   branmch for arch linux
+ubuntu branch for Ubuntu 
+windows branch for Windows
