@@ -9,6 +9,8 @@ zle_highlight=('paste:none')
 # beeping is annoying
 unsetopt BEEP
 
+# start tmux all time
+# [[ $TERM != "screen" ]] && exec tmux
 
 # completions
 autoload -Uz compinit
@@ -28,6 +30,13 @@ autoload -Uz colors && colors
 
 # Useful Functions
 source "$ZDOTDIR/zsh-functions"
+source "$ZDOTDIR/zsh_functions"
+
+# Functions
+FPATH=$ZDOTDIR/zsh_functions/:$FPATH
+# Attempt to loop autloading of custom functions
+autoload -Uz $ZDOTDIR/zsh_functions/*
+# autoload -Uz ${fpath[1]}/*(:t)
 
 # Normal files to source
 zsh_add_file "zsh-exports"
@@ -38,17 +47,12 @@ zsh_add_file "zsh-prompt"
 # Plugins
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
 zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
-zsh_add_plugin "hlissner/zsh-autopair"
-zsh_add_completion "esc/conda-zsh-completion" false
-# For more plugins: https://github.com/unixorn/awesome-zsh-plugins
-# More completions https://github.com/zsh-users/zsh-completions
 
 # Key-bindings
 bindkey -s '^o' 'ranger^M'
-bindkey -s '^f' 'zi^M'
 bindkey -s '^s' 'ncdu^M'
-# bindkey -s '^n' 'nvim $(fzf)^M'
-# bindkey -s '^v' 'nvim\n'
+bindkey -s '^f' 'nvim $(fzf)^M'
+bindkey -s '^v' 'nvim\n'
 bindkey -s '^z' 'zi^M'
 bindkey '^[[P' delete-char
 bindkey "^p" up-line-or-beginning-search # Up
@@ -58,8 +62,7 @@ bindkey "^j" down-line-or-beginning-search # Down
 bindkey -r "^u"
 bindkey -r "^d"
 
-# FZF 
-# TODO update for mac
+# FZF
 [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
 [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -69,9 +72,55 @@ compinit
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
-# bindkey '^e' edit-command-line
+bindkey '^e' edit-command-line
 
-# TODO Remove these
-setxkbmap -option caps:escape
-xset r rate 210 40
+# history
+HISTFILE="$XDG_CACHE_HOME/zsh/history"
+HISTSIZE=10000000
+SAVEHIST=10000000
+setopt appendhistory notify
+unsetopt beep nomatch
+# Treat the '!' character specially during expansion.
+setopt bang_hist
+# Write to the history file immediately, not when the shell exits.
+setopt inc_append_history
+# Share history between all sessions.
+setopt share_history
+# Expire a duplicate event first when trimming history.
+setopt hist_expire_dups_first
+# Do not record an event that was just recorded again.
+setopt hist_ignore_dups
+# Delete an old recorded event if a new event is a duplicate.
+setopt hist_ignore_all_dups
+# Do not display a previously found event.
+setopt hist_find_no_dups
+# Do not record an event starting with a space.
+setopt hist_ignore_space
+# Do not write a duplicate event to the history file.
+setopt hist_save_no_dups
+# Do not execute immediately upon history expansion.
+setopt hist_verify
+# Show timestamp in history
+setopt extended_history
 
+# zstyle
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
+zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+zstyle ':completion::complete:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
+zstyle ':completion:*' rehash true
+zmodload zsh/complist
