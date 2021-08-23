@@ -1,0 +1,6 @@
+#!/bin/zsh
+# return the output of the most recent command that was captured by cap
+function ret() { 
+    cat /tmp/capture.out
+}
+
