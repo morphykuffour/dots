@@ -9,10 +9,7 @@ RCS
 
 CVS
 \.\#.+       # CVS conflict files / emacs lock files
-\.cvsignore
-
-\.svn
-_darcs
+\.cvsignore \.svn _darcs
 \.hg
 
 \.git
@@ -24,3 +21,11 @@ _darcs
 ^/README.*
 ^/LICENSE.*
 ^/COPYING
+
+
+^/git 
+^/font 
+^/gdb 
+^/install 
+^/notes.* 
+^/program 
