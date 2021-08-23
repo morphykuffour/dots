@@ -1,0 +1,5 @@
+#!/bin/zsh
+# git commit faster
+function gsend () {
+    git commit -am "$1" && git push
+}
