@@ -121,3 +121,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
 zstyle ':completion:*' rehash true
 zmodload zsh/complist
+
+
+test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)
+
