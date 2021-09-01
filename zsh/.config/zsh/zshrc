@@ -9,9 +9,6 @@ zle_highlight=('paste:none')
 # beeping is annoying
 unsetopt BEEP
 
-# start tmux all time
-# [[ $TERM != "screen" ]] && exec tmux
-
 # completions
 autoload -Uz compinit
 zstyle ':completion:*' menu select
