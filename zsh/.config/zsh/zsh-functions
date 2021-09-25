@@ -30,13 +30,3 @@ function zsh_add_completion() {
 	if [ "$2" = true ] && compinit "${completion_file:1}"
 }
 
-# Auto-push directories onto bash's stack.
-# function cd ()
-# {
-#   if [ -e $1 ]; then 
-#     pushd $1 &> /dev/null   #dont display current stack 
-#   fi
-# }
-
-# to list current directories history
-# dirs -v
