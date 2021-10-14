@@ -1,34 +1,41 @@
-############################################################
-# Simple but Cute and Helpful (TM) Bash Settings
-#
-# cat feedback >> "kirtika.ruchandani@gmail.com"
-############################################################
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
 
-#!/usr/bin/env bash
-# ${HOME}/.bashrc: executed by bash(1) for non-login shells.
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+# append to the history file, don't overwrite it
+shopt -s histappend
 
-# User Info
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
 
-export USERNAME="Kirtika Ruchandani"
-export NICKNAME="rkirti"
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
 
-# Distribute bashrc into smaller, more specific files
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
 
-source .shells/defaults
-source .shells/functions
-source .shells/exports
-source .shells/alias
-source .shells/prompt   # Fancy prompt with time and current working dir
-source .shells/git      # Conveniences - Display current branch etc
+export GREP_OPTIONS='--color=auto'
+alias ls='exa'
 
-# Welcome message
-echo -ne "Good Morning, $NICKNAME! It's "; date '+%A, %B %-d %Y'
-echo -e "And now your moment of Zen:"; fortune
-echo
-echo "Hardware Information:"
-sensors  # Needs: 'sudo apt-get install lm-sensors'
-uptime   # Needs: 'sudo apt-get install lsscsi'
-lsscsi
-free -m
+# export PS1="$(tput setaf 1)\w\n\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h\[$(tput setaf 5)\]\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$\[$(tput sgr0)\] "
+
+
+if [ "`id -u`" -eq 0 ]; then
+    PS1="\[\033[m\]|\[\033[1;35m\]\t\[\033[m\]|\[\e[1;31m\]\u\[\e[1;36m\]\[\033[m\]@\[\e[1;36m\]\h\[\033[m\]:\[\e[0m\]\[\e[1;32m\][\W]> \[\e[0m\]"
+else
+    PS1="\[\033[m\]|\[\033[1;35m\]\t\[\033[m\]|\[\e[1m\]\u\[\e[1;36m\]\[\033[m\]@\[\e[1;36m\]\h\[\033[m\]:\[\e[0m\]\[\e[1;32m\][\W]> \[\e[0m\]"
+fi
+
+# setup nice colors
+# eval `dircolors ~/.dircolors`
+test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)
