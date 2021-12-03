@@ -28,7 +28,7 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-HISTFILE="$XDG_DATA_HOME/zsh/history"
+# HISTFILE="$XDG_DATA_HOME/zsh/history"
 HISTSIZE=1000000
 SAVEHIST=1000000
 export PATH="$HOME/.local/bin":$PATH
@@ -57,4 +57,10 @@ export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
+
+
+alias tmux="tmux -2"
+alias t="tmux -2"
+alias v="nvim"
+
 
