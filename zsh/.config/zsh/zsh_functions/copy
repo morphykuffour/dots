@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-# copy content of a file to clipboard without opening the file
-xclip -sel c < $@ 
-
