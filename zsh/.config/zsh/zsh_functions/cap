@@ -1,5 +1,0 @@
-#!/bin/zsh
-# capture the output of a command so it can be retrieved with ret
-function cap() {
-    tee /tmp/capture.out
-}
