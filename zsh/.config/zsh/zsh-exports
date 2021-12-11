@@ -1,16 +1,13 @@
 #!/bin/sh
-<<<<<<< HEAD
 HISTSIZE=1000000
 SAVEHIST=1000000
 export MANWIDTH=999
 export PATH="$HOME/.local/bin":$PATH
-=======
 # HISTFILE="$XDG_DATA_HOME/zsh/history"
 # HISTSIZE=1000000
 # SAVEHIST=1000000
 export PATH="$HOME/.local/bin":$PATH
 # export MANWIDTH=999
->>>>>>> edecb0fc85129eee288e897749587c2af52656fb
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
