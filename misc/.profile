@@ -64,3 +64,5 @@ alias t="tmux -2"
 alias v="nvim"
 
 
+
+export PATH="$HOME/.poetry/bin:$PATH"
