@@ -1,6 +1,16 @@
 #!/bin/sh
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+export PATH="$HOME/.local/bin":$PATH
+export PATH="$HOME/bin":$PATH
+export MANPAGER='nvim +Man!'
+=======
+<<<<<<< HEAD
+>>>>>>> 6e47e41f9bda3e42cb962c8dbe9400f68ef0e3a2
 HISTSIZE=1000000
 SAVEHIST=1000000
+>>>>>>> ee964c3e09ec0a1c15c60664e205f4a8f978c903
 export MANWIDTH=999
 export PATH="$HOME/.local/bin":$PATH
 # HISTFILE="$XDG_DATA_HOME/zsh/history"
@@ -11,6 +21,9 @@ export PATH="$HOME/.local/bin":$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
+<<<<<<< HEAD
+=======
 
 export STARSHIP_CONFIG=~/.config/starship/config.toml
 eval "$(starship init zsh)"
+>>>>>>> ee964c3e09ec0a1c15c60664e205f4a8f978c903
