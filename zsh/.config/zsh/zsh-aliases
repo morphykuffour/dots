@@ -128,3 +128,9 @@ alias gco="git checkout"
 alias gs="git status --short"
 alias gpush="git push -u origin HEAD"
 alias gpull="git pull --rebase"
+
+# binary analysis
+alias ida64="/opt/idafree-7.6/ida64"
+alias brave="/mnt/c/Program\ Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+alias sublime="/mnt/c/Program\ Files/Sublime\ Text/sublime_text.exe"
+
