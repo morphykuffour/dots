@@ -2,6 +2,8 @@
 export PATH="$HOME/.local/bin":$PATH
 export PATH="$HOME/bin":$PATH
 export MANPAGER='nvim +Man!'
+export EDITOR=nvim
+export VISUAL=nvim
 export MANWIDTH=999
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
