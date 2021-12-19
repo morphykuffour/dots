@@ -71,3 +71,5 @@ bindkey '^e' edit-command-line
 # use starship for PS1
 eval "$(starship init zsh)"
 export STARSHIP_CONFIG=~/.config/starship/config.toml
+
+eval "$(atuin init zsh)"
