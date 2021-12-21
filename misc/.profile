@@ -37,7 +37,8 @@ export GOPATH=$HOME/.local/share/go
 export VISUAL=nvim
 export EDITOR=nvim
 export FILE="ranger"
-export TERMINAL="kitty"
+# export TERMINAL="kitty"
+export TERMINAL="alacritty"
 export BROWSER="brave"
 
 # Man Pages settings
