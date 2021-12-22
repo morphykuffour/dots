@@ -159,9 +159,6 @@ _source_plugin() {
 	return 1
 }
 
-# ZSH Autosuggestions
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-# _source_plugin zsh-autosuggestions && ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
 # ZSH Syntax Highlighting
 if _source_plugin zsh-syntax-highlighting
@@ -306,50 +303,7 @@ find() {
 	fi
 }
 
-source /home/morp/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-echo 'eval "$(atuin init zsh)"' >> ~/.zshrc
-
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
+# ZSH Autosuggestions
+source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 eval "$(atuin init zsh)"
