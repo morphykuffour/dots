@@ -162,6 +162,7 @@ _source_plugin() {
 }
 
 
+<<<<<<< HEAD
 # Basic auto/tab complete:
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -191,6 +192,118 @@ zle -N zle-keymap-select
 zle-line-init() {
 zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
 echo -ne "\e[5 q"
+=======
+# ZSH Syntax Highlighting
+if _source_plugin zsh-syntax-highlighting
+then
+	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+	ZSH_HIGHLIGHT_STYLES[default]=none
+	ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
+	ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
+	ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
+	ZSH_HIGHLIGHT_STYLES[global-alias]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
+	ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
+	ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
+	ZSH_HIGHLIGHT_STYLES[path]=underline
+	ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
+	ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
+	ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
+	ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
+	ZSH_HIGHLIGHT_STYLES[command-substitution]=none
+	ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[process-substitution]=none
+	ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
+	ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
+	ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
+	ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
+	ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
+	ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta
+	ZSH_HIGHLIGHT_STYLES[assign]=none
+	ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
+	ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
+	ZSH_HIGHLIGHT_STYLES[named-fd]=none
+	ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
+	ZSH_HIGHLIGHT_STYLES[arg0]=fg=green
+	ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
+	ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
+	ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
+	ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
+	ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
+	ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
+	ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
+fi
+
+unset -f _source_plugin
+
+
+# -------------------------------- FUNCTIONS ---------------------------------
+lazygit() {
+	USAGE="
+lazygit [OPTION]... <msg>
+
+    GIT but lazy
+
+    Options:
+        --fixup <commit>        runs 'git commit --fixup <commit> [...]'
+        --amend                 runs 'git commit --amend --no-edit [...]'
+        -f, --force             runs 'git push --force-with-lease [...]'
+        -h, --help              show this help text
+"
+	while [ $# -gt 0 ]
+	do
+		key="$1"
+
+		case $key in
+			--fixup)
+				COMMIT="$2"
+				shift # past argument
+				shift # past value
+				;;
+			--amend)
+				AMEND=true
+				shift # past argument
+				;;
+			-f|--force)
+				FORCE=true
+				shift # past argument
+				;;
+			-h|--help)
+				echo "$USAGE"
+				EXIT=true
+				break
+				;;
+			*)
+				MESSAGE="$1"
+				shift # past argument
+				;;
+		esac
+	done
+	unset key
+	if [ -z "$EXIT" ]
+	then
+		git status .
+		git add .
+		if [ -n "$AMEND" ]
+		then
+			git commit --amend --no-edit
+		elif [ -n "$COMMIT" ]
+		then
+			git commit --fixup "$COMMIT"
+			GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash "$COMMIT"^
+		else
+			git commit -m "$MESSAGE"
+		fi
+		git push origin HEAD $([ -n "$FORCE" ] && echo '--force-with-lease')
+	fi
+	unset USAGE COMMIT MESSAGE AMEND FORCE
+>>>>>>> 7b5cd1595dd3f656160ed7c70a47b1affe6fd157
 }
 zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
@@ -214,6 +327,7 @@ bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 
 bindkey '^[[P' delete-char
 
+<<<<<<< HEAD
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
@@ -274,3 +388,18 @@ source /home/morp/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/morp/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
 # source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 
+=======
+find() {
+	if [ $# = 1 ]
+	then
+		command find . -iname "*$@*"
+	else
+		command find "$@"
+	fi
+}
+
+# ZSH Autosuggestions
+source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+eval "$(atuin init zsh)"
+>>>>>>> 7b5cd1595dd3f656160ed7c70a47b1affe6fd157
