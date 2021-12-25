@@ -20,7 +20,6 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip --color=auto'
-# alias pacman='pacman --color=auto'
 alias luamake=/home/morp/.config/nvim/lua-language-server/3rd/luamake/luamake
 
 ### LS & TREE
@@ -73,6 +72,7 @@ setopt NUMERIC_GLOB_SORT
 setopt PROMPT_SUBST
 setopt SHARE_HISTORY
 
+# -------------------------------- HISTORY ------------------------------------
 HISTFILE=~/.zsh_history
 HIST_STAMPS=mm/dd/yyyy
 HISTSIZE=5000
@@ -82,8 +82,7 @@ WORDCHARS=${WORDCHARS//\/}
 PROMPT_EOL_MARK=
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 
-
-# ZSH completion system
+# ------------------------------ ZSH completion system ------------------------
 autoload -Uz compinit
 compinit -d ~/.cache/zcompdump
 zstyle ':completion:*:*:*:*:*' menu select
@@ -100,7 +99,7 @@ zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# Key bindings
+#  ---------------------------- Key bindings -------------------------------------
 bindkey -e
 bindkey '^U' backward-kill-line
 bindkey '^[[2~' overwrite-mode
@@ -117,7 +116,7 @@ bindkey '^[[6~' end-of-buffer-or-history
 bindkey '^[[Z' undo
 bindkey ' ' magic-space
 
-# Prompt
+# I love this Prompt
 PROMPT=$'%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%n@%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
 RPROMPT=$'%(?.. %? %F{red}%Bx%b%F{reset})%(1j. %j %F{yellow}%Bbg %b%F{reset}.)'
 
@@ -138,9 +137,6 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 export LESSHISTFILE=-
 
-# colorize ls
-[ -x /usr/bin/dircolors ] && eval "$(dircolors -b)"
-
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
     xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty)
@@ -148,21 +144,6 @@ case "$TERM" in
         ;;
 esac
 
-# ------------------------------- ZSH PLUGINS ---------------------------------
-# Plugin source helper
-_source_plugin() {
-    local plugin_name="$1"
-    for basedir in /usr/share/zsh/plugins /usr/share
-    do
-        plugin="$basedir/$plugin_name/$plugin_name.zsh"
-        [ -f "$plugin" ] && source "$plugin" && return 0
-    done
-    echo "\033[33m[ ! ]\033[0m ZSH ${plugin_name#zsh-} not installed"
-    return 1
-}
-
-
-<<<<<<< HEAD
 # Basic auto/tab complete:
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -183,131 +164,21 @@ bindkey -v '^?' backward-delete-char
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select () {
-case $KEYMAP in
-    vicmd) echo -ne '\e[1 q';;      # block
-    viins|main) echo -ne '\e[5 q';; # beam
-esac
+    case $KEYMAP in
+        vicmd) echo -ne '\e[1 q';;      # block
+        viins|main) echo -ne '\e[5 q';; # beam
+    esac
 }
 zle -N zle-keymap-select
 zle-line-init() {
-zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-echo -ne "\e[5 q"
-=======
-# ZSH Syntax Highlighting
-if _source_plugin zsh-syntax-highlighting
-then
-	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-	ZSH_HIGHLIGHT_STYLES[default]=none
-	ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
-	ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
-	ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[global-alias]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[path]=underline
-	ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
-	ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
-	ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[command-substitution]=none
-	ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[process-substitution]=none
-	ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
-	ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[assign]=none
-	ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
-	ZSH_HIGHLIGHT_STYLES[named-fd]=none
-	ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
-	ZSH_HIGHLIGHT_STYLES[arg0]=fg=green
-	ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
-	ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
-fi
-
-unset -f _source_plugin
-
-
-# -------------------------------- FUNCTIONS ---------------------------------
-lazygit() {
-	USAGE="
-lazygit [OPTION]... <msg>
-
-    GIT but lazy
-
-    Options:
-        --fixup <commit>        runs 'git commit --fixup <commit> [...]'
-        --amend                 runs 'git commit --amend --no-edit [...]'
-        -f, --force             runs 'git push --force-with-lease [...]'
-        -h, --help              show this help text
-"
-	while [ $# -gt 0 ]
-	do
-		key="$1"
-
-		case $key in
-			--fixup)
-				COMMIT="$2"
-				shift # past argument
-				shift # past value
-				;;
-			--amend)
-				AMEND=true
-				shift # past argument
-				;;
-			-f|--force)
-				FORCE=true
-				shift # past argument
-				;;
-			-h|--help)
-				echo "$USAGE"
-				EXIT=true
-				break
-				;;
-			*)
-				MESSAGE="$1"
-				shift # past argument
-				;;
-		esac
-	done
-	unset key
-	if [ -z "$EXIT" ]
-	then
-		git status .
-		git add .
-		if [ -n "$AMEND" ]
-		then
-			git commit --amend --no-edit
-		elif [ -n "$COMMIT" ]
-		then
-			git commit --fixup "$COMMIT"
-			GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash "$COMMIT"^
-		else
-			git commit -m "$MESSAGE"
-		fi
-		git push origin HEAD $([ -n "$FORCE" ] && echo '--force-with-lease')
-	fi
-	unset USAGE COMMIT MESSAGE AMEND FORCE
->>>>>>> 7b5cd1595dd3f656160ed7c70a47b1affe6fd157
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
 }
 zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+# -------------------------------- FUNCTIONS ---------------------------------
 
 # Use lf to switch directories and bind it to ctrl-o
 lfcd () {
@@ -327,7 +198,6 @@ bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 
 bindkey '^[[P' delete-char
 
-<<<<<<< HEAD
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
@@ -346,7 +216,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 zstyle ':fzf-tab:*' switch-group ',' '.'
 
 # ------------------------------- ZSH FUNCTIONS ---------------------------------
-
 change_background() {
     # dconf write /org/mate/desktop/background/picture-filename "'$HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf)'"
     feh --bg-scale $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
@@ -382,24 +251,9 @@ commitDotFiles() {
     popd
 }
 
-eval "$(atuin init zsh)"
+# ------------------------------- ZSH PLUGINS ---------------------------------
+
 source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
 source /home/morp/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/morp/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
-# source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
-
-=======
-find() {
-	if [ $# = 1 ]
-	then
-		command find . -iname "*$@*"
-	else
-		command find "$@"
-	fi
-}
-
-# ZSH Autosuggestions
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 eval "$(atuin init zsh)"
->>>>>>> 7b5cd1595dd3f656160ed7c70a47b1affe6fd157
