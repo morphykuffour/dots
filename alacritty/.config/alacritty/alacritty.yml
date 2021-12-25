@@ -41,17 +41,17 @@ cursor:
 
 font:
   normal:
-    family: JetBrainsMono
+    family: JetBrains Mono
     style: SemiBold
 
   # The bold font face
   bold:
-    family: JetBrainsMono
+    family: JetBrains Mono
     style: Bold
 
   # The italic font face
   italic:
-    family: JetBrainsMono
+    family: JetBrains Mono
     style: Italic
 
   size: 5.0
