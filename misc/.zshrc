@@ -1,10 +1,9 @@
+#!/usr/bin/env zsh
 
-# Configure color-scheme
 COLOR_SCHEME=dark # dark/light
 
-
 # --------------------------------- ALIASES -----------------------------------
-#alias ..='cd ..'
+alias ..='cd ..'
 alias cp='cp -v'
 alias rm='rm -I'
 alias mv='mv -iv'
@@ -13,33 +12,36 @@ alias xclip='xclip -selection c'
 command -v vim > /dev/null && alias vi='vim'
 
 ### Colorize commands
-alias ls='ls --color=auto'
+# alias ls='ls --color=auto'
+alias ls='exa'
+alias cat='bat'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip --color=auto'
-alias pacman='pacman --color=auto'
+# alias pacman='pacman --color=auto'
+alias luamake=/home/morp/.config/nvim/lua-language-server/3rd/luamake/luamake
 
 ### LS & TREE
 alias ll='ls -la'
 alias la='ls -A'
 alias l='ls -F'
 command -v lsd > /dev/null && alias ls='lsd --group-dirs first' && \
-	alias tree='lsd --tree'
-command -v colorls > /dev/null && alias ls='colorls --sd --gs' && \
-	alias tree='colorls --tree'
+    alias tree='lsd --tree'
+    command -v colorls > /dev/null && alias ls='colorls --sd --gs' && \
+        alias tree='colorls --tree'
 
 ### CAT & LESS
 command -v bat > /dev/null && \
-	alias bat='bat --theme=ansi' && \
-	alias cat='bat --pager=never' && \
-	alias less='bat'
-# in debian the command is batcat
-command -v batcat > /dev/null && \
-	alias batcat='batcat --theme=ansi' && \
-	alias cat='batcat --pager=never' && \
-	alias less='batcat'
+    alias bat='bat --theme=ansi' && \
+    alias cat='bat --pager=never' && \
+    alias less='bat'
+    # in debian the command is batcat
+    command -v batcat > /dev/null && \
+        alias batcat='batcat --theme=ansi' && \
+        alias cat='batcat --pager=never' && \
+        alias less='batcat'
 
 ### TOP
 command -v htop > /dev/null && alias top='htop'
@@ -141,215 +143,134 @@ export LESSHISTFILE=-
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty)
-	precmd() { print -Pnr -- $'\e]0;%n@%m: %~\a' }
-	;;
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty)
+        precmd() { print -Pnr -- $'\e]0;%n@%m: %~\a' }
+        ;;
 esac
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 # Plugin source helper
 _source_plugin() {
-	local plugin_name="$1"
-	for basedir in /usr/share/zsh/plugins /usr/share
-	do
-		plugin="$basedir/$plugin_name/$plugin_name.zsh"
-		[ -f "$plugin" ] && source "$plugin" && return 0
-	done
-	echo "\033[33m[ ! ]\033[0m ZSH ${plugin_name#zsh-} not installed"
-	return 1
+    local plugin_name="$1"
+    for basedir in /usr/share/zsh/plugins /usr/share
+    do
+        plugin="$basedir/$plugin_name/$plugin_name.zsh"
+        [ -f "$plugin" ] && source "$plugin" && return 0
+    done
+    echo "\033[33m[ ! ]\033[0m ZSH ${plugin_name#zsh-} not installed"
+    return 1
 }
 
-# ZSH Autosuggestions
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-# _source_plugin zsh-autosuggestions && ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
-# ZSH Syntax Highlighting
-if _source_plugin zsh-syntax-highlighting
-then
-	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-	ZSH_HIGHLIGHT_STYLES[default]=none
-	ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
-	ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
-	ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[global-alias]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
-	ZSH_HIGHLIGHT_STYLES[path]=underline
-	ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
-	ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
-	ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[command-substitution]=none
-	ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[process-substitution]=none
-	ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
-	ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
-	ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta
-	ZSH_HIGHLIGHT_STYLES[assign]=none
-	ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
-	ZSH_HIGHLIGHT_STYLES[named-fd]=none
-	ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
-	ZSH_HIGHLIGHT_STYLES[arg0]=fg=green
-	ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
-	ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
-	ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
-fi
+# Basic auto/tab complete:
+autoload -U compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)# Include hidden files.
 
-unset -f _source_plugin
+# vi mode
+bindkey -v
+export KEYTIMEOUT=1
 
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v '^?' backward-delete-char
 
-# -------------------------------- FUNCTIONS ---------------------------------
-lazygit() {
-	USAGE="
-lazygit [OPTION]... <msg>
+# Change cursor shape for different vi modes.
+function zle-keymap-select () {
+case $KEYMAP in
+    vicmd) echo -ne '\e[1 q';;      # block
+    viins|main) echo -ne '\e[5 q';; # beam
+esac
+}
+zle -N zle-keymap-select
+zle-line-init() {
+zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-    GIT but lazy
+# Use lf to switch directories and bind it to ctrl-o
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp" >/dev/null
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+bindkey -s '^o' 'lfcd\n'
 
-    Options:
-        --fixup <commit>        runs 'git commit --fixup <commit> [...]'
-        --amend                 runs 'git commit --amend --no-edit [...]'
-        -f, --force             runs 'git push --force-with-lease [...]'
-        -h, --help              show this help text
-"
-	while [ $# -gt 0 ]
-	do
-		key="$1"
+bindkey -s '^a' 'bc -lq\n'
 
-		case $key in
-			--fixup)
-				COMMIT="$2"
-				shift # past argument
-				shift # past value
-				;;
-			--amend)
-				AMEND=true
-				shift # past argument
-				;;
-			-f|--force)
-				FORCE=true
-				shift # past argument
-				;;
-			-h|--help)
-				echo "$USAGE"
-				EXIT=true
-				break
-				;;
-			*)
-				MESSAGE="$1"
-				shift # past argument
-				;;
-		esac
-	done
-	unset key
-	if [ -z "$EXIT" ]
-	then
-		git status .
-		git add .
-		if [ -n "$AMEND" ]
-		then
-			git commit --amend --no-edit
-		elif [ -n "$COMMIT" ]
-		then
-			git commit --fixup "$COMMIT"
-			GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash "$COMMIT"^
-		else
-			git commit -m "$MESSAGE"
-		fi
-		git push origin HEAD $([ -n "$FORCE" ] && echo '--force-with-lease')
-	fi
-	unset USAGE COMMIT MESSAGE AMEND FORCE
+bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
+
+bindkey '^[[P' delete-char
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
+export LESSOPEN='| ~/.local/bin/lessfilter %s'
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# preview directory's content with exa when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+# switch group using `,` and `.`
+zstyle ':fzf-tab:*' switch-group ',' '.'
+
+# ------------------------------- ZSH FUNCTIONS ---------------------------------
+
+change_background() {
+    # dconf write /org/mate/desktop/background/picture-filename "'$HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf)'"
+    feh --bg-scale $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
 }
 
-glog() {
-	setterm -linewrap off 2> /dev/null
-
-	git --no-pager log --all --color=always --graph --abbrev-commit --decorate --date-order \
-		--format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' "$@" \
-		| sed -E \
-			-e 's/\|(\x1b\[[0-9;]*m)+\\(\x1b\[[0-9;]*m)+ /├\1─╮\2/' \
-			-e 's/(\x1b\[[0-9;]+m)\|\x1b\[m\1\/\x1b\[m /\1├─╯\x1b\[m/' \
-			-e 's/\|(\x1b\[[0-9;]*m)+\\(\x1b\[[0-9;]*m)+/├\1╮\2/' \
-			-e 's/(\x1b\[[0-9;]+m)\|\x1b\[m\1\/\x1b\[m/\1├╯\x1b\[m/' \
-			-e 's/╮(\x1b\[[0-9;]*m)+\\/╮\1╰╮/' \
-			-e 's/╯(\x1b\[[0-9;]*m)+\//╯\1╭╯/' \
-			-e 's/(\||\\)\x1b\[m   (\x1b\[[0-9;]*m)/╰╮\2/' \
-			-e 's/(\x1b\[[0-9;]*m)\\/\1╮/g' \
-			-e 's/(\x1b\[[0-9;]*m)\//\1╯/g' \
-			-e 's/^\*|(\x1b\[m )\*/\1⎬/g' \
-			-e 's/(\x1b\[[0-9;]*m)\|/\1│/g' \
-		| command less -r $([ $# -eq 0 ] && echo "+/[^/]HEAD")
-
-	setterm -linewrap on 2> /dev/null
+die () {
+    echo >&2 "$@"
+    exit 1
 }
 
-find() {
-	if [ $# = 1 ]
-	then
-		command find . -iname "*$@*"
-	else
-		command find "$@"
-	fi
+addToPath() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$PATH:$1
+    fi
 }
 
+addToPathFront() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+commitDotFiles() {
+    pushd $DOTFILES
+    pushd personal
+    git add .
+    git commit -m "automagic messaging from me in the past.  Have you checked up your butthole?"
+    git push origin master
+    popd
+    git add .
+    git commit -m "automagic messaging from me in the past.  Have you checked up your butthole?"
+    git push origin master
+    popd
+}
+
+eval "$(atuin init zsh)"
+source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
 source /home/morp/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-echo 'eval "$(atuin init zsh)"' >> ~/.zshrc
+source /home/morp/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
+# source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
-eval "$(atuin init zsh)"
