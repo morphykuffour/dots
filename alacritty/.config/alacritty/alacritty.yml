@@ -1,5 +1,3 @@
-# Colors (One Darker)
-# Note I am using alacritty-ligatures until ligatures make it upstream
 colors:
   # Default colors
   primary:
@@ -95,3 +93,8 @@ key_bindings:
   # - { key: Add, mods: Control, action: IncreaseFontSize }
   # - { key: Subtract, mods: Control, action: DecreaseFontSize }
   # - { key: N, mods: Control, action: SpawnNewInstance }
+
+rules:
+  'https://[^\s]+': brave-browser {0}
+  '([-_0-9a-zA-Z/]+):([0-9]+)': some-ide {1} --line {2}
+

@@ -3,53 +3,12 @@
 COLOR_SCHEME=dark # dark/light
 
 # --------------------------------- ALIASES -----------------------------------
-alias ..='cd ..'
-alias cp='cp -v'
-alias rm='rm -I'
-alias mv='mv -iv'
-alias ln='ln -sriv'
-alias xclip='xclip -selection c'
-command -v vim > /dev/null && alias vi='vim'
+source $HOME/.zsh_aliases
 
 ### Colorize commands
-# alias ls='ls --color=auto'
-alias ls='exa'
-alias cat='bat'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-alias diff='diff --color=auto'
-alias ip='ip --color=auto'
-alias luamake=/home/morp/.config/nvim/lua-language-server/3rd/luamake/luamake
 
-### LS & TREE
-alias ll='ls -la'
-alias la='ls -A'
-alias l='ls -F'
-command -v lsd > /dev/null && alias ls='lsd --group-dirs first' && \
-    alias tree='lsd --tree'
-    command -v colorls > /dev/null && alias ls='colorls --sd --gs' && \
-        alias tree='colorls --tree'
 
-### CAT & LESS
-command -v bat > /dev/null && \
-    alias bat='bat --theme=ansi' && \
-    alias cat='bat --pager=never' && \
-    alias less='bat'
-    # in debian the command is batcat
-    command -v batcat > /dev/null && \
-        alias batcat='batcat --theme=ansi' && \
-        alias cat='batcat --pager=never' && \
-        alias less='batcat'
 
-### TOP
-command -v htop > /dev/null && alias top='htop'
-command -v gotop > /dev/null && alias top='gotop -p $([ "$COLOR_SCHEME" = "light" ] && echo "-c default-dark")'
-command -v ytop > /dev/null && alias top='ytop -p $([ "$COLOR_SCHEME" = "light" ] && echo "-c default-dark")'
-command -v btm > /dev/null && alias top='btm $([ "$COLOR_SCHEME" = "light" ] && echo "--color default-light")'
-# themes for light/dark color-schemes inside ~/.config/bashtop; Press ESC to open the menu and change the theme
-command -v bashtop > /dev/null && alias top='bashtop'
-command -v bpytop > /dev/null && alias top='bpytop'
 
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
@@ -73,10 +32,10 @@ setopt PROMPT_SUBST
 setopt SHARE_HISTORY
 
 # -------------------------------- HISTORY ------------------------------------
-HISTFILE=~/.zsh_history
+HISTFILE=~/.cache/zsh/history
 HIST_STAMPS=mm/dd/yyyy
-HISTSIZE=5000
-SAVEHIST=5000
+HISTSIZE=10000000
+SAVEHIST=10000000
 ZLE_RPROMPT_INDENT=0
 WORDCHARS=${WORDCHARS//\/}
 PROMPT_EOL_MARK=
@@ -85,6 +44,7 @@ TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 # ------------------------------ ZSH completion system ------------------------
 autoload -Uz compinit
 compinit -d ~/.cache/zcompdump
+_comp_options+=(globdots)		# Include hidden files.
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -121,21 +81,9 @@ PROMPT=$'%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%n@%m%b%F{%(#.blue.gree
 RPROMPT=$'%(?.. %? %F{red}%Bx%b%F{reset})%(1j. %j %F{yellow}%Bbg %b%F{reset}.)'
 
 # ----------------------------------- MISC -----------------------------------
-export VISUAL=vim
-export EDITOR=$VISUAL
 
 # enable terminal linewrap
 setterm -linewrap on 2> /dev/null
-
-# colorize man pages
-export LESS_TERMCAP_mb=$'\e[1;32m'
-export LESS_TERMCAP_md=$'\e[1;32m'
-export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[01;33m'
-export LESS_TERMCAP_ue=$'\e[0m'
-export LESS_TERMCAP_us=$'\e[1;4;31m'
-export LESSHISTFILE=-
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -202,6 +150,21 @@ bindkey '^[[P' delete-char
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
 export LESSOPEN='| ~/.local/bin/lessfilter %s'
 # disable sort when completing `git checkout`
@@ -239,16 +202,10 @@ addToPathFront() {
 }
 
 commitDotFiles() {
-    pushd $DOTFILES
-    pushd personal
+    cd $HOME/dotfiles
     git add .
-    git commit -m "automagic messaging from me in the past.  Have you checked up your butthole?"
-    git push origin master
-    popd
-    git add .
-    git commit -m "automagic messaging from me in the past.  Have you checked up your butthole?"
-    git push origin master
-    popd
+    git commit -am "dotfile update"
+    git push 
 }
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
