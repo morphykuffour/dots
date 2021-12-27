@@ -5,11 +5,6 @@ COLOR_SCHEME=dark # dark/light
 # --------------------------------- ALIASES -----------------------------------
 source $HOME/.zsh_aliases
 
-### Colorize commands
-
-
-
-
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
 setopt BEEP
@@ -140,7 +135,7 @@ lfcd () {
 }
 bindkey -s '^o' 'lfcd\n'
 
-bindkey -s '^a' 'bc -lq\n'
+# bindkey -s '^a' 'bc -lq\n'
 
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 
@@ -149,21 +144,6 @@ bindkey '^[[P' delete-char
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
 export LESSOPEN='| ~/.local/bin/lessfilter %s'

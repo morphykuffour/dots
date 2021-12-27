@@ -9,6 +9,8 @@ export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
 export DOTFILES=$HOME/dotfiles
+export TERM="screen-256color"
+
 
 
 # colorize man pages
