@@ -34,5 +34,7 @@ mkdir -p $HOME/.local/share/fonts
 cp $dots/font/JetBrains_Mono_Regular_Nerd_Font_Complete_Mono.ttf ~/.local/share/fonts/
 sudo fc-cache -fv
 
+# swap caps_lock and escape
+/usr/bin/setxkbmap -option "caps:swapescape"
 echo
 echo "Finished deployment"

@@ -60,6 +60,7 @@ alias grep='grep --color=auto'
 alias pip='pip3'
 alias python='python3'
 alias py="python3"
+alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 alias weather='curl wttr.in'
 alias bat="\bat"
 alias lsb="lsb_release -a"
@@ -118,7 +119,7 @@ alias diff='diff --color=auto'
 alias ip='ip --color=auto'
 alias luamake=/home/morp/.config/nvim/lua-language-server/3rd/luamake/luamake
 alias ll='ls -la'
-alias la='ls -A'
+alias la='ls -a'
 alias l='ls -F'
 command -v lsd > /dev/null && alias ls='lsd --group-dirs first' && \
 alias tree='lsd --tree'
