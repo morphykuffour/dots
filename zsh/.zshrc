@@ -4,6 +4,7 @@ COLOR_SCHEME=dark # dark/light
 
 # --------------------------------- ALIASES -----------------------------------
 source $HOME/.zsh_aliases
+source $HOME/.zsh_exports
 
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
