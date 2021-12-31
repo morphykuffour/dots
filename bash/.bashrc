@@ -39,3 +39,9 @@ fi
 # setup nice colors
 # eval `dircolors ~/.dircolors`
 test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
