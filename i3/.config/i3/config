@@ -138,3 +138,8 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+
+# exec --no-startup-id exec mate-settings-daemon
+# exec --no-startup-id exec mate-screensaver
+# exec --no-startup-id exec mate-power-manager
+# exec --no-startup-id exec nm-applet
