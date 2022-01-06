@@ -64,5 +64,5 @@ alias t="tmux -2"
 alias v="nvim"
 
 
-
+export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"
