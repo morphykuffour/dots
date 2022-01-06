@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Easier navigation: .., ..., ~ and -
+alias dots="cd ~/dotfiles"
 alias ls="exa"
 alias cd..="cd .."
 alias ..="cd .."
