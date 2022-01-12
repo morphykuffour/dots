@@ -37,9 +37,8 @@ export GOPATH=$HOME/.local/share/go
 export VISUAL=nvim
 export EDITOR=nvim
 export FILE="ranger"
-# export TERMINAL="kitty"
-export TERMINAL="alacritty"
-export BROWSER="brave"
+export TERMINAL="kitty"
+export BROWSER="brave-browser"
 
 # Man Pages settings
 man() {
@@ -62,7 +61,6 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 alias tmux="tmux -2"
 alias t="tmux -2"
 alias v="nvim"
-
 
 export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"

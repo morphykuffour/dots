@@ -193,5 +193,5 @@ commitDotFiles() {
 
 source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
 source /home/morp/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/morp/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
+# source /home/morp/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
 eval "$(atuin init zsh)"
