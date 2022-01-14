@@ -75,6 +75,7 @@ alias v.="$EDITOR ."
 alias t='tmux'
 alias r=ranger-cd
 alias :q='exit'
+alias sau="sudo apt update"
 
 # Edit config files
 alias zshrc="$EDITOR $ZDOTDIR/zshrc"

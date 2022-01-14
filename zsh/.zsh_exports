@@ -10,7 +10,7 @@ export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
 export DOTFILES=$HOME/dotfiles
 export TERM="screen-256color"
-export VAGRANT_DEFAULT_PROVIDER=libvirt
+# export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 # colorize man pages
 export LESS_TERMCAP_mb=$'\e[1;32m'
