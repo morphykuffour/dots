@@ -96,7 +96,7 @@ if ! command -v discord-ptb &> /dev/null ; then
 fi
 
 # install dwm on debian
-sudo apt install libx11-dev libxinerama-dev libxft-dev libx11-xcb-dev libxcb-res0-dev -y
+sudo apt install libx11-dev libxinerama-dev libxft-dev libx11-xcb-dev libxcb-res0-dev autoconf xutils-dev libtool -y
 # build patched-libxft-bgra
 cd ~/build || exit
 git clone https://github.com/uditkarode/libxft-bgra
