@@ -95,11 +95,28 @@ if ! command -v discord-ptb &> /dev/null ; then
   sudo apt install ./discord-ptb.deb
 fi
 
+# install suckless tools
+
 # install dwm on debian
-sudo apt install libx11-dev libxinerama-dev libxft-dev libx11-xcb-dev libxcb-res0-dev autoconf xutils-dev libtool -y
-# build patched-libxft-bgra
+sudo apt install libx11-dev libxinerama-dev libxft-dev libx11-xcb-dev libxcb-res0-dev autoconf libharfbuzz-dev picom xutils-dev libtool -y
 cd ~/build || exit
 git clone https://github.com/uditkarode/libxft-bgra
 cd libxft-bgra || exit
 sh autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
+sudo make install
+
+# st
+git clone https://github.com/LukeSmithxyz/st
+cd st
+sudo make install
+
+# dwm
+git clone https://github.com/LukeSmithxyz/dwm
+cd dwm
+sudo make install
+
+# dmenu
+cd ~/build || exit
+git clone https://github.com/LukeSmithxyz/dmenu.git
+make
 sudo make install
