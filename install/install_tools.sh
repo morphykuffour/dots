@@ -56,7 +56,11 @@ fi
 
 # install McFly CTRL + R
 curl -LSfs https://raw.githubusercontent.com/cantino/mcfly/master/ci/install.sh | sudo sh -s -- --git cantino/mcfly
-
+libx11-dev
+libxinerama-dev
+libxft-dev
+libx11-xcb-dev
+libxcb-res0-dev
 # }}} 
 
 # install Zsh
@@ -90,3 +94,12 @@ if ! command -v discord-ptb &> /dev/null ; then
   wget -O ~/Downloads/discord-ptb.deb "https://discordapp.com/api/download/ptb?platform=linux&format=deb"
   sudo apt install ./discord-ptb.deb
 fi
+
+# install dwm on debian
+sudo apt install libx11-dev libxinerama-dev libxft-dev libx11-xcb-dev libxcb-res0-dev -y
+# build patched-libxft-bgra
+cd ~/build || exit
+git clone https://github.com/uditkarode/libxft-bgra
+cd libxft-bgra || exit
+sh autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man
+sudo make install
