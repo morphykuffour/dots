@@ -37,17 +37,8 @@ export GOPATH=$HOME/.local/share/go
 export VISUAL=nvim
 export EDITOR=nvim
 export FILE="ranger"
-export TERMINAL="kitty"
+export TERMINAL="xfce4-terminal"
 export BROWSER="brave-browser"
-
-# Man Pages settings
-man() {
-    local width=$(tput cols)
-    [ $width -gt $MANWIDTH ] && width=$MANWIDTH
-    env MANWIDTH=$width \
-    man "$@"
-}
-
 
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
@@ -56,7 +47,6 @@ export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
-
 
 alias tmux="tmux -2"
 alias t="tmux -2"
