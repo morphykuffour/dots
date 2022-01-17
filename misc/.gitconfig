@@ -2,8 +2,8 @@
 	email = morphy.kuffour@uconn.edu
 	name = Morphy Kuffour
 
-[push]
-    default = simple
+# [push]
+#     default = simple
 
 [core]
     editor = nvim
