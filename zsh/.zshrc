@@ -199,11 +199,13 @@ mkd() {
   fi
 }
 
+# ------------------------------- ZSH APPS ------------------------------------
 eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 # source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
-source /home/morp/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/morp/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+fpath=(/home/morp/dotfiles/zsh/.zsh/zsh-completions/src $fpath)
+source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
