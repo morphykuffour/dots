@@ -207,5 +207,6 @@ eval "$(starship init zsh)"
 # ------------------------------- ZSH PLUGINS ---------------------------------
 # source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
 fpath=(/home/morp/dotfiles/zsh/.zsh/zsh-completions/src $fpath)
+source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
