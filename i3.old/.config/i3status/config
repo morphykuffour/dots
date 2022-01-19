@@ -37,4 +37,3 @@ load {
 disk "/" {
         format = "%avail"
 }
-
