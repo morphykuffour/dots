@@ -10,6 +10,8 @@ export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
 export DOTFILES=$HOME/dotfiles
 export TERM="screen-256color"
+export PATH=/opt/homebrew/bin:$PATH
+
 
 # colorize man pages
 export LESS_TERMCAP_mb=$'\e[1;32m'
@@ -20,5 +22,5 @@ export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 export LESSHISTFILE=-
-export QMK_HOME="/home/morp/.qmk_firmware"
-export GEM_HOME="/home/morp/.local/share/gem/ruby/2.7.0"
+export QMK_HOME="$HOME/.qmk_firmware"
+export GEM_HOME="$HOME/.local/share/gem/ruby/2.7.0"
