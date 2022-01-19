@@ -199,13 +199,7 @@ mkd() {
   fi
 }
 
-<<<<<<< HEAD
-source $HOME/.zsh/fzf-tab/fzf-tab.plugin.zsh
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-=======
 # ------------------------------- ZSH APPS ------------------------------------
->>>>>>> 7844f8f46fde21bf2297efe52ac6b563a5e9e67e
 eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
