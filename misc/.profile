@@ -54,3 +54,5 @@ alias v="nvim"
 
 export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"
+# start emacs 
+/opt/homebrew/bin/emacs --daemon &

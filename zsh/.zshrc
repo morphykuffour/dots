@@ -204,6 +204,21 @@ eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
 
+# case "$(uname -s)" in
+#    Darwin)
+# #    eval $(/opt/homebrew/bin/brew shellenv)
+#      ;;
+#    Linux)
+#      echo 'Linux'
+# #     eval "$(starship init zsh)"
+#      ;;
+#    CYGWIN*|MINGW32*|MSYS*|MINGW*)
+#      ;;
+#    *)
+#      # echo 'Other OS' 
+#      ;;
+# esac
+
 # ------------------------------- ZSH PLUGINS ---------------------------------
 # source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
 fpath=($HOME/.zsh/zsh-completions/src $fpath)

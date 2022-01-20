@@ -1,8 +1,0 @@
-# ~/.config/starship.toml
-
-[battery]
-disabled = "true"
-
-[[battery.display]]
-disabled = "true"
-
