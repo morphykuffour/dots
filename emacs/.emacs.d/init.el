@@ -156,3 +156,6 @@
 (pdf-loader-install)
 
 (server-start)
+
+(global-set-key (kbd "\e\ec")
+    (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
