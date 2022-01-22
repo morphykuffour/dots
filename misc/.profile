@@ -34,10 +34,11 @@ export PATH="$HOME/.local/bin":$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
+
 export VISUAL=nvim
 export EDITOR=nvim
 export FILE="ranger"
-export TERMINAL="xfce4-terminal"
+export TERMINAL="kitty"
 export BROWSER="brave-browser"
 
 export LESS_TERMCAP_mb=$'\e[1;32m'
