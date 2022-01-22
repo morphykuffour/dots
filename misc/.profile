@@ -56,4 +56,20 @@ alias v="nvim"
 export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"
 # start emacs 
-/opt/homebrew/bin/emacs --daemon &
+
+case "$(uname -s)" in
+   Darwin)
+#    eval $(/opt/homebrew/bin/brew shellenv)
+      /opt/homebrew/bin/emacs --daemon &
+     ;;
+   Linux)
+     echo 'Linux'
+#     eval "$(starship init zsh)"
+      /usr/bin/emacs --daemon &
+     ;;
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     ;;
+   *)
+     # echo 'Other OS' 
+     ;;
+esac
