@@ -77,10 +77,12 @@ alias t='tmux'
 alias r=ranger-cd
 alias :q='exit'
 alias sau="sudo apt update"
+alias imgcat="kitty +kitten icat"
 
 # Edit config files
-alias zshrc="$EDITOR $ZDOTDIR/zshrc"
-alias vrc="$EDITOR  /home/morp/.config/nvim/init.vim"
+alias zrc="$EDITOR $HOME/dotfiles/zshrc"
+alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
+
 
 alias vim='nvim'
 alias sv="sudo $EDITOR"

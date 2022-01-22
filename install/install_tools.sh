@@ -120,3 +120,17 @@ cd ~/build || exit
 git clone https://github.com/LukeSmithxyz/dmenu.git
 make
 sudo make install
+
+# i3 swallow
+
+# clone the repository
+# git clone https://github.com/jamesofarrell/i3-swallow
+
+# # change directory to `i3-swallow`
+# cd i3-swallow
+
+# # install necessary python dependencies to run i3-swallow
+# python3 -m pip install -r requirements.txt
+
+# # install i3-swallow in `~/.local/bin/swallow`
+# make install
