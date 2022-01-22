@@ -37,8 +37,8 @@ export GOPATH=$HOME/.local/share/go
 
 export VISUAL=nvim
 export EDITOR=nvim
-export FILE="ranger"
-export TERMINAL="kitty"
+export FILE=lf
+export TERMINAL=kitty
 export BROWSER="brave-browser"
 
 export LESS_TERMCAP_mb=$'\e[1;32m'
