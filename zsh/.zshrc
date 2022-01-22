@@ -196,7 +196,6 @@ mkd() {
   fi
 }
 
-<<<<<<< HEAD
 build_cscope_db_func() {
     local PROJDIR=$PWD
     cd /
@@ -206,7 +205,6 @@ build_cscope_db_func() {
 }
 alias csbuild=\\''build_cscope_db_func\\''
 # https://medium.com/@mmeinhar85/how-to-integrate-cscope-into-vim-in-linux-85274102474
-=======
 # fix tmux issue
 # Change cursor with support for inside/outside tmux
 # function _set_cursor() {
@@ -234,7 +232,6 @@ alias csbuild=\\''build_cscope_db_func\\''
 # ensure insert mode and beam cursor when exiting vim
 # zle-line-init() { zle -K viins; _set_beam_cursor }
 
->>>>>>> refs/remotes/origin/main
 
 # ------------------------------- ZSH APPS ------------------------------------
 eval "$(atuin init zsh)"
