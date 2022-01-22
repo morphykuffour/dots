@@ -199,6 +199,16 @@ mkd() {
   fi
 }
 
+build_cscope_db_func() {
+    local PROJDIR=$PWD
+    cd /
+    find $PROJDIR -name \\''*.c\\'' -o -name \\''*.h\\'' > $PROJDIR/cscope.files
+    cd $PROJDIR
+    cscope -Rbkq
+}
+alias csbuild=\\''build_cscope_db_func\\''
+# https://medium.com/@mmeinhar85/how-to-integrate-cscope-into-vim-in-linux-85274102474
+
 # ------------------------------- ZSH APPS ------------------------------------
 eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
