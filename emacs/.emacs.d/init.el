@@ -71,7 +71,8 @@
 (load-theme 'adwaita)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (set-face-attribute 'mode-line nil  :height 200)
-(set-face-attribute 'default nil :font "JetBrains Mono" :height 100)
+(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
+;; (set-face-attribute 'default nil :font "JetBrains" :height 100) ;; FIXME for macos
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 (scroll-bar-mode -1)        ; Disable visible scrollbar
