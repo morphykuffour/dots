@@ -69,7 +69,8 @@
              (vertico-mode))
 
 ;; PERSONAL SETTINGS
-(load-theme 'adwaita)
+;; (load-theme 'adwaita)
+(load-theme 'wombat)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (set-face-attribute 'mode-line nil  :height 200)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
