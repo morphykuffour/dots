@@ -1,3 +1,11 @@
 replace sxiv with kitty icat
 learn intricates of lf LukeSmith will shell direcoty shell scripts incoprorated
-MT(MOD_LCTL, KC_ESC) for QMK keyboards
+
+QMK keyboards key mods
+
+# MT(HOLD,     TAPPED)
+
+MT(MOD_LCTL, KC_ESC) 
+MT(KC_WWW_SEARCH,  KC_TAB) 
+
+MT(MOD_LCTL | MOD_LSFT,KC_GRV) 

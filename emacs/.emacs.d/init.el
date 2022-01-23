@@ -19,7 +19,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;;; PACKAGES
+;; PACKAGES
 (use-package command-log-mode)
 (use-package ivy
              :diminish
@@ -73,7 +73,6 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (set-face-attribute 'mode-line nil  :height 200)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
-;; (set-face-attribute 'default nil :font "JetBrains" :height 100) ;; FIXME for macos
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -94,7 +93,7 @@
 
 (with-system gnu/linux
              ;; zathura as pdf viewer
-             ;; ~/.local/bin/zathura.sh
+             ;; ~/.local/bin/zathura-sync.sh
              (setq TeX-view-program-list
                    '(("zathura" 
                       ("zathura" (mode-io-correlate "-sync.sh")
@@ -127,17 +126,17 @@
              (org-roam-db-autosync-mode)
              (require 'org-roam-protocol)) ;; If using org-roam-protocol
 
-;;;; Org-roam
+;; Org-roam
 (define-key global-map (kbd "C-c n f") #'org-roam-node-find)
 (define-key global-map (kbd "C-c n c") #'org-roam-capture)
 (define-key global-map (kbd "C-c n i") #'org-roam-node-insert)
 (define-key global-map (kbd "C-c n l") #'org-roam-buffer-toggle)
 
 ;; org-roam-ui
-(use-package! websocket
+(use-package websocket
               :after org-roam)
 
-(use-package! org-roam-ui
+(use-package org-roam-ui
               :after org-roam 
               :config
               (setq org-roam-ui-sync-theme t
@@ -157,67 +156,65 @@
 
 ;; md-mode
 ;; https://jblevins.org/projects/markdown-mode/
-(use-package markdown-mode
-             :ensure t
-             :commands (markdown-mode gfm-mode)
-             :mode (("README\\.md\\'" . gfm-mode)
-                    ("\\.md\\'" . markdown-mode)
-                    ("\\.markdown\\'" . markdown-mode))
-             :init (setq markdown-command "multimarkdown"))
-
-;; PDFs
-; (pdf-tools-install)
-(pdf-loader-install)
-
-(server-start)
-
-(global-set-key (kbd "\e\ec")
-                (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
-
-;; (getenv "SHELL")
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
-
-(column-number-mode)
-(global-display-line-numbers-mode t)
-
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                 term-mode-hook
-                 eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-
-(use-package rainbow-delimiters
-             :hook (prog-mode . rainbow-delimiters-mode))
-
-
-(use-package which-key
-             :init (which-key-mode)
-             :diminish which-key-mode
-             :config
-             (setq which-key-idle-delay 0.3))
-
-
-(use-package ivy-rich
-             :init
-             (ivy-rich-mode 1)
-             :config
-             (setq ivy-format-function #'ivy-format-function-line)
-             (setq ivy-rich--display-transformers-list
-                   (plist-put ivy-rich--display-transformers-list
-                              'ivy-switch-buffer
-                              '(:columns
-                                 ((ivy-rich-candidate (:width 40))
-                                  (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
-                                  (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
-                                  (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
-                                  (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
-                                 :predicate
-                                 (lambda (cand)
-                                   (if-let ((buffer (get-buffer cand)))
-                                           ;; Don't mess with EXWM buffers
-                                           (with-current-buffer buffer
-                                                                (not (derived-mode-p 'exwm-mode)))))))))
-
+;; (use-package markdown-mode
+;;              :ensure t
+;;              :commands (markdown-mode gfm-mode)
+;;              :mode (("README\\.md\\'" . gfm-mode)
+;;                     ("\\.md\\'" . markdown-mode)
+;;                     ("\\.markdown\\'" . markdown-mode))
+;;              :init (setq markdown-command "multimarkdown"))
+;; 
+;; ;; PDFs
+;; ; (pdf-tools-install)
+;; (pdf-loader-install)
+;; 
+;; (global-set-key (kbd "\e\ec")
+;;                 (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
+;; 
+;; ;; (getenv "SHELL")
+;; (when (memq window-system '(mac ns x))
+;;   (exec-path-from-shell-initialize))
+;; 
+;; 
+;; (column-number-mode)
+;; (global-display-line-numbers-mode t)
+;; 
+;; ;; Disable line numbers for some modes
+;; (dolist (mode '(org-mode-hook
+;;                  term-mode-hook
+;;                  eshell-mode-hook))
+;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;; 
+;; 
+;; (use-package rainbow-delimiters
+;;              :hook (prog-mode . rainbow-delimiters-mode))
+;; 
+;; 
+;; (use-package which-key
+;;              :init (which-key-mode)
+;;              :diminish which-key-mode
+;;              :config
+;;              (setq which-key-idle-delay 0.3))
+;; 
+;; 
+;; (use-package ivy-rich
+;;              :init
+;;              (ivy-rich-mode 1)
+;;              :config
+;;              (setq ivy-format-function #'ivy-format-function-line)
+;;              (setq ivy-rich--display-transformers-list
+;;                    (plist-put ivy-rich--display-transformers-list
+;;                               'ivy-switch-buffer
+;;                               '(:columns
+;;                                  ((ivy-rich-candidate (:width 40))
+;;                                   (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+;;                                   (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+;;                                   (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+;;                                   (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
+;;                                  :predicate
+;;                                  (lambda (cand)
+;;                                    (if-let ((buffer (get-buffer cand)))
+;;                                            ;; Don't mess with EXWM buffers
+;;                                            (with-current-buffer buffer
+;;                                                                 (not (derived-mode-p 'exwm-mode)))))))))
+;; 
