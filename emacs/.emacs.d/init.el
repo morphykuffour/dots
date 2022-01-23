@@ -89,11 +89,9 @@
 (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                 term-mode-hook
-                 eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
- 
+;; (dolist (mode '(org-mode-hook term-mode-hook eshell-mode-hook shell-mode-hook))
+;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -140,15 +138,15 @@
 
 ;; org-roam-ui
 (use-package websocket
-              :after org-roam)
+             :after org-roam)
 
 (use-package org-roam-ui
-              :after org-roam 
-              :config
-              (setq org-roam-ui-sync-theme t
-                    org-roam-ui-follow t
-                    org-roam-ui-update-on-save t
-                    org-roam-ui-open-on-start t))
+             :after org-roam 
+             :config
+             (setq org-roam-ui-sync-theme t
+                   org-roam-ui-follow t
+                   org-roam-ui-update-on-save t
+                   org-roam-ui-open-on-start t))
 
 ;; md-roam
 ;; (require 'org-roam)
@@ -189,18 +187,20 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
- 
-;; (use-package rainbow-delimiters
-;;              :hook (prog-mode . rainbow-delimiters-mode))
-;; 
-;; 
-;; (use-package which-key
-;;              :init (which-key-mode)
-;;              :diminish which-key-mode
-;;              :config
-;;              (setq which-key-idle-delay 0.3))
-;; 
-;; 
+
+(use-package rainbow-delimiters
+             :hook (prog-mode . rainbow-delimiters-mode))
+
+
+(use-package which-key
+             :init (which-key-mode)
+             :diminish which-key-mode
+             :config
+             (setq which-key-idle-delay 0.3))
+
+(functionp 'module-load) ; should be t
+
+
 ;; (use-package ivy-rich
 ;;              :init
 ;;              (ivy-rich-mode 1)
@@ -222,3 +222,16 @@
 ;;                                            (with-current-buffer buffer
 ;;                                                                 (not (derived-mode-p 'exwm-mode)))))))))
 ;; 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(tree-sitter-langs a tree-sitter which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
