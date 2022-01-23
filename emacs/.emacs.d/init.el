@@ -246,7 +246,7 @@
   :init (doom-modeline-mode 0)
   :custom ((doom-modeline-height 15)))
 
-(setq global-hl-todo-mode t)
+(global-hl-todo-mode)
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
         ("FIXME"  . "#FF0000")
