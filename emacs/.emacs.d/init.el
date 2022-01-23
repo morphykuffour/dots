@@ -63,6 +63,8 @@
              (setq evil-want-integration t)
              (evil-collection-init))
 
+;; (setq evil-want-minibuffer t)
+
 ;; vertico
 (use-package vertico
              :config
@@ -198,37 +200,47 @@
              :config
              (setq which-key-idle-delay 0.3))
 
+(require 'cask)
+
 (functionp 'module-load) ; should be t
+;; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/emacs-tree-sitter/core")
+;; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/emacs-tree-sitter/lisp")
+;; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/emacs-tree-sitter/langs")
 
+;; (require 'tree-sitter)
+;; (require 'tree-sitter-hl)
+;; (require 'tree-sitter-langs)
+;; (require 'tree-sitter-debug)
+;; (require 'tree-sitter-query)
 
-;; (use-package ivy-rich
-;;              :init
-;;              (ivy-rich-mode 1)
-;;              :config
-;;              (setq ivy-format-function #'ivy-format-function-line)
-;;              (setq ivy-rich--display-transformers-list
-;;                    (plist-put ivy-rich--display-transformers-list
-;;                               'ivy-switch-buffer
-;;                               '(:columns
-;;                                  ((ivy-rich-candidate (:width 40))
-;;                                   (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
-;;                                   (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
-;;                                   (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
-;;                                   (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
-;;                                  :predicate
-;;                                  (lambda (cand)
-;;                                    (if-let ((buffer (get-buffer cand)))
-;;                                            ;; Don't mess with EXWM buffers
-;;                                            (with-current-buffer buffer
-;;                                                                 (not (derived-mode-p 'exwm-mode)))))))))
-;; 
+(use-package ivy-rich
+             :init
+             (ivy-rich-mode 1)
+             :config
+             (setq ivy-format-function #'ivy-format-function-line)
+             (setq ivy-rich--display-transformers-list
+                   (plist-put ivy-rich--display-transformers-list
+                              'ivy-switch-buffer
+                              '(:columns
+                                 ((ivy-rich-candidate (:width 40))
+                                  (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+                                  (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+                                  (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+                                  (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
+                                 :predicate
+                                 (lambda (cand)
+                                   (if-let ((buffer (get-buffer cand)))
+                                           ;; Don't mess with EXWM buffers
+                                           (with-current-buffer buffer
+                                                                (not (derived-mode-p 'exwm-mode)))))))))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(tree-sitter-langs a tree-sitter which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
+   '(counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

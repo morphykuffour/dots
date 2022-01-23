@@ -53,7 +53,7 @@ alias list_systemctl="systemctl list-unit-files --state=enabled"
 alias dotfiles="cd $HOME/dotfiles"
 alias explorer='/mnt/c/Windows/explorer.exe'
 alias vrc='nvim /home/morp/.config/nvim/init.vim'
-alias dot='nvim /home/morp/dotfiles'
+# alias dot='nvim /home/morp/dotfiles'
 alias rd="rmdir"
 alias ip='ip -color=auto'
 alias diff='diff --color=auto'
