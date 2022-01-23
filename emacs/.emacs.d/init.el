@@ -114,6 +114,15 @@
                (exec-path-from-shell-initialize))
              )
 
+;; md mode
+(use-package markdown-mode
+             :ensure t
+             :commands (markdown-mode gfm-mode)
+             :mode (("README\\.md\\'" . gfm-mode)
+                    ("\\.md\\'" . markdown-mode)
+                    ("\\.markdown\\'" . markdown-mode))
+             :init (setq markdown-command "multimarkdown"))
+
 ;; org-roam
 (use-package org-roam
              :ensure t
@@ -134,8 +143,32 @@
              (org-roam-setup)
              (org-roam-db-autosync-mode)
              (require 'org-roam-protocol)) ;; If using org-roam-protocol
-
 (setq org-roam-graph-executable "dot")
+
+;; https://jblevins.org/projects/markdown-mode/
+;; md-roam
+(setq org-roam-v2-ack t)
+(require 'org-roam)
+(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+(setq org-roam-file-extensions '("org" "md"))
+(add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam")
+(require 'md-roam)
+(md-roam-mode 1)
+(setq md-roam-file-extension "md")
+(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+
+;; TODO add aliases and roam_refs
+;; (add-to-list 'org-roam-capture-templates
+;;     '("m" "Markdown" plain "" :target
+;;         (file+head "%<%Y-%m-%dT%H%M%S>.md"
+;; "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+;; 	:unnarrowed t))
+
+(add-to-list 'org-roam-capture-templates
+    '("m" "Markdown" plain "" :target
+        (file+head "%<%Y-%m-%dT%H%M%S>.md"
+"---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
+    :unnarrowed t))
 
 ;; org-roam-ui
 (use-package websocket
@@ -148,27 +181,6 @@
                    org-roam-ui-follow t
                    org-roam-ui-update-on-save t
                    org-roam-ui-open-on-start t))
-
-;; md-roam
-;; (require 'org-roam)
-;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-;; (setq org-roam-file-extensions '("org" "md"))
-;; (add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam.el")
-;; (md-roam-mode 1)
-;; (require 'md-roam)
-;; (setq md-roam-file-extension "md")
-;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-
-;; md-mode
-;; https://jblevins.org/projects/markdown-mode/
-(use-package markdown-mode
-             :ensure t
-             :commands (markdown-mode gfm-mode)
-             :mode (("README\\.md\\'" . gfm-mode)
-                    ("\\.md\\'" . markdown-mode)
-                    ("\\.markdown\\'" . markdown-mode))
-             :init (setq markdown-command "multimarkdown"))
-
 ;; PDFs
 (pdf-loader-install)
 
@@ -254,13 +266,52 @@
         ("GOTCHA" . "#FF4500")
         ("STUB"   . "#1E90FF")))
 
+;; (company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
+;; == irony-mode ==
+(use-package irony
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  :config
+  ;; replace the `completion-at-point' and `complete-symbol' bindings in
+  ;; irony-mode's buffers by irony-mode's function
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async))
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  )
+
+;; == company-mode ==
+(use-package company
+  :ensure t
+  :defer t
+  :init (add-hook 'after-init-hook 'global-company-mode)
+  :config
+  (use-package company-irony :ensure t :defer t)
+  (setq company-idle-delay              nil
+	company-minimum-prefix-length   2
+	company-show-numbers            t
+	company-tooltip-limit           20
+	company-dabbrev-downcase        nil
+	company-backends                '((company-irony company-gtags))
+	)
+  :bind ("C-;" . company-complete-common)
+  )
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
+   '(company-irony irony company hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
