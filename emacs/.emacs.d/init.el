@@ -81,9 +81,19 @@
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
 (menu-bar-mode -1)            ; Disable the menu bar
-(eval-after-load "linum" '(set-face-attribute 'linum nil :height 100))
+(eval-after-load "linum" 
+                 '(set-face-attribute 'linum nil :height 100))
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
+(column-number-mode)
+(global-display-line-numbers-mode t)
+
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                 term-mode-hook
+                 eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+ 
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -127,11 +137,6 @@
              (org-roam-db-autosync-mode)
              (require 'org-roam-protocol)) ;; If using org-roam-protocol
 
-;; Org-roam
-(define-key global-map (kbd "C-c n f") #'org-roam-node-find)
-(define-key global-map (kbd "C-c n c") #'org-roam-capture)
-(define-key global-map (kbd "C-c n i") #'org-roam-node-insert)
-(define-key global-map (kbd "C-c n l") #'org-roam-buffer-toggle)
 
 ;; org-roam-ui
 (use-package websocket
@@ -146,47 +151,45 @@
                     org-roam-ui-open-on-start t))
 
 ;; md-roam
-(require 'org-roam)
-(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-(setq org-roam-file-extensions '("org" "md"))
-(add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam.el")
-(md-roam-mode 1)
-(require 'md-roam)
-(setq md-roam-file-extension "md")
-(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+;; (require 'org-roam)
+;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+;; (setq org-roam-file-extensions '("org" "md"))
+;; (add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam.el")
+;; (md-roam-mode 1)
+;; (require 'md-roam)
+;; (setq md-roam-file-extension "md")
+;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; md-mode
 ;; https://jblevins.org/projects/markdown-mode/
-;; (use-package markdown-mode
-;;              :ensure t
-;;              :commands (markdown-mode gfm-mode)
-;;              :mode (("README\\.md\\'" . gfm-mode)
-;;                     ("\\.md\\'" . markdown-mode)
-;;                     ("\\.markdown\\'" . markdown-mode))
-;;              :init (setq markdown-command "multimarkdown"))
-;; 
-;; ;; PDFs
-;; ; (pdf-tools-install)
-;; (pdf-loader-install)
-;; 
-;; (global-set-key (kbd "\e\ec")
-;;                 (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
-;; 
-;; ;; (getenv "SHELL")
-;; (when (memq window-system '(mac ns x))
-;;   (exec-path-from-shell-initialize))
-;; 
-;; 
-;; (column-number-mode)
-;; (global-display-line-numbers-mode t)
-;; 
-;; ;; Disable line numbers for some modes
-;; (dolist (mode '(org-mode-hook
-;;                  term-mode-hook
-;;                  eshell-mode-hook))
-;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-;; 
-;; 
+(use-package markdown-mode
+             :ensure t
+             :commands (markdown-mode gfm-mode)
+             :mode (("README\\.md\\'" . gfm-mode)
+                    ("\\.md\\'" . markdown-mode)
+                    ("\\.markdown\\'" . markdown-mode))
+             :init (setq markdown-command "multimarkdown"))
+
+;; PDFs
+(pdf-loader-install)
+
+;; KEYMAPS
+
+;; Org-roam
+(define-key global-map (kbd "C-c n f") #'org-roam-node-find)
+(define-key global-map (kbd "C-c n c") #'org-roam-capture)
+(define-key global-map (kbd "C-c n i") #'org-roam-node-insert)
+(define-key global-map (kbd "C-c n l") #'org-roam-buffer-toggle)
+
+;; edit init.el TODO 
+;; (define-key global-map (kbd "C-c e i") #'(find-file "~/dotfiles/emacs/.emacs.d/init.el"))
+
+;; shell paths
+(getenv "SHELL")
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
+ 
 ;; (use-package rainbow-delimiters
 ;;              :hook (prog-mode . rainbow-delimiters-mode))
 ;; 
