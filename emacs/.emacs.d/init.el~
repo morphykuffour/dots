@@ -63,6 +63,8 @@
              (setq evil-want-integration t)
              (evil-collection-init))
 
+;; (setq evil-want-minibuffer t)
+
 ;; vertico
 (use-package vertico
              :config
@@ -81,12 +83,10 @@
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
 (menu-bar-mode -1)            ; Disable the menu bar
-(eval-after-load "linum" 
-                 '(set-face-attribute 'linum nil :height 100))
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
 (column-number-mode)
-(global-display-line-numbers-mode t)
+;; (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for some modes
 ;; (dolist (mode '(org-mode-hook term-mode-hook eshell-mode-hook shell-mode-hook))
@@ -135,6 +135,7 @@
              (org-roam-db-autosync-mode)
              (require 'org-roam-protocol)) ;; If using org-roam-protocol
 
+(setq org-roam-graph-executable "dot")
 
 ;; org-roam-ui
 (use-package websocket
@@ -198,47 +199,60 @@
              :config
              (setq which-key-idle-delay 0.3))
 
-(require 'cask)
+;; TODO install tree-sitter
+(use-package counsel
+             :bind (("M-x" . counsel-M-x)
+                    ("C-x b" . counsel-ibuffer)
+                    ("C-x C-f" . counsel-find-file)
+                    :map minibuffer-local-map
+                    ("C-r" . 'counsel-minibuffer-history))
+             :config
+             (setq ivy-initial-inputs-alist nil))
 
-(functionp 'module-load) ; should be t
-(add-to-list 'load-path "$HOME/.emacs.d/elispfiles/emacs-tree-sitter/core")
-(add-to-list 'load-path "$HOME/.emacs.d/elispfiles/emacs-tree-sitter/lisp")
-(add-to-list 'load-path "$HOME/.emacs.d/elispfiles/emacs-tree-sitter/langs")
+(use-package ivy-rich
+             :init
+             (ivy-rich-mode 1))
 
-(require 'tree-sitter)
-(require 'tree-sitter-hl)
-(require 'tree-sitter-langs)
-(require 'tree-sitter-debug)
-(require 'tree-sitter-query)
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
-;; (use-package ivy-rich
-;;              :init
-;;              (ivy-rich-mode 1)
-;;              :config
-;;              (setq ivy-format-function #'ivy-format-function-line)
-;;              (setq ivy-rich--display-transformers-list
-;;                    (plist-put ivy-rich--display-transformers-list
-;;                               'ivy-switch-buffer
-;;                               '(:columns
-;;                                  ((ivy-rich-candidate (:width 40))
-;;                                   (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
-;;                                   (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
-;;                                   (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
-;;                                   (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
-;;                                  :predicate
-;;                                  (lambda (cand)
-;;                                    (if-let ((buffer (get-buffer cand)))
-;;                                            ;; Don't mess with EXWM buffers
-;;                                            (with-current-buffer buffer
-;;                                                                 (not (derived-mode-p 'exwm-mode)))))))))
-;; 
+(global-set-key (kbd "C-h f") #'helpful-callable)
+(global-set-key (kbd "C-h v") #'helpful-variable)
+(global-set-key (kbd "C-h k") #'helpful-key)
+(global-set-key (kbd "C-c C-d") #'helpful-at-point)
+(global-set-key (kbd "C-h F") #'helpful-function)
+(global-set-key (kbd "C-h C") #'helpful-command)
+
+(use-package command-log-mode
+  :commands command-log-mode)
+
+(use-package doom-themes
+  :init (load-theme 'doom-palenight t))
+
+(use-package all-the-icons)
+
+(eval-after-load "linum" 
+                 '(set-face-attribute 'linum nil :height 100))
+;; disbled
+(use-package doom-modeline
+  :init (doom-modeline-mode 0)
+  :custom ((doom-modeline-height 15)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
+   '(hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
