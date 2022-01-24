@@ -338,7 +338,7 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(olivetti zones all-the-icons-ivy-rich centered-window org-dashboard company-irony irony company hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
+   '(evil-mu4e mu4e-views olivetti zones all-the-icons-ivy-rich centered-window org-dashboard company-irony irony company hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
