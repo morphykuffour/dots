@@ -1,4 +1,4 @@
-;; emacs config
+;;emacs config
 
 ;;; PACKAGE LIST
 (require 'package)
@@ -160,17 +160,11 @@
 (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
-;; (add-to-list 'org-roam-capture-templates
-;;     '("m" "Markdown" plain "" :target
-;;         (file+head "%<%Y-%m-%dT%H%M%S>.md"
-;; "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-;; 	:unnarrowed t))
-
 (add-to-list 'org-roam-capture-templates
-	     '("m" "Markdown" plain "" :target
-	       (file+head "%<%Y-%m-%dT%H%M%S>.md"
-			  "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
-	       :unnarrowed t))
+    '("m" "Markdown" plain "" :target
+        (file+head "%<%Y-%m-%dT%H%M%S>.md"
+"---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+	:unnarrowed t))
 
 ;; org-roam-ui
 (use-package websocket
@@ -322,14 +316,12 @@
   :if (display-graphic-p))
 
 ;; make backup to a designated dir, mirroring the full path
-
 (defun my-backup-file-name (fpath)
   "Return a new file path of a given file path.
 If the new path's directories does not exist, create them."
   (let* (
         (backupRootDir "~/Documents/emacs-backup/")
-        (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path, ➢ for example: “C:”
-        (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
+        (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
         )
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
     backupFilePath
