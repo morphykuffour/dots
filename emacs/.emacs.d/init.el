@@ -10,6 +10,7 @@
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
+
 (setq use-package-always-ensure t)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
