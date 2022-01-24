@@ -1,0 +1,6 @@
+ #!/bin/sh
+
+ # remap caps to escape
+ setxkbmap -option caps:escape
+ # swap escape and caps
+ # setxkbmap -option caps:swapescape
