@@ -40,6 +40,9 @@ floating_modifier $mod
 # bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec i3-sensible-terminal
 
+# google search
+bindsym $mod+g exec --no-startup-id ~/.local/bin/google-search.sh
+
 # kill focused window
 # bindsym $mod+space exec "/home/theprimeagen/dotfiles/awesome-streamerrc/ThePrimeagen/tmux2"
 

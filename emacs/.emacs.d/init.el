@@ -3,8 +3,8 @@
 ;;; PACKAGE LIST
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+			 ("org" . "https://orgmode.org/elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 ;;; BOOTSTRAP USE-PACKAGE
 (package-initialize)
@@ -23,22 +23,22 @@
 ;; PACKAGES
 (use-package command-log-mode)
 (use-package ivy
-             :diminish
-             :bind (("C-s" . swiper)
-                    :map ivy-minibuffer-map
-                    ("TAB" . ivy-alt-done)	
-                    ("C-l" . ivy-alt-done)
-                    ("C-j" . ivy-next-line)
-                    ("C-k" . ivy-previous-line)
-                    :map ivy-switch-buffer-map
-                    ("C-k" . ivy-previous-line)
-                    ("C-l" . ivy-done)
-                    ("C-d" . ivy-switch-buffer-kill)
-                    :map ivy-reverse-i-search-map
-                    ("C-k" . ivy-previous-line)
-                    ("C-d" . ivy-reverse-i-search-kill))
-             :config
-             (ivy-mode 1))
+  :diminish
+  :bind (("C-s" . swiper)
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)	
+	 ("C-l" . ivy-alt-done)
+	 ("C-j" . ivy-next-line)
+	 ("C-k" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-l" . ivy-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
 
 ;;; UNDO
 ;; Vim style undo not needed for emacs 28
@@ -46,30 +46,30 @@
 
 ;;; Vim Bindings
 (use-package evil
-             :demand t
-             :bind (("<escape>" . keyboard-escape-quit))
-             :init
-             ;; allows for using cgn
-             ;; (setq evil-search-module 'evil-search)
-             (setq evil-want-keybinding nil)
-             ;; no vim insert bindings
-             (setq evil-undo-system 'undo-fu)
-             :config
-             (evil-mode 1))
+  :demand t
+  :bind (("<escape>" . keyboard-escape-quit))
+  :init
+  ;; allows for using cgn
+  ;; (setq evil-search-module 'evil-search)
+  (setq evil-want-keybinding nil)
+  ;; no vim insert bindings
+  (setq evil-undo-system 'undo-fu)
+  :config
+  (evil-mode 1))
 
 ;;; Vim Bindings Everywhere else
 (use-package evil-collection
-             :after evil
-             :config
-             (setq evil-want-integration t)
-             (evil-collection-init))
+  :after evil
+  :config
+  (setq evil-want-integration t)
+  (evil-collection-init))
 
 ;; (setq evil-want-minibuffer t)
 
 ;; vertico
 (use-package vertico
-             :config
-             (vertico-mode))
+  :config
+  (vertico-mode))
 
 ;; PERSONAL SETTINGS
 ;; (load-theme 'adwaita)
@@ -105,48 +105,48 @@
      ,@body))
 
 (with-system gnu/linux
-             ;; zathura as pdf viewer
-             ;; ~/.local/bin/zathura-sync.sh
-             (setq TeX-view-program-list
-                   '(("zathura" 
-                      ("zathura" (mode-io-correlate "-sync.sh")
-                       " "
-                       (mode-io-correlate "%n:1:%t ")
-                       "%o"))))
+  ;; zathura as pdf viewer
+  ;; ~/.local/bin/zathura-sync.sh
+  (setq TeX-view-program-list
+	'(("zathura" 
+	   ("zathura" (mode-io-correlate "-sync.sh")
+	    " "
+	    (mode-io-correlate "%n:1:%t ")
+	    "%o"))))
 
-             (when (daemonp)
-               (exec-path-from-shell-initialize))
-             )
+  (when (daemonp)
+    (exec-path-from-shell-initialize))
+  )
 
 ;; md mode
 (use-package markdown-mode
-             :ensure t
-             :commands (markdown-mode gfm-mode)
-             :mode (("README\\.md\\'" . gfm-mode)
-                    ("\\.md\\'" . markdown-mode)
-                    ("\\.markdown\\'" . markdown-mode))
-             :init (setq markdown-command "multimarkdown"))
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 ;; org-roam
 (use-package org-roam
-             :ensure t
-             :init
-             (setq org-roam-v2-ack t)
-             :custom
-             (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-             :bind (("C-c n l" . org-roam-buffer-toggle)
-                    ("C-c n f" . org-roam-node-find)
-                    ("C-c n g" . org-roam-graph)
-                    ("C-c n i" . org-roam-node-insert)
-                    ("C-c n c" . org-roam-capture)
-                    :map org-mode-map
-                    ("C-M-i" . completion-at-point)
-                    ;; Dailies
-                    ("C-c n j" . org-roam-dailies-capture-today))
-             :config
-             (org-roam-setup)
-             (org-roam-db-autosync-mode)
-             (require 'org-roam-protocol)) ;; If using org-roam-protocol
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n g" . org-roam-graph)
+	 ("C-c n i" . org-roam-node-insert)
+	 ("C-c n c" . org-roam-capture)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point)
+	 ;; Dailies
+	 ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-setup)
+  (org-roam-db-autosync-mode)
+  (require 'org-roam-protocol)) ;; If using org-roam-protocol
 (setq org-roam-graph-executable "dot")
 
 ;; https://jblevins.org/projects/markdown-mode/
@@ -169,22 +169,22 @@
 ;; 	:unnarrowed t))
 
 (add-to-list 'org-roam-capture-templates
-    '("m" "Markdown" plain "" :target
-        (file+head "%<%Y-%m-%dT%H%M%S>.md"
-"---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
-    :unnarrowed t))
+	     '("m" "Markdown" plain "" :target
+	       (file+head "%<%Y-%m-%dT%H%M%S>.md"
+			  "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
+	       :unnarrowed t))
 
 ;; org-roam-ui
 (use-package websocket
-             :after org-roam)
+  :after org-roam)
 
 (use-package org-roam-ui
-             :after org-roam 
-             :config
-             (setq org-roam-ui-sync-theme t
-                   org-roam-ui-follow t
-                   org-roam-ui-update-on-save t
-                   org-roam-ui-open-on-start t))
+  :after org-roam 
+  :config
+  (setq org-roam-ui-sync-theme t
+	org-roam-ui-follow t
+	org-roam-ui-update-on-save t
+	org-roam-ui-open-on-start t))
 ;; PDFs
 (pdf-loader-install)
 
@@ -206,28 +206,28 @@
 
 
 (use-package rainbow-delimiters
-             :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 
 (use-package which-key
-             :init (which-key-mode)
-             :diminish which-key-mode
-             :config
-             (setq which-key-idle-delay 0.3))
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
 
 ;; TODO install tree-sitter
 (use-package counsel
-             :bind (("M-x" . counsel-M-x)
-                    ("C-x b" . counsel-ibuffer)
-                    ("C-x C-f" . counsel-find-file)
-                    :map minibuffer-local-map
-                    ("C-r" . 'counsel-minibuffer-history))
-             :config
-             (setq ivy-initial-inputs-alist nil))
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x b" . counsel-ibuffer)
+	 ("C-x C-f" . counsel-find-file)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (setq ivy-initial-inputs-alist nil))
 
 (use-package ivy-rich
-             :init
-             (ivy-rich-mode 1))
+  :init
+  (ivy-rich-mode 1))
 
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -256,7 +256,7 @@
 (use-package all-the-icons)
 
 (eval-after-load "linum" 
-                 '(set-face-attribute 'linum nil :height 100))
+  '(set-face-attribute 'linum nil :height 100))
 ;; disbled
 (use-package doom-modeline
   :init (doom-modeline-mode 0)
@@ -265,10 +265,10 @@
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
-        ("FIXME"  . "#FF0000")
-        ("DEBUG"  . "#A020F0")
-        ("GOTCHA" . "#FF4500")
-        ("STUB"   . "#1E90FF")))
+	("FIXME"  . "#FF0000")
+	("DEBUG"  . "#A020F0")
+	("GOTCHA" . "#FF4500")
+	("STUB"   . "#1E90FF")))
 
 ;; (company-mode)
 ;; (add-hook 'after-init-hook 'global-company-mode)
@@ -315,9 +315,13 @@
 (use-package dashboard
   :ensure t
   :config
-  (dashboard-setup-startup-hook))
-(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-(setq dashboard-startup-banner 'logo)
+  (dashboard-setup-startup-hook)
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq dashboard-startup-banner 'logo)
+  )
+
+(use-package all-the-icons
+  :if (display-graphic-p))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -325,7 +329,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(centered-window org-dashboard company-irony irony company hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
+   '(all-the-icons-ivy-rich centered-window org-dashboard company-irony irony company hl-todo all-the-icons-completion all-the-icons-dired all-the-icons-ivy doom-themes helpful counsel ansi shut-up epl git commander f s cask a which-key vertico use-package undo-fu rainbow-delimiters pdf-tools org-roam-ui org-roam-bibtex markdown-toc ivy-rich gruvbox-theme exec-path-from-shell evil-commentary evil-collection doom-modeline command-log-mode @)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
