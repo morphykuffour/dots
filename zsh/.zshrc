@@ -237,7 +237,6 @@ alias csbuild=\\''build_cscope_db_func\\''
 eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
-eval $(thefuck --alias)
 # case "$(uname -s)" in
 #    Darwin)
 # #    eval $(/opt/homebrew/bin/brew shellenv)
@@ -258,8 +257,7 @@ eval $(thefuck --alias)
 # RPROMPT=$'%(?.. %? %F{red}%Bx%b%F{reset})%(1j. %j %F{yellow}%Bbg %b%F{reset}.)'
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
-# source /home/morp/.zsh/fzf-tab/fzf-tab.plugin.zsh
-fpath=($HOME/.zsh/zsh-completions/src $fpath)
 source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
