@@ -258,7 +258,6 @@ eval "$(starship init zsh)"
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
-source $HOME/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-# source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source $HOME/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-# source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
