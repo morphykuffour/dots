@@ -81,6 +81,7 @@ alias imgcat="kitty +kitten icat"
 alias zet="cd $HOME/Dropbox/Zettelkasten/"
 # Edit config files
 alias zrc="$EDITOR $HOME/dotfiles/zshrc"
+alias erc="emacsclient -c -a 'emacs' &  $HOME/dotfiles/emacs/.emacs.d/init.el"
 alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
 
 
