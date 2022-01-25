@@ -66,7 +66,7 @@ alias weather='curl wttr.in'
 alias bat="\bat"
 alias lsb="lsb_release -a"
 alias nvdir="cd $HOME/.config/nvim"
-# alias lua="lua5.2"
+alias lua="lua5.2"
 alias h="history"
 alias v="nvim"
 alias emacs="emacsclient -c -a 'emacs' &"
@@ -78,7 +78,7 @@ alias r=ranger-cd
 alias :q='exit'
 alias sau="sudo apt update"
 alias imgcat="kitty +kitten icat"
-
+alias zet="cd $HOME/Dropbox/Zettelkasten/"
 # Edit config files
 alias zrc="$EDITOR $HOME/dotfiles/zshrc"
 alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
