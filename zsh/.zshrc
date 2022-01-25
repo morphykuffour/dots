@@ -257,7 +257,7 @@ eval "$(starship init zsh)"
 # RPROMPT=$'%(?.. %? %F{red}%Bx%b%F{reset})%(1j. %j %F{yellow}%Bbg %b%F{reset}.)'
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
-fpath=($HOME/.zsh/zsh-completions/src $fpath)
 source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
