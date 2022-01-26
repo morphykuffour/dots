@@ -123,11 +123,13 @@
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
 	 ("\\.md\\'" . markdown-mode)
+	 ("\\.rmd\\'" . markdown-mode)
 	 ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
 ;; Wrap line in markdown.
 (add-hook 'markdown-mode-hook (lambda () (visual-line-mode 1)))
+(setq markdown-enable-math t)
 
 ;; org-roam
 (use-package org-roam
@@ -399,3 +401,21 @@ the week."
 				omit-day-of-week-p)))
 (global-set-key "\C-x\M-d" `insdate-insert-current-date)
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+
+(autoload 'fennel-mode (expand-file-name "~/.emacs.d/elispfiles/fennel-mode/fennel-mode") nil t)
+(add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
+
+(defun open-terminal ()
+"Open default terminal emulator in the current directory."
+  (interactive)
+  (start-process "terminal" nil (getenv "TERMINAL")))
+
+(defun open-terminal-in-project-root ()
+"Open default terminal in the project root."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (open-terminal)))
+(server-mode t)
