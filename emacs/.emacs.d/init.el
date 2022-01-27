@@ -214,6 +214,16 @@
   (setq which-key-idle-delay 0.3))
 
 ;; TODO install tree-sitter
+; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/elisp-tree-sitter/core")
+; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/elisp-tree-sitter/lisp")
+; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/elisp-tree-sitter/langs")
+
+; (require 'tree-sitter)
+; (require 'tree-sitter-hl)
+; (require 'tree-sitter-langs)
+; (require 'tree-sitter-debug)
+; (require 'tree-sitter-query)
+
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
