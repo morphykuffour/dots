@@ -87,6 +87,9 @@ alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
 
 alias vim='nvim'
 alias sv="sudo $EDITOR"
+alias tmux="tmux -2"
+alias t="tmux -2"
+alias v="nvim"
 
 # system management aliases
 alias hibernate="systemctl suspend"
@@ -113,7 +116,6 @@ alias cp='cp -v'
 alias mv='mv -iv'
 alias xclip='xclip -selection c'
 command -v vim > /dev/null && alias vi='vim'
-# alias ls='ls --color=auto'
 alias ls='exa'
 alias cat='bat'
 alias grep='grep --color=auto'
@@ -121,13 +123,9 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip --color=auto'
-alias luamake=/home/morp/.config/nvim/lua-language-server/3rd/luamake/luamake
 alias ll='ls -la'
 alias la='ls -a'
 alias l='ls -F'
-command -v lsd > /dev/null && alias ls='lsd --group-dirs first' && \
-alias tree='lsd --tree'
-command -v colorls > /dev/null && alias ls='colorls --sd --gs' && \
 alias tree='colorls --tree'
 alias bat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
@@ -135,9 +133,3 @@ alias less='bat'
 alias batcat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
 alias less='batcat'
-command -v htop > /dev/null && alias top='htop'
-command -v gotop > /dev/null && alias top='gotop -p $([ "$COLOR_SCHEME" = "light" ] && echo "-c default-dark")'
-command -v ytop > /dev/null && alias top='ytop -p $([ "$COLOR_SCHEME" = "light" ] && echo "-c default-dark")'
-command -v btm > /dev/null && alias top='btm $([ "$COLOR_SCHEME" = "light" ] && echo "--color default-light")'
-command -v bashtop > /dev/null && alias top='bashtop'
-command -v bpytop > /dev/null && alias top='bpytop'
