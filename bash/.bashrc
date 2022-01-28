@@ -46,3 +46,4 @@ export PATH="$HOME/gems/bin:$PATH"
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"
 export QMK_HOME="/Users/morphykuffour/.qmk_firmware"
+ [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
