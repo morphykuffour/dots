@@ -117,6 +117,12 @@
     (exec-path-from-shell-initialize))
   )
 
+(with-system darwin
+  ;; multi-markdown error
+  (custom-set-variables
+    '(markdown-command "/opt/homebrew/bin/pandoc"))
+  )
+
 ;; md mode
 (use-package markdown-mode
   :ensure t
@@ -429,3 +435,15 @@ the week."
   (let ((default-directory (projectile-project-root)))
     (open-terminal)))
 (server-mode t)
+
+(defun copy-filename()
+  "Put the current file name on the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))

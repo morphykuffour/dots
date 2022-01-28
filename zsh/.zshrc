@@ -237,6 +237,7 @@ alias csbuild=\\''build_cscope_db_func\\''
 eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 # case "$(uname -s)" in
 #    Darwin)
 # #    eval $(/opt/homebrew/bin/brew shellenv)
