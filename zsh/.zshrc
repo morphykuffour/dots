@@ -213,6 +213,21 @@ eval "$(starship init zsh)"
 # I love this Prompt
 # PROMPT=$'%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%n@%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
 # RPROMPT=$'%(?.. %? %F{red}%Bx%b%F{reset})%(1j. %j %F{yellow}%Bbg %b%F{reset}.)'
+case "$(uname -s)" in
+  Darwin)
+    #    eval $(/opt/homebrew/bin/brew shellenv)
+    # start emacs 
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+    ;;
+  Linux)
+    source /usr/share/autojump/autojump.zsh
+    ;;
+  CYGWIN*|MINGW32*|MSYS*|MINGW*)
+    ;;
+  *)
+    # echo 'Other OS' 
+    ;;
+esac
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
