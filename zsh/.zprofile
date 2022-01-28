@@ -36,6 +36,7 @@ case "$(uname -s)" in
      echo 'Linux'
 #     eval "$(starship init zsh)"
       /usr/bin/emacs --daemon &
+      source /usr/share/autojump/autojump.zsh
      ;;
    CYGWIN*|MINGW32*|MSYS*|MINGW*)
      ;;
