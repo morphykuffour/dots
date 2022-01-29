@@ -13,7 +13,8 @@ general {
 
 order += "disk /"
 order += "wireless _first_"
-order += "battery all"
+# order += "battery all"
+order += "battery 0"
 order += "load"
 order += "tztime local"
 
@@ -22,8 +23,16 @@ wireless _first_ {
         format_down = "W: down"
 }
 
-battery all {
-        format = "%status %percentage %remaining"
+# battery all {
+#         format = "%status %percentage %remaining"
+# }
+battery 0 {
+    format = " %status %percentage %remaining (%consumption)"
+    path = "/sys/class/power_supply/BAT%d/uevent"
+    low_threshold = "30"
+    threshold_type = "time"
+    last_full_capacity = true
+    integer_battery_capacity = true
 }
 
 tztime local {
