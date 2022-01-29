@@ -34,7 +34,7 @@ case "$(uname -s)" in
   Linux)
     echo 'Linux'
     #     eval "$(starship init zsh)"
-    /usr/bin/emacs --daemon &
+    # /usr/bin/emacs --daemon &
     ;;
   CYGWIN*|MINGW32*|MSYS*|MINGW*)
     ;;
