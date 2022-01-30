@@ -28,7 +28,7 @@ export QMK_HOME="$HOME/.qmk_firmware"
 export GEM_HOME="$HOME/.local/share/gem/ruby/2.7.0"
 export QMK_HOME="/home/morp/.qmk_firmware"
 export GEM_HOME="/home/morp/.local/share/gem/ruby/2.7.0"
-
+export ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 export LESSHISTFILE=-
 export MCFLY_KEY_SCHEME=vim
 export STARSHIP_CONFIG='$HOME/.config/starship/starship.toml'
