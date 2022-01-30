@@ -159,7 +159,7 @@ zstyle ':fzf-tab:*' switch-group ',' '.'
 # ------------------------------- ZSH FUNCTIONS ---------------------------------
 change_background() {
     # dconf write /org/mate/desktop/background/picture-filename "'$HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf)'"
-    feh --bg-scale $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
+    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
 }
 
 die () {
