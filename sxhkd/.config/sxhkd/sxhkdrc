@@ -11,35 +11,24 @@ super + c
 # PASTE system-wide
 super + v
   sh -c 'xclip -selection clipboard -o | xvkbd -xsendevent -file - 2>/dev/null'
+super + g
+  ~/.local/bin/google-search.sh
 super + shift + a
 	$TERMINAL -e alsamixer; pkill -RTMIN+10 blocks
 super + w
 	$TERMINAL -e sudo nmtui
 super + shift + w
 	$BROWSER
+super + shift + s
+  ~/.local/bin/xps-display-only-layout.sh
+super + shift + d
+  ~/.local/bin/dual-display-layout.sh
 
-# Et cetera...
 super + grave
-	dmenuunicode
-super + Scroll_Lock
-	killall screenkey || screenkey
-super + Insert
-	showclip
-super + shift + x
-	prompt "Shutdown computer?" "sudo -A shutdown -h now"
-super + shift + BackSpace
-	prompt "Reboot computer?" "sudo -A reboot"
-super + shift + Escape
-	prompt 'Leave Xorg?' 'killall Xorg'
-super + x
-	ifinstalled slock && ( slock & xset dpms force off ; mpc pause ; pauseallmpv )
-XF86Launch1
-	xset dpms force off
 XF86MonBrightnessDown
 	xbacklight -dec 15
 XF86MonBrightnessUp
 	xbacklight -inc 15
-
 XF86PowerOff
 	prompt "Shutdown computer?" "sudo -A shutdown -h now"
 XF86Calculator
@@ -51,19 +40,7 @@ XF86ScreenSaver
 XF86MyComputer
 	$TERMINAL -e $FILE /
 
-# Function keys
-# Change display
-super + F3
-	displayselect
-# Hibernate
-super + F4
-	prompt 'Hibernate computer?' 'sudo -A zzz -Z'
-# Mount a USB drive or Android device
-super + F10
-	{dmenumount,dmenuumount}
-
 # Alt Keys #
-
 # Take screenshot
 alt + s
 	flameshot gui --path $HOME/Pictures/screenshots

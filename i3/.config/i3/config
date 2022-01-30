@@ -1,5 +1,3 @@
-# i3 config file (v4)
-
 # Super as MOD
 set $mod Mod4
 
@@ -28,17 +26,18 @@ for_window [class="^.*"] client.focused          #77dd77 #285577 #ffffff #2e9ef4
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# TODO move all bindings to sxhkd
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+# bindsym $mod+Return exec i3-sensible-terminal
 
 # google search
-bindsym $mod+g exec --no-startup-id ~/.local/bin/google-search.sh
+# bindsym $mod+g exec --no-startup-id ~/.local/bin/google-search.sh
 
 # kill window
 bindsym $mod+Shift+q kill
 
 # start dmenu 
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+h focus left
@@ -68,7 +67,7 @@ bindsym $mod+Shift+Right move right
 bindsym $mod+z split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+# bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -153,10 +152,6 @@ bindsym $mod+r mode "resize"
 # CUSTOM KEYS START
 # ------------------------------------------
 exec --no-startup-id nm-applet
-
-# TODO fix monitors and resolution scripts
-# bindsym $mod+Shift+s exec --no-startup-id ~/.local/bin/monitor
-# bindsym $mod+Shift+n exec --no-startup-id ~/.local/bin/resolution
 
 # FKeys
 # Pulse Audio controls
