@@ -362,7 +362,10 @@
 
 ;; R-markdown for pdfs
 (require 'color)
-(require 'ess)
+
+(use-package ess
+  :ensure t
+  :init (require 'ess-site))
 
 (use-package polymode
   :ensure t
