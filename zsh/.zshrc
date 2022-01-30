@@ -232,6 +232,7 @@ esac
 # ------------------------------- ZSH PLUGINS ---------------------------------
 source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
 source $HOME/.zsh/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
+source $HOME/.zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
 # source $HOME/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
