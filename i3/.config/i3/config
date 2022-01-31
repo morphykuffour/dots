@@ -153,6 +153,10 @@ bindsym $mod+r mode "resize"
 # ------------------------------------------
 exec --no-startup-id nm-applet
 
+# TODO fix monitors and resolution scripts
+# bindsym $mod+Shift+n exec --no-startup-id ~/.local/bin/xps-display-only-layout.sh
+# bindsym $mod+Shift+s exec --no-startup-id ~/.local/bin/dual-display-layout.sh
+
 # FKeys
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
