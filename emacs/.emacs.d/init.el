@@ -77,11 +77,11 @@
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
-(set-fringe-mode 10)        ; Give some breathing room
-(menu-bar-mode -1)            ; Disable the menu bar
+(scroll-bar-mode -1)        ; visible scrollbar
+(tool-bar-mode -1)          ; the toolbar
+(tooltip-mode -1)           ; tooltips
+(set-fringe-mode 90)        ; space to left
+(menu-bar-mode 1)           ; the menu bar
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
 (column-number-mode)
@@ -201,7 +201,7 @@
 (define-key global-map (kbd "C-c n l") #'org-roam-buffer-toggle)
 
 ;; edit init.el TODO 
-;; (define-key global-map (kbd "C-c e i") #'(find-file "~/dotfiles/emacs/.emacs.d/init.el"))
+(define-key global-map (kbd "C-c e i") #'(find-file "~/dotfiles/emacs/.emacs.d/init.el"))
 
 ;; shell paths
 (getenv "SHELL")
@@ -265,16 +265,17 @@
   :commands command-log-mode)
 
 (use-package doom-themes
-  :init (load-theme 'doom-gruvbox t))
+  :init (load-theme 'doom-dracula t))
 
 (use-package all-the-icons)
 
 (eval-after-load "linum" 
   '(set-face-attribute 'linum nil :height 100))
+
 ;; disbled
-(use-package doom-modeline
-  :init (doom-modeline-mode 0)
-  :custom ((doom-modeline-height 15)))
+;; (use-package doom-modeline
+;;   :init (doom-modeline-mode 0)
+;;   :custom ((doom-modeline-height 15)))
 
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
