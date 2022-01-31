@@ -73,7 +73,7 @@
 
 ;; PERSONAL SETTINGS
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(set-face-attribute 'mode-line nil  :height 200)
+(set-face-attribute 'mode-line nil  :height 140)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
@@ -270,12 +270,8 @@
 (use-package all-the-icons)
 
 (eval-after-load "linum" 
-  '(set-face-attribute 'linum nil :height 100))
+  '(set-face-attribute 'linum nil :height 160))
 
-;; disbled
-;; (use-package doom-modeline
-;;   :init (doom-modeline-mode 0)
-;;   :custom ((doom-modeline-height 15)))
 
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
