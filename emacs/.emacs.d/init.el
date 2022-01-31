@@ -437,7 +437,7 @@ the week."
   (interactive)
   (let ((default-directory (projectile-project-root)))
     (open-terminal)))
-(server-mode t)
+;; (server-mode t)
 
 (defun copy-filename()
   "Put the current file name on the clipboard"
