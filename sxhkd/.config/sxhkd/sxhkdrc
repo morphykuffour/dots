@@ -6,11 +6,11 @@ super + d
 super + r
 	$TERMINAL -e $FILE
 # COPY system-wide
-super + c
-  xclip -selection primary -o | xclip -selection clipboard -i
+# super + c
+#   xclip -selection primary -o | xclip -selection clipboard -i
 # PASTE system-wide
-super + v
-  sh -c 'xclip -selection clipboard -o | xvkbd -xsendevent -file - 2>/dev/null'
+# super + v
+#   sh -c 'xclip -selection clipboard -o | xvkbd -xsendevent -file - 2>/dev/null'
 super + g
   ~/.local/bin/google-search.sh
 super + shift + a

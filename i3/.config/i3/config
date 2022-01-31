@@ -87,8 +87,8 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 for_window [ title="notetaker_window" ] floating enable
-bindsym $mod+n exec termite -e ~/.local/bin/notetaker -t notetaker_window
-bindsym $mod+Shift+n exec mostRecentNote
+# bindsym $mod+n exec termite -e ~/.local/bin/notetaker -t notetaker_window
+# bindsym $mod+Shift+n exec mostRecentNote
 
 # switch to workspace
 bindsym $mod+1 workspace 1
