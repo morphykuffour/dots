@@ -38,3 +38,4 @@ make
 gparted
 parted
 gpg
+cscope
