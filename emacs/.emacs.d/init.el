@@ -3,8 +3,8 @@
 ;;; PACKAGE LIST
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 ;;; USE-PACKAGE
 (package-initialize)
@@ -21,50 +21,50 @@
 ;; PACKAGES
 (use-package command-log-mode)
 (use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)	
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("C-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
+             :diminish
+             :bind (("C-s" . swiper)
+                    :map ivy-minibuffer-map
+                    ("TAB" . ivy-alt-done)	
+                    ("C-l" . ivy-alt-done)
+                    ("C-j" . ivy-next-line)
+                    ("C-k" . ivy-previous-line)
+                    :map ivy-switch-buffer-map
+                    ("C-k" . ivy-previous-line)
+                    ("C-l" . ivy-done)
+                    ("C-d" . ivy-switch-buffer-kill)
+                    :map ivy-reverse-i-search-map
+                    ("C-k" . ivy-previous-line)
+                    ("C-d" . ivy-reverse-i-search-kill))
+             :config
+             (ivy-mode 1))
 
 ;;; UNDO
 (use-package undo-fu)
 
 ;;; Vim Bindings
 (use-package evil
-  :demand t
-  :bind (("<escape>" . keyboard-escape-quit))
-  :init
-  (setq evil-search-module 'evil-search)
-  (setq evil-want-keybinding nil)
-  ;; no vim insert bindings
-  (setq evil-undo-system 'undo-fu)
-  :config
-  (evil-mode 1))
+             :demand t
+             :bind (("<escape>" . keyboard-escape-quit))
+             :init
+             (setq evil-search-module 'evil-search)
+             (setq evil-want-keybinding nil)
+             ;; no vim insert bindings
+             (setq evil-undo-system 'undo-fu)
+             :config
+             (evil-mode 1))
 
 ;;; Vim Bindings Everywhere else
 (use-package evil-collection
-  :after evil
-  :config
-  (setq evil-want-integration t)
-  (evil-collection-init))
+             :after evil
+             :config
+             (setq evil-want-integration t)
+             (evil-collection-init))
 (setq evil-want-minibuffer nil)
 
 ;; vertico
 (use-package vertico
-  :config
-  (vertico-mode))
+             :config
+             (vertico-mode))
 
 ;; PERSONAL SETTINGS
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -94,29 +94,29 @@
      ,@body))
 
 (with-system gnu/linux
-  ;; zathura as pdf viewer
-  (setq TeX-view-program-list
-	'(("zathura" 
-	   ("zathura" (mode-io-correlate "-sync.sh")
-	    " "
-	    (mode-io-correlate "%n:1:%t ")
-	    "%o"))))
+             ;; zathura as pdf viewer
+             (setq TeX-view-program-list
+                   '(("zathura" 
+                      ("zathura" (mode-io-correlate "-sync.sh")
+                       " "
+                       (mode-io-correlate "%n:1:%t ")
+                       "%o"))))
 
-  (when (daemonp)
-    (exec-path-from-shell-initialize)))
+             (when (daemonp)
+               (exec-path-from-shell-initialize)))
 
 (with-system darwin (custom-set-variables
-		     '(markdown-command "/opt/homebrew/bin/pandoc")))
+                      '(markdown-command "/opt/homebrew/bin/pandoc")))
 
 ;; md mode
 (use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.rmd\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+             :ensure t
+             :commands (markdown-mode gfm-mode)
+             :mode (("README\\.md\\'" . gfm-mode)
+                    ("\\.md\\'" . markdown-mode)
+                    ("\\.rmd\\'" . markdown-mode)
+                    ("\\.markdown\\'" . markdown-mode))
+             :init (setq markdown-command "multimarkdown"))
 
 ;; Wrap line in markdown.
 (add-hook 'markdown-mode-hook (lambda () (visual-line-mode 1)))
@@ -127,25 +127,25 @@
 (require 'org-roam)
 
 (use-package org-roam
-  :after org
-  :ensure t
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n g" . org-roam-graph)
-	 ("C-c n i" . org-roam-node-insert)
-	 ("C-c n c" . org-roam-capture)
-	 ("C-c n a" . org-roam-alias-add)
-	 :map org-mode-map
-	 ("C-M-i" . completion-at-point)
-	 ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-  :config
-  (org-roam-setup)
-  (org-roam-db-autosync-mode)
-  (require 'org-roam-protocol)) ;; If using org-roam-protocol
+             :after org
+             :ensure t
+             :init
+             (setq org-roam-v2-ack t)
+             :custom
+             (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+             :bind (("C-c n l" . org-roam-buffer-toggle)
+                    ("C-c n f" . org-roam-node-find)
+                    ("C-c n g" . org-roam-graph)
+                    ("C-c n i" . org-roam-node-insert)
+                    ("C-c n c" . org-roam-capture)
+                    ("C-c n a" . org-roam-alias-add)
+                    :map org-mode-map
+                    ("C-M-i" . completion-at-point)
+                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
+             :config
+             (org-roam-setup)
+             (org-roam-db-autosync-mode)
+             (require 'org-roam-protocol)) ;; If using org-roam-protocol
 
 (setq org-roam-graph-executable "dot")
 
@@ -160,22 +160,22 @@
 
 ;; TODO add aliases and roam_refs
 (add-to-list 'org-roam-capture-templates
-	     '("m" "Markdown" plain "" :target
-	       (file+head "%<%Y-%m-%dT%H%M%S>.md"
-			  "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-	       :unnarrowed t))
+             '("m" "Markdown" plain "" :target
+               (file+head "%<%Y-%m-%dT%H%M%S>.md"
+                          "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+               :unnarrowed t))
 
 ;; org-roam-ui
 (use-package websocket
-  :after org-roam)
+             :after org-roam)
 
 (use-package org-roam-ui
-  :after org-roam 
-  :config
-  (setq org-roam-ui-sync-theme t
-	org-roam-ui-follow t
-	org-roam-ui-update-on-save t
-	org-roam-ui-open-on-start t))
+             :after org-roam 
+             :config
+             (setq org-roam-ui-sync-theme t
+                   org-roam-ui-follow t
+                   org-roam-ui-update-on-save t
+                   org-roam-ui-open-on-start t))
 ;; PDFs
 (pdf-loader-install)
 
@@ -186,38 +186,38 @@
 
 
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+             :hook (prog-mode . rainbow-delimiters-mode))
 
 
 (use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
+             :init (which-key-mode)
+             :diminish which-key-mode
+             :config
+             (setq which-key-idle-delay 0.3))
 
 (use-package counsel
-  :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (setq ivy-initial-inputs-alist nil))
+             :bind (("M-x" . counsel-M-x)
+                    ("C-x b" . counsel-ibuffer)
+                    ("C-x C-f" . counsel-find-file)
+                    :map minibuffer-local-map
+                    ("C-r" . 'counsel-minibuffer-history))
+             :config
+             (setq ivy-initial-inputs-alist nil))
 
 (use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
+             :init
+             (ivy-rich-mode 1))
 
 (use-package helpful
-  :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+             :commands (helpful-callable helpful-variable helpful-command helpful-key)
+             :custom
+             (counsel-describe-function-function #'helpful-callable)
+             (counsel-describe-variable-function #'helpful-variable)
+             :bind
+             ([remap describe-function] . counsel-describe-function)
+             ([remap describe-command] . helpful-command)
+             ([remap describe-variable] . counsel-describe-variable)
+             ([remap describe-key] . helpful-key))
 
 (global-set-key (kbd "C-h f") #'helpful-callable)
 (global-set-key (kbd "C-h v") #'helpful-variable)
@@ -227,40 +227,39 @@
 (global-set-key (kbd "C-h C") #'helpful-command)
 
 (use-package command-log-mode
-  :commands command-log-mode)
+             :commands command-log-mode)
 
 (use-package doom-themes
-  :init (load-theme 'doom-dracula t))
+             :init (load-theme 'doom-dracula t))
 
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
-	("FIXME"  . "#FF0000")
-	("DEBUG"  . "#A020F0")
-	("GOTCHA" . "#FF4500")
-	("STUB"   . "#1E90FF")))
+        ("FIXME"  . "#FF0000")
+        ("DEBUG"  . "#A020F0")
+        ("GOTCHA" . "#FF4500")
+        ("STUB"   . "#1E90FF")))
 
 (require 'dashboard)
 (dashboard-setup-startup-hook)
 ;; Or if you use use-package
 (use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook)
-  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (setq dashboard-startup-banner 'nil)
-  ;; (setq dashboard-startup-banner 'logo)
-  )
+             :ensure t
+             :config
+             (dashboard-setup-startup-hook)
+             (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+             (setq dashboard-startup-banner 'nil) ; 'logo -> logo
+             )
 
 (use-package all-the-icons
-  :if (display-graphic-p))
+             :if (display-graphic-p))
 
 ;; make backup to a designated dir, mirroring the full path
 (defun my-backup-file-name (fpath)
   (let* (
-	 (backupRootDir "~/Documents/emacs-backup/")
-	 (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
-	 )
+         (backupRootDir "~/Documents/emacs-backup/")
+         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
+         )
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
     backupFilePath
     )
@@ -274,60 +273,58 @@
 (require 'color)
 
 (use-package ess
-  :ensure t
-  :init (require 'ess-site))
+             :ensure t
+             :init (require 'ess-site))
 
 (use-package polymode
-  :ensure t
-  :config
-  (use-package poly-R)
-  (use-package poly-markdown)
-	     ;;; MARKDOWN
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
-	     ;;; R modes
-  (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
-  (markdown-toggle-math t)
-  (defun ess-rmarkdown ()
-    "Compile R markdown (.Rmd). Should work for any output type."
-    (interactive)
-					; Check if attached R-session
-    (condition-case nil
-	(ess-get-process)
-      (error
-       (ess-switch-process)))
-    (let* ((rmd-buf (current-buffer)))
-      (save-excursion
-	(let* ((sprocess (ess-get-process ess-current-process-name))
-	       (sbuffer (process-buffer sprocess))
-	       (buf-coding (symbol-name buffer-file-coding-system))
-	       (R-cmd
-		(format "library(rmarkdown); rmarkdown::render(\"%s\")"
-			buffer-file-name)))
-	  (message "Running rmarkdown on %s" buffer-file-name)
-	  (ess-execute R-cmd 'buffer nil nil)
-	  (switch-to-buffer rmd-buf)
-	  (ess-show-buffer (buffer-name sbuffer) nil)))))
-  )
+             :ensure t
+             :config
+             (use-package poly-R)
+             (use-package poly-markdown)
+             ;;; MARKDOWN
+             (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
+             ;;; R modes
+             (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
+             (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
+             (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
+             (markdown-toggle-math t)
+             (defun ess-rmarkdown ()
+               "Compile R markdown (.Rmd). Should work for any output type."
+               (interactive)
+               ; Check if attached R-session
+               (condition-case nil
+                               (ess-get-process)
+                               (error
+                                 (ess-switch-process)))
+               (let* ((rmd-buf (current-buffer)))
+                 (save-excursion
+                   (let* ((sprocess (ess-get-process ess-current-process-name))
+                          (sbuffer (process-buffer sprocess))
+                          (buf-coding (symbol-name buffer-file-coding-system))
+                          (R-cmd
+                            (format "library(rmarkdown); rmarkdown::render(\"%s\")"
+                                    buffer-file-name)))
+                     (message "Running rmarkdown on %s" buffer-file-name)
+                     (ess-execute R-cmd 'buffer nil nil)
+                     (switch-to-buffer rmd-buf)
+                     (ess-show-buffer (buffer-name sbuffer) nil)))))
+             )
 ;; (define-key polymode-mode-map "\M-ns" 'ess-rmarkdown)
 (with-eval-after-load 'polymode
-  (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
+                      (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
 
 (require 'calendar)
 
 (defun insert-current-date (&optional omit-day-of-week-p)
-  "Insert today's date using the current locale.
-With a prefix argument, the date is inserted without the day of
-the week."
+  "Insert today's date"
   (interactive "P*")
   (insert (calendar-date-string (calendar-current-date) nil
-				omit-day-of-week-p)))
-(global-set-key "\C-x\M-d" `insdate-insert-current-date)
+                                omit-day-of-week-p)))
+(global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
 
 (org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)))
+  'org-babel-load-languages
+  '((python . t)))
 
 (autoload 'fennel-mode (expand-file-name "~/.emacs.d/elispfiles/fennel-mode/fennel-mode") nil t)
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
@@ -336,10 +333,10 @@ the week."
   "Put the current file name on the clipboard"
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
-		      default-directory
-		    (buffer-file-name))))
+                    default-directory
+                    (buffer-file-name))))
     (when filename
       (with-temp-buffer
-	(insert filename)
-	(clipboard-kill-region (point-min) (point-max)))
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
