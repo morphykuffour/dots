@@ -1,4 +1,4 @@
-;;emacs config
+;;emacs os config
 
 ;;; PACKAGE LIST
 (require 'package)
@@ -6,17 +6,15 @@
 			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
-;;; BOOTSTRAP USE-PACKAGE
+;;; USE-PACKAGE
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-
 (setq use-package-always-ensure t)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
-
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -41,7 +39,6 @@
   (ivy-mode 1))
 
 ;;; UNDO
-;; Vim style undo not needed for emacs 28
 (use-package undo-fu)
 
 ;;; Vim Bindings
@@ -49,8 +46,7 @@
   :demand t
   :bind (("<escape>" . keyboard-escape-quit))
   :init
-  ;; allows for using cgn
-  ;; (setq evil-search-module 'evil-search)
+  (setq evil-search-module 'evil-search)
   (setq evil-want-keybinding nil)
   ;; no vim insert bindings
   (setq evil-undo-system 'undo-fu)
@@ -63,8 +59,7 @@
   :config
   (setq evil-want-integration t)
   (evil-collection-init))
-
-;; (setq evil-want-minibuffer t)
+(setq evil-want-minibuffer nil)
 
 ;; vertico
 (use-package vertico
@@ -88,13 +83,8 @@
 (global-set-key [C-mouse-wheel-up-event]  'text-scale-increase)
 (global-set-key  [C-mouse-wheel-down-event] 'text-scale-decrease)
 (setq custom-file (concat user-emacs-directory "/custom.el"))
-
-;; (global-display-line-numbers-mode t)
-
-;; Disable line numbers for some modes
-;; (dolist (mode '(org-mode-hook term-mode-hook eshell-mode-hook shell-mode-hook))
-;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
+;; edit init.el 
+(global-set-key (kbd "C-c e i") (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -105,7 +95,6 @@
 
 (with-system gnu/linux
   ;; zathura as pdf viewer
-  ;; ~/.local/bin/zathura-sync.sh
   (setq TeX-view-program-list
 	'(("zathura" 
 	   ("zathura" (mode-io-correlate "-sync.sh")
@@ -114,14 +103,10 @@
 	    "%o"))))
 
   (when (daemonp)
-    (exec-path-from-shell-initialize))
-  )
+    (exec-path-from-shell-initialize)))
 
-(with-system darwin
-  ;; multi-markdown error
-  (custom-set-variables
-    '(markdown-command "/opt/homebrew/bin/pandoc"))
-  )
+(with-system darwin (custom-set-variables
+		     '(markdown-command "/opt/homebrew/bin/pandoc")))
 
 ;; md mode
 (use-package markdown-mode
@@ -138,7 +123,11 @@
 (setq markdown-enable-math t)
 
 ;; org-roam
+(require 'org)
+(require 'org-roam)
+
 (use-package org-roam
+  :after org
   :ensure t
   :init
   (setq org-roam-v2-ack t)
@@ -149,10 +138,10 @@
 	 ("C-c n g" . org-roam-graph)
 	 ("C-c n i" . org-roam-node-insert)
 	 ("C-c n c" . org-roam-capture)
+	 ("C-c n a" . org-roam-alias-add)
 	 :map org-mode-map
 	 ("C-M-i" . completion-at-point)
-	 ;; Dailies
-	 ("C-c n j" . org-roam-dailies-capture-today))
+	 ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
   :config
   (org-roam-setup)
   (org-roam-db-autosync-mode)
@@ -161,8 +150,6 @@
 (setq org-roam-graph-executable "dot")
 
 ;; md-roam
-(setq org-roam-v2-ack t)
-(require 'org-roam)
 (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
 (setq org-roam-file-extensions '("org" "md"))
 (add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam")
@@ -192,17 +179,6 @@
 ;; PDFs
 (pdf-loader-install)
 
-;; KEYMAPS
-
-;; Org-roam
-(define-key global-map (kbd "C-c n f") #'org-roam-node-find)
-(define-key global-map (kbd "C-c n c") #'org-roam-capture)
-(define-key global-map (kbd "C-c n i") #'org-roam-node-insert)
-(define-key global-map (kbd "C-c n l") #'org-roam-buffer-toggle)
-
-;; edit init.el TODO 
-(define-key global-map (kbd "C-c e i") #'(find-file "~/dotfiles/emacs/.emacs.d/init.el"))
-
 ;; shell paths
 (getenv "SHELL")
 (when (memq window-system '(mac ns x))
@@ -218,17 +194,6 @@
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
-
-;; TODO install tree-sitter
-; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/elisp-tree-sitter/core")
-; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/elisp-tree-sitter/lisp")
-; (add-to-list 'load-path "$HOME/.emacs.d/elispfiles/elisp-tree-sitter/langs")
-
-; (require 'tree-sitter)
-; (require 'tree-sitter-hl)
-; (require 'tree-sitter-langs)
-; (require 'tree-sitter-debug)
-; (require 'tree-sitter-query)
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
@@ -267,12 +232,6 @@
 (use-package doom-themes
   :init (load-theme 'doom-dracula t))
 
-(use-package all-the-icons)
-
-(eval-after-load "linum" 
-  '(set-face-attribute 'linum nil :height 160))
-
-
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
@@ -280,45 +239,6 @@
 	("DEBUG"  . "#A020F0")
 	("GOTCHA" . "#FF4500")
 	("STUB"   . "#1E90FF")))
-
-;; (company-mode)
-;; (add-hook 'after-init-hook 'global-company-mode)
-;; == irony-mode ==
-(use-package irony
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  :config
-  ;; replace the `completion-at-point' and `complete-symbol' bindings in
-  ;; irony-mode's buffers by irony-mode's function
-  (defun my-irony-mode-hook ()
-    (define-key irony-mode-map [remap completion-at-point]
-      'irony-completion-at-point-async)
-    (define-key irony-mode-map [remap complete-symbol]
-      'irony-completion-at-point-async))
-  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-  )
-
-;; == company-mode ==
-(use-package company
-  :ensure t
-  :defer t
-  :init (add-hook 'after-init-hook 'global-company-mode)
-  :config
-  (use-package company-irony :ensure t :defer t)
-  (setq company-idle-delay              nil
-	company-minimum-prefix-length   2
-	company-show-numbers            t
-	company-tooltip-limit           20
-	company-dabbrev-downcase        nil
-	company-backends                '((company-irony company-gtags))
-	)
-  :bind ("C-;" . company-complete-common)
-  )
 
 (require 'dashboard)
 (dashboard-setup-startup-hook)
@@ -328,7 +248,8 @@
   :config
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-startup-banner 'nil)
+  ;; (setq dashboard-startup-banner 'logo)
   )
 
 (use-package all-the-icons
@@ -336,8 +257,6 @@
 
 ;; make backup to a designated dir, mirroring the full path
 (defun my-backup-file-name (fpath)
-  "Return a new file path of a given file path.
-  If the new path's directories does not exist, create them."
   (let* (
 	 (backupRootDir "~/Documents/emacs-backup/")
 	 (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
@@ -346,16 +265,10 @@
     backupFilePath
     )
   )
-
 (setq make-backup-file-name-function 'my-backup-file-name)
 
 (require 'olivetti)
 (auto-image-file-mode 1)
-
-(require 'org-transclusion)
-(define-key global-map (kbd "<f12>") #'org-transclusion-add)
-;; (define-key global-map (kbd "C-n t") #'org-transclusion-mode)
-
 
 ;; R-markdown for pdfs
 (require 'color)
@@ -376,11 +289,6 @@
   (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
   (markdown-toggle-math t)
-  ;; from https://gist.github.com/benmarwick/ee0f400b14af87a57e4a
-  ;; compile rmarkdown to HTML or PDF with M-n s
-  ;; use YAML in Rmd doc to specify the usual options
-  ;; which can be seen at http://rmarkdown.rstudio.com/
-  ;; thanks http://roughtheory.com/posts/ess-rmarkdown.html
   (defun ess-rmarkdown ()
     "Compile R markdown (.Rmd). Should work for any output type."
     (interactive)
@@ -424,26 +332,14 @@ the week."
 (autoload 'fennel-mode (expand-file-name "~/.emacs.d/elispfiles/fennel-mode/fennel-mode") nil t)
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
 
-(defun open-terminal ()
-"Open default terminal emulator in the current directory."
-  (interactive)
-  (start-process "terminal" nil (getenv "TERMINAL")))
-
-(defun open-terminal-in-project-root ()
-"Open default terminal in the project root."
-  (interactive)
-  (let ((default-directory (projectile-project-root)))
-    (open-terminal)))
-;; (server-mode t)
-
 (defun copy-filename()
   "Put the current file name on the clipboard"
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
+		      default-directory
+		    (buffer-file-name))))
     (when filename
       (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
+	(insert filename)
+	(clipboard-kill-region (point-min) (point-max)))
       (message filename))))
