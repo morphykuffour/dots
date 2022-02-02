@@ -96,6 +96,11 @@ bindsym $mod+2 workspace 2
 bindsym $mod+3 workspace 3
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 0
 # bindsym F1 workspace 1
 # bindsym F2 workspace 2
 # bindsym F3 workspace 3
@@ -146,7 +151,10 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-
+# rename workspaces
+# bindsym $mod+r exec i3-input -F "rename workspace to "$(i3-msg -t get_workspaces | jq -r "map(select(.focused))[0].num"):%s"" -P "New name: "
+# # clear workspace name
+# bindsym $mod+c exec i3-msg "rename workspace to "$(i3-msg -t get_workspaces | jq -r "map(select(.focused))[0].num")""
 
 # ------------------------------------------
 # CUSTOM KEYS START
