@@ -37,7 +37,7 @@ case "$(uname -s)" in
     PATH="/Library/Developer/CommandLineTools/usr/bin:${PATH}"
     export PATH
     export SHELL="/bin/zsh"
-
+    alias o="open"
     # ~/.dircolors/themefile
     # eval $(dircolors ~/.dircolors/dircolors.256dark)
 

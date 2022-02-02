@@ -340,3 +340,41 @@
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; setting up latex mode
+;; Forward/inverse search with evince using D-bus.
+;; Installation:
+;; M-x package-install RET auctex RET
+;; Tells emacs where to find LaTeX.
+(with-system darwin 
+             ;; might not need because emacs should be able to read from path
+             ;; (let ((my-path (expand-file-name "/usr/local/bin:/usr/local/texlive/2015/bin/x86_64-darwin")))
+             ;;   (setenv "PATH" (concat my-path ":" (getenv "PATH")))
+             ;;   (add-to-list 'exec-path my-path)) 
+
+             ;; AucTeX settings
+             (setq TeX-PDF-mode t)
+
+             (add-hook 'LaTeX-mode-hook
+                       (lambda ()
+                         (push
+                           '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+                             :help "Run latexmk on file")
+                           TeX-command-list)))
+             (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
+             (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+             (setq TeX-view-program-list
+                   '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
+             (custom-set-variables
+               '(TeX-source-correlate-method 'synctex)
+               '(TeX-source-correlate-mode t)
+               '(TeX-source-correlate-start-server t))
+             )
+(require 'tex-site)
+(with-eval-after-load "preview"
+                      '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{circuitikz}" t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

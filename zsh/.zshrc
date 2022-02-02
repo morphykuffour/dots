@@ -233,6 +233,7 @@ case "$(uname -s)" in
     #    eval $(/opt/homebrew/bin/brew shellenv)
     # start emacs 
     [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+    code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
     ;;
   Linux)
     source /usr/share/autojump/autojump.zsh
