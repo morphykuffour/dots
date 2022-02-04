@@ -381,22 +381,22 @@
 
 (dired-recent-mode 1)
 (use-package dired-recent
-   :load-path "~/.emacs.d/contrib/dired-recent.el/"
-   :config
-   (require 'dired-recent)
-   (dired-recent-mode 1)
-)
+             :load-path "~/.emacs.d/contrib/dired-recent.el/"
+             :config
+             (require 'dired-recent)
+             (dired-recent-mode 1)
+             )
 
 ;; Make better use of =dired-recent-open= using ivy:
 
 (defun my-dired-recent-dirs ()
   "Present a list of recently used directories and open the selected one in dired"
   (interactive)
-    (let ((dir (ivy-read "Directory: "
-                         dired-recent-directories
-                         :re-builder #'ivy--regex
-                         :sort nil
-                         :initial-input nil)))
-      (dired dir)))
+  (let ((dir (ivy-read "Directory: "
+                       dired-recent-directories
+                       :re-builder #'ivy--regex
+                       :sort nil
+                       :initial-input nil)))
+    (dired dir)))
 
 (global-set-key (kbd "C-z") 'my-dired-recent-dirs)
