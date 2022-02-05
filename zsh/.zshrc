@@ -217,6 +217,7 @@ function cscope_build() {
   # rm -f cscope.files cscope.in.out cscope.po.out
   echo "The cscope database is generated"
 }
+
 # -d don't build database, use kscope_generate explicitly
 alias cscope="cscope -d"
 
