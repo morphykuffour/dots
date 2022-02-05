@@ -400,3 +400,7 @@
     (dired dir)))
 
 (global-set-key (kbd "C-z") 'my-dired-recent-dirs)
+
+;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(100))
+(add-to-list 'default-frame-alist '(alpha . (100)))
