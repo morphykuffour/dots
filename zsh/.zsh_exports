@@ -13,6 +13,8 @@ export DOTFILES=$HOME/dotfiles
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libxml2/lib/pkgconfig"
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 # export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 # colorize man pages
