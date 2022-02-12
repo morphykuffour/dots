@@ -51,6 +51,7 @@ case "$(uname -s)" in
 
     # MacPorts Installer addition on 2022-01-20_at_11:53:51: adding an appropriate PATH variable for use with MacPorts.
     export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+    export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
     # Finished adapting your PATH environment variable for use with MacPorts.
 
 
