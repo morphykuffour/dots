@@ -94,6 +94,7 @@
 (global-set-key (kbd "C-c e i") (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
 (global-set-key (kbd "C-c e p") 'package-install)
 (global-set-key (kbd "C-c e o") 'olivetti-mode)
+(global-set-key (kbd "M-o") 'ace-window)
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
