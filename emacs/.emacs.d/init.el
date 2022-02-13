@@ -67,7 +67,6 @@
              (vertico-mode))
 
 ;; PERSONAL SETTINGS
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (set-face-attribute 'mode-line nil  :height 140)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
 (setq visible-bell nil)
@@ -75,16 +74,26 @@
 (scroll-bar-mode -1)        ; visible scrollbar
 (tool-bar-mode -1)          ; the toolbar
 (tooltip-mode -1)           ; tooltips
-(set-fringe-mode 90)        ; space to left
+;; (set-fringe-mode 90)        ; space to left
 (menu-bar-mode t)           ; the menu bar
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
 (column-number-mode)
-(global-set-key [C-mouse-wheel-up-event]  'text-scale-increase)
-(global-set-key  [C-mouse-wheel-down-event] 'text-scale-decrease)
 (setq custom-file (concat user-emacs-directory "/custom.el"))
-;; edit init.el 
+
+;; KEYMAPS
+(global-set-key (kbd "C-h f") #'helpful-callable)
+(global-set-key (kbd "C-h v") #'helpful-variable)
+(global-set-key (kbd "C-h k") #'helpful-key)
+(global-set-key (kbd "C-c C-d") #'helpful-at-point)
+(global-set-key (kbd "C-h F") #'helpful-function)
+(global-set-key (kbd "C-h C") #'helpful-command)
+(global-set-key [C-mouse-wheel-up-event]   'text-scale-increase)
+(global-set-key [C-mouse-wheel-down-event] 'text-scale-decrease)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-c e i") (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
+(global-set-key (kbd "C-c e p") 'package-install)
+(global-set-key (kbd "C-c e o") 'olivetti-mode)
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -219,12 +228,6 @@
              ([remap describe-variable] . counsel-describe-variable)
              ([remap describe-key] . helpful-key))
 
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key)
-(global-set-key (kbd "C-c C-d") #'helpful-at-point)
-(global-set-key (kbd "C-h F") #'helpful-function)
-(global-set-key (kbd "C-h C") #'helpful-command)
 
 (use-package command-log-mode
              :commands command-log-mode)
@@ -266,7 +269,7 @@
   )
 (setq make-backup-file-name-function 'my-backup-file-name)
 
-;; (require 'olivetti)
+(require 'olivetti)
 (auto-image-file-mode 1)
 
 ;; R-markdown for pdfs
@@ -349,9 +352,6 @@
              (require 'dired-recent)
              (dired-recent-mode 1)
              )
-
-;; Make better use of =dired-recent-open= using ivy:
-
 (defun my-dired-recent-dirs ()
   "Present a list of recently used directories and open the selected one in dired"
   (interactive)
@@ -367,3 +367,32 @@
 ;; Transparency
 (set-frame-parameter (selected-frame) 'alpha '(100))
 (add-to-list 'default-frame-alist '(alpha . (100)))
+
+;; Company
+;; Autocomplete popups
+(use-package company
+             :ensure t
+             :config
+             (progn
+               (setq company-idle-delay 0.2
+                     ;; min prefix of 2 chars
+                     company-minimum-prefix-length 2
+                     company-selection-wrap-around t
+                     company-show-numbers t
+                     company-dabbrev-downcase nil
+                     company-echo-delay 0
+                     company-tooltip-limit 20
+                     company-transformers '(company-sort-by-occurrence)
+                     company-begin-commands '(self-insert-command)
+                     )
+               (global-company-mode))
+             )
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; Provides all the racket support
+(use-package racket-mode
+             :ensure t)
+
+(add-hook 'racket-mode-hook
+	  (lambda ()
+	    (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
