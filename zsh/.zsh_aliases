@@ -86,6 +86,7 @@ alias zet="cd $HOME/Dropbox/Zettelkasten/"
 alias zrc="$EDITOR $HOME/dotfiles/zshrc"
 alias erc="emacsclient -c -a 'emacs' &  $HOME/dotfiles/emacs/.emacs.d/init.el"
 alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
+alias rars="java -jar ~/bin/rars_533d3c0.jar"
 
 
 alias vim='nvim'

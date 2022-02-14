@@ -1,6 +1,6 @@
  #!/bin/sh
 
  # remap caps to escape
- sudo setxkbmap -option caps:escape
+ setxkbmap -option caps:escape
  # swap escape and caps
  # setxkbmap -option caps:swapescape
