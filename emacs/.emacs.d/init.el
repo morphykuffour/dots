@@ -67,7 +67,7 @@
              (vertico-mode))
 
 ;; PERSONAL SETTINGS
-(set-face-attribute 'mode-line nil  :height 140)
+(set-face-attribute 'mode-line nil  :height 180)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
@@ -80,6 +80,7 @@
 (evil-commentary-mode)
 (column-number-mode)
 (setq custom-file (concat user-emacs-directory "/custom.el"))
+(setq shell-command-switch "-ic")
 
 ;; KEYMAPS
 (global-set-key (kbd "C-h f") #'helpful-callable)
@@ -397,3 +398,4 @@
 (add-hook 'racket-mode-hook
 	  (lambda ()
 	    (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
+
