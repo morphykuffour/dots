@@ -86,8 +86,7 @@ alias zet="cd $HOME/Dropbox/Zettelkasten/"
 alias zrc="$EDITOR $HOME/dotfiles/zshrc"
 alias erc="emacsclient -c -a 'emacs' &  $HOME/dotfiles/emacs/.emacs.d/init.el"
 alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
-
-
+alias nyxt="xterm -e 'xhost +127.0.0.1; docker run -it -p 4006:4006 -v /Users/morp:/root/ --rm bigdeddu/nyxt:2.2.1'"
 alias vim='nvim'
 alias sv="sudo $EDITOR"
 alias tmux="tmux -2"
