@@ -92,6 +92,7 @@
 
 (load-user-file "personal.el")
 (load-user-file "hydra.el")
+(load-user-file "utils.el")
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -99,18 +100,6 @@
   (declare (indent defun))
   `(when (eq system-type ',type)
      ,@body))
-
-(with-system gnu/linux
-             ;; zathura as pdf viewer
-             (setq TeX-view-program-list
-                   '(("zathura" 
-                      ("zathura" (mode-io-correlate "-sync.sh")
-                       " "
-                       (mode-io-correlate "%n:1:%t ")
-                       "%o"))))
-
-             (when (daemonp)
-               (exec-path-from-shell-initialize)))
 
 (with-system darwin (custom-set-variables
                       '(markdown-command "/opt/homebrew/bin/pandoc")))
@@ -315,32 +304,6 @@
                       (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
 
 (require 'calendar)
-
-(defun insert-current-date (&optional omit-day-of-week-p)
-  "Insert today's date"
-  (interactive "P*")
-  (insert (calendar-date-string (calendar-current-date) nil
-                                omit-day-of-week-p)))
-(global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
-
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((python . t)))
-
-(autoload 'fennel-mode (expand-file-name "~/.emacs.d/elispfiles/fennel-mode/fennel-mode") nil t)
-(add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
-
-(defun copy-filename()
-  "Put the current file name on the clipboard"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                    default-directory
-                    (buffer-file-name))))
-    (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
 
 
 (dired-recent-mode 1)
