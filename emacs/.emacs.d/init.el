@@ -25,12 +25,7 @@
              :bind (("C-s" . swiper)
                     :map ivy-minibuffer-map
                     ("TAB" . ivy-alt-done)	
-                    ("C-l" . ivy-alt-done)
-                    ("C-j" . ivy-next-line)
-                    ("C-k" . ivy-previous-line)
                     :map ivy-switch-buffer-map
-                    ("C-k" . ivy-previous-line)
-                    ("C-l" . ivy-done)
                     ("C-d" . ivy-switch-buffer-kill)
                     :map ivy-reverse-i-search-map
                     ("C-k" . ivy-previous-line)
@@ -55,11 +50,11 @@
 
 ;;; Vim Bindings Everywhere else
 (use-package evil-collection
+             :ensure t
              :after evil
              :config
              (setq evil-want-integration t)
              (evil-collection-init))
-(setq evil-want-minibuffer nil)
 
 ;; vertico
 (use-package vertico
@@ -67,35 +62,36 @@
              (vertico-mode))
 
 ;; PERSONAL SETTINGS
-(set-face-attribute 'mode-line nil  :height 180)
+(set-face-attribute 'mode-line nil  :height 150)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 (scroll-bar-mode -1)        ; visible scrollbar
 (tool-bar-mode -1)          ; the toolbar
 (tooltip-mode -1)           ; tooltips
-;; (set-fringe-mode 90)        ; space to left
+;;(set-fringe-mode 90)       ; space to left
 (menu-bar-mode t)           ; the menu bar
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
 (column-number-mode)
 (setq custom-file (concat user-emacs-directory "/custom.el"))
 (setq shell-command-switch "-ic")
+(setq counsel-find-file-at-point t)  
 
-;; KEYMAPS
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key)
-(global-set-key (kbd "C-c C-d") #'helpful-at-point)
-(global-set-key (kbd "C-h F") #'helpful-function)
-(global-set-key (kbd "C-h C") #'helpful-command)
-(global-set-key [C-mouse-wheel-up-event]   'text-scale-increase)
-(global-set-key [C-mouse-wheel-down-event] 'text-scale-decrease)
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key (kbd "C-c e i") (lambda () (interactive) (find-file "~/dotfiles/emacs/.emacs.d/init.el")))
-(global-set-key (kbd "C-c e p") 'package-install)
-(global-set-key (kbd "C-c e o") 'olivetti-mode)
-(global-set-key (kbd "M-o") 'ace-window)
+(defconst user-init-dir
+  (cond ((boundp 'user-emacs-directory)
+         user-emacs-directory)
+        ((boundp 'user-init-directory)
+         user-init-directory)
+        (t "~/.emacs.d/")))
+
+(defun load-user-file (file)
+  (interactive "f")
+  "Load a file in current user's configuration directory"
+  (load-file (expand-file-name file user-init-dir)))
+
+(load-user-file "personal.el")
+(load-user-file "hydra.el")
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -146,7 +142,7 @@
              (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
              :bind (("C-c n l" . org-roam-buffer-toggle)
                     ("C-c n f" . org-roam-node-find)
-                    ("C-c n g" . org-roam-graph)
+                    ("C-c n g" . org-roam-ui-open)
                     ("C-c n i" . org-roam-node-insert)
                     ("C-c n c" . org-roam-capture)
                     ("C-c n a" . org-roam-alias-add)
@@ -399,3 +395,14 @@
 	  (lambda ()
 	    (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
 
+
+(use-package magit
+  :ensure t)
+
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode)
+
+;; elfeed
+(global-set-key (kbd "C-x w") 'elfeed)
+(setq elfeed-feeds
+      '(" https://jvns.ca/atom.xml"))
