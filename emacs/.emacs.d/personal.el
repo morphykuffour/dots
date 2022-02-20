@@ -12,3 +12,4 @@
 (global-set-key (kbd "C-c e p") 'package-install)
 (global-set-key (kbd "C-c e o") 'olivetti-mode)
 (global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
+(global-set-key (kbd "<space><space>") 'previous-buffer)
