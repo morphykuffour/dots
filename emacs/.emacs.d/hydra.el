@@ -30,7 +30,3 @@ _~_: modified
 
 (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body)
 
-(defhydra hydra-zoom (global-map "<f2>")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
