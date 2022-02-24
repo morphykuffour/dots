@@ -353,9 +353,6 @@
 (use-package magit
   :ensure t)
 
-(use-package magit-delta
-  :hook (magit-mode . magit-delta-mode)
-
 (use-package vterm
     :ensure t)
 
@@ -411,5 +408,3 @@ _~_: modified
   ("q" quit-window "quit" :color blue))
 
 (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body)
-
-
