@@ -45,5 +45,9 @@ export PATH="$HOME/gems/bin:$PATH"
 # Install Ruby Gems to ~/gems
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"
-export QMK_HOME="/Users/morphykuffour/.qmk_firmware"
+export QMK_HOME="$HOME/.qmk_firmware"
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /usr/local/bin/virtualenvwrapper.#!/bin/bash
+
  [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
