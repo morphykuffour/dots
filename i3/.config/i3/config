@@ -1,5 +1,5 @@
 # Super as MOD
-set $mod Mod1
+set $mod Mod4
 
 # Font for window titles
 font pango:DejaVu Sans Mono 8
