@@ -1,5 +1,5 @@
 # Super as MOD
-set $mod Mod4
+set $mod Mod1
 
 # Font for window titles
 font pango:DejaVu Sans Mono 8
@@ -31,7 +31,7 @@ floating_modifier $mod
 bindsym $mod+Return exec i3-sensible-terminal
 
 # google search
-# bindsym $mod+g exec --no-startup-id ~/.local/bin/google-search.sh
+bindsym $mod+g exec --no-startup-id ~/.local/bin/google-search.sh
 
 # kill window
 bindsym $mod+Shift+q kill
