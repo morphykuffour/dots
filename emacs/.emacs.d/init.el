@@ -152,7 +152,7 @@
 (require 'md-roam)
 (md-roam-mode 1)
 (setq md-roam-file-extension "md")
-(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+(org-roam-db-autosync-mode ) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
 (add-to-list 'org-roam-capture-templates
@@ -220,7 +220,7 @@
              :commands command-log-mode)
 
 (use-package doom-themes
-             :init (load-theme 'doom-dracula t))
+             :init (load-theme 'doom-dracula t)
 
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
