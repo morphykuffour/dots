@@ -152,7 +152,7 @@
 (require 'md-roam)
 (md-roam-mode 1)
 (setq md-roam-file-extension "md")
-; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
 (add-to-list 'org-roam-capture-templates
@@ -353,8 +353,8 @@
 (use-package magit
   :ensure t)
 
-(use-package vterm
-    :ensure t)
+;; (use-package vterm
+;;     :ensure t)
 
 ;; elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
