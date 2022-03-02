@@ -104,6 +104,10 @@
 (with-system darwin (custom-set-variables
                       '(markdown-command "/opt/homebrew/bin/pandoc")))
 
+;; pandoc mode
+(add-hook 'markdown-mode-hook 'pandoc-mode)
+(add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+
 ;; md mode
 (use-package markdown-mode
              :ensure t
@@ -152,7 +156,7 @@
 (require 'md-roam)
 (md-roam-mode 1)
 (setq md-roam-file-extension "md")
-(org-roam-db-autosync-mode ) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
 (add-to-list 'org-roam-capture-templates
@@ -174,6 +178,7 @@
                    org-roam-ui-open-on-start t))
 ;; PDFs
 (pdf-loader-install)
+(add-to-list 'auto-mode-alist '("\\.pdf\\'" . auto-revert))
 
 ;; shell paths
 (getenv "SHELL")
@@ -220,7 +225,7 @@
              :commands command-log-mode)
 
 (use-package doom-themes
-             :init (load-theme 'doom-dracula t)
+             :init (load-theme 'doom-dracula t))
 
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
