@@ -40,27 +40,15 @@ alias psmem='ps auxf | sort -nr -k 4 | head -5'
 # get top process eating cpu ##
 alias pscpu='ps auxf | sort -nr -k 3 | head -5'
 
-# gpg encryption
-# verify signature for isos
-alias gpg-check="gpg2 --keyserver-options auto-key-retrieve --verify"
-# receive the key of a developer
-alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
-
-# For when keys break
-alias archlinx-fix-keys="sudo pacman-key --init && sudo pacman-key --populate archlinux && sudo pacman-key --refresh-keys"
-
 # systemd
 alias list_systemctl="systemctl list-unit-files --state=enabled"
-
 
 # Set personal aliases
 alias dotfiles="cd $HOME/dotfiles"
 alias explorer='/mnt/c/Windows/explorer.exe'
 alias vrc='nvim /home/morp/.config/nvim/init.vim'
-# alias dot='nvim /home/morp/dotfiles'
 alias rd="rmdir"
 alias ip='ip -color=auto'
-alias diff='diff --color=auto'
 alias grep='grep --color=auto'
 alias pip='pip3'
 alias python='python3'
@@ -78,15 +66,11 @@ alias :e="$EDITOR ."
 alias e="$EDITOR"
 alias v.="$EDITOR ."
 alias t='tmux'
-# alias r=ranger-cd
 alias :q='exit'
 alias sau="sudo apt update"
-alias imgcat="kitty +kitten icat"
+alias icat="kitty +kitten icat"
 alias zet="cd $HOME/Dropbox/Zettelkasten/"
-# Edit config files
-alias zrc="$EDITOR $HOME/dotfiles/zshrc"
 alias erc="emacsclient -c -a 'emacs' &  $HOME/dotfiles/emacs/.emacs.d/init.el"
-alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
 alias nyxt="xterm -e 'xhost +127.0.0.1; docker run -it -p 4006:4006 -v /Users/morp:/root/ --rm bigdeddu/nyxt:2.2.1'"
 alias rars="java -jar ~/bin/rars_533d3c0.jar"
 alias vim='nvim'
@@ -94,6 +78,10 @@ alias sv="sudo $EDITOR"
 alias tmux="tmux -2"
 alias t="tmux -2"
 alias v="nvim"
+
+# Edit config files
+alias zrc="$EDITOR $HOME/dotfiles/zshrc"
+alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
 
 # system management aliases
 alias hibernate="systemctl suspend"
@@ -137,3 +125,4 @@ alias less='bat'
 alias batcat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
 alias less='batcat'
+
