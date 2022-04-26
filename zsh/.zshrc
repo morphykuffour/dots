@@ -117,7 +117,28 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
+
+bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
+bindkey '^[[P' delete-char
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
+export LESSOPEN='| ~/.local/bin/lessfilter %s'
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:*' switch-group ',' '.'
+
 # -------------------------------- FUNCTIONS ---------------------------------
+
+# Top ten memory hogs
+# http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
+memtop() {ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead}
+zle -N memtop
 
 # Use lf to switch directories and bind it to ctrl-o
 lfcd () {
@@ -131,34 +152,20 @@ lfcd () {
 }
 bindkey -s '^o' 'lfcd\n'
 
-# bindkey -s '^a' 'bc -lq\n'
-
-bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
-
-bindkey '^[[P' delete-char
-
-# Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
-
-zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
-export LESSOPEN='| ~/.local/bin/lessfilter %s'
-# disable sort when completing `git checkout`
-zstyle ':completion:*:git-checkout:*' sort false
-# set descriptions format to enable group support
-zstyle ':completion:*:descriptions' format '[%d]'
-# set list-colors to enable filename colorizing
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# preview directory's content with exa when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-# switch group using `,` and `.`
-zstyle ':fzf-tab:*' switch-group ',' '.'
-
-# ------------------------------- ZSH FUNCTIONS ---------------------------------
 change_background() {
-    # dconf write /org/mate/desktop/background/picture-filename "'$HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf)'"
     feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
 }
+
+myip () {
+  curl ifconfig.me
+}
+
+# strg+x,s adds sudo to the line
+run-with-sudo() {
+  LBUFFER="sudo $LBUFFER"
+}
+zle -N run-with-sudo
+bindkey '^Xs' run-with-sudo
 
 die () {
     echo >&2 "$@"
@@ -175,6 +182,18 @@ addToPathFront() {
     if [[ "$PATH" != *"$1"* ]]; then
         export PATH=$1:$PATH
     fi
+}
+
+# create a new script, automatically populating the shebang line, editing the script, and making it executable.
+shebang() {
+# $ shebang perl test.pl
+    if i=$(which $1);
+    then
+        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
+    else
+        echo "'which' could not find $1, is it in your \$PATH?";
+    fi;
+    rehash
 }
 
 commitDotFiles() {
@@ -194,63 +213,29 @@ mkd() {
   fi
 }
 
-build_cscope_db_func() {
-    local PROJDIR=$PWD
-    cd /
-    find $PROJDIR -name \\''*.c\\'' -o -name \\''*.h\\'' > $PROJDIR/cscope.files
-    cd $PROJDIR
-    cscope -Rbkq
-}
-alias csbuild=\\''build_cscope_db_func\\''
-# Generate cscope database
-function cscope_build() {
-  # Generate a list of all source files starting from the current directory
-  # The -o means logical or
-  find . -name "*.c" -o -name "*.cc" -o -name "*.cpp" -o -name "*.h" -o -name "*.hh" -o -name "*.hpp" > cscope.files
-  # -q build fast but larger database
-  # -R search symbols recursively
-  # -b build the database only, don't fire cscope
-  # -i file that contains list of file paths to be processed
-  # This will generate a few cscope.* files
-  cscope -q -R -b -i cscope.files
-  # Temporary files, remove them
-  # rm -f cscope.files cscope.in.out cscope.po.out
-  echo "The cscope database is generated"
-}
-
-# -d don't build database, use kscope_generate explicitly
-alias cscope="cscope -d"
+case "$(uname -s)" in
+  Darwin)
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+    code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
+    ;;
+  Linux)
+    source /usr/share/autojump/autojump.zsh
+    open () { xdg-open "$*" &}
+    ;;
+  CYGWIN*|MINGW32*|MSYS*|MINGW*)
+    ;;
+  *)
+    ;;
+esac
 
 # ------------------------------- ZSH APPS ------------------------------------
 eval "$(atuin init zsh)"
 eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
 
-# I love this Prompt
-# PROMPT=$'%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%n@%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-# RPROMPT=$'%(?.. %? %F{red}%Bx%b%F{reset})%(1j. %j %F{yellow}%Bbg %b%F{reset}.)'
-case "$(uname -s)" in
-  Darwin)
-    #    eval $(/opt/homebrew/bin/brew shellenv)
-    # start emacs 
-    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
-    code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
-    ;;
-  Linux)
-    source /usr/share/autojump/autojump.zsh
-    ;;
-  CYGWIN*|MINGW32*|MSYS*|MINGW*)
-    ;;
-  *)
-    # echo 'Other OS' 
-    ;;
-esac
-
 # ------------------------------- ZSH PLUGINS ---------------------------------
 source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
 source $HOME/.zsh/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
 source $HOME/.zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
-# source $HOME/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-
