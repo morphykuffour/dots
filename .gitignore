@@ -1,6 +1,7 @@
 dwm/
 slock/
 zsh.old/
+tmux/.tmux/resurrect/*
 notes.txt
 *zcompdump*
 
