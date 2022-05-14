@@ -46,7 +46,6 @@ alias list_systemctl="systemctl list-unit-files --state=enabled"
 # Set personal aliases
 alias dotfiles="cd $HOME/dotfiles"
 alias explorer='/mnt/c/Windows/explorer.exe'
-alias vrc='nvim /home/morp/.config/nvim/init.vim'
 alias rd="rmdir"
 alias ip='ip -color=auto'
 alias grep='grep --color=auto'
@@ -80,8 +79,9 @@ alias t="tmux -2"
 alias v="nvim"
 
 # Edit config files
-alias zrc="$EDITOR $HOME/dotfiles/zshrc"
-alias vrc="$EDITOR  $HOME/.config/nvim/init.vim"
+alias zrc="$EDITOR $HOME/dotfiles/zsh/.zshrc"
+alias zrca="$EDITOR $HOME/dotfiles/zsh/.zsh_aliases"
+alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
 
 # system management aliases
 alias hibernate="systemctl suspend"
