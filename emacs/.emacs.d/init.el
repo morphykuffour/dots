@@ -1,4 +1,17 @@
-;;emacs os config
+;emacs os config
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 ;;; PACKAGE LIST
 (require 'package)
@@ -96,7 +109,7 @@
 
 ;; nano-emacs
 ;; nano.el in root is a symlink to /nano-emacs/nano.el
-(load-user-file "nano.el")
+;; (load-user-file "nano.el")
 
 ;; WSL specific
 (defun copy-selected-text (start end)
@@ -367,25 +380,4 @@
                (global-company-mode))
              )
 (add-hook 'after-init-hook 'global-company-mode)
-
-;; elfeed
-(global-set-key (kbd "C-x w") 'elfeed)
-(setq elfeed-feeds
-      '(" https://jvns.ca/atom.xml"))
-
-(defhydra hydra-launcher (:color blue)
-   "Launch"
-   ("h" man "man")
-   ("R" (browse-url "http://www.reddit.com/r/emacs/") "reddit")
-   ("W" (browse-url "http://www.emacswiki.org/") "emacswiki")
-   ("r" (xwidget-webkit-browse-url "http://www.reddit.com/r/emacs/") "reddit")
-   ("w" (xwidget-webkit-browse-url "http://www.emacswiki.org/") "emacswiki")
-   ("s" shell "shell")
-   ("q" nil "cancel"))
-(global-set-key (kbd "C-c r") 'hydra-idget-weauncher/body)
-
-(defhydra hydra-zoom (global-map "<f6>")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
 
