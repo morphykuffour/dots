@@ -77,6 +77,7 @@
 (setq custom-file (concat user-emacs-directory "/custom.el"))
 (setq shell-command-switch "-ic")
 (setq counsel-find-file-at-point t)  
+(pixel-scroll-precision-mode)
 
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory)
@@ -91,8 +92,19 @@
   (load-file (expand-file-name file user-init-dir)))
 
 (load-user-file "personal.el")
-;; (load-user-file "hydra.el")
 (load-user-file "utils.el")
+
+;; nano-emacs
+;; nano.el in root is a symlink to /nano-emacs/nano.el
+(load-user-file "nano.el")
+
+;; WSL specific
+(defun copy-selected-text (start end)
+  (interactive "r")
+    (if (use-region-p)
+        (let ((text (buffer-substring-no-properties start end)))
+            (shell-command (concat "echo '" text "' | clip.exe")))))
+
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -157,6 +169,7 @@
 (md-roam-mode 1)
 (setq md-roam-file-extension "md")
 (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+
 
 ;; TODO add aliases and roam_refs
 (add-to-list 'org-roam-capture-templates
