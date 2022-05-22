@@ -355,12 +355,6 @@
              )
 (add-hook 'after-init-hook 'global-company-mode)
 
-(use-package magit
-  :ensure t)
-
-;; (use-package vterm
-;;     :ensure t)
-
 ;; elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
 (setq elfeed-feeds
