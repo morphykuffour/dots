@@ -11,8 +11,8 @@ package.path = home
 require("qrcp").setup{
   mode = "action",
   key = "Q",
-  send_options = "-i wlp2s0",
-  receive_options = "-i wlp2s0",
+  send_options = "-i eth0",
+  receive_options = "-i eth0",
 }
 
 -- nvim-ctrl
