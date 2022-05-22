@@ -1,5 +1,5 @@
+version = "0.18.0"
 -- xplr.config.general.show_hidden = true
-
 -- Needed for plugins
 local home = os.getenv("HOME")
 package.path = home
