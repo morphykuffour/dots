@@ -2,13 +2,13 @@
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
+      (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -93,11 +93,11 @@
 (pixel-scroll-precision-mode)
 
 (defconst user-init-dir
-  (cond ((boundp 'user-emacs-directory)
-         user-emacs-directory)
-        ((boundp 'user-init-directory)
-         user-init-directory)
-        (t "~/.emacs.d/")))
+          (cond ((boundp 'user-emacs-directory)
+                 user-emacs-directory)
+                ((boundp 'user-init-directory)
+                 user-init-directory)
+                (t "~/.emacs.d/")))
 
 (defun load-user-file (file)
   (interactive "f")
@@ -114,9 +114,9 @@
 ;; WSL specific
 (defun copy-selected-text (start end)
   (interactive "r")
-    (if (use-region-p)
-        (let ((text (buffer-substring-no-properties start end)))
-            (shell-command (concat "echo '" text "' | clip.exe")))))
+  (if (use-region-p)
+    (let ((text (buffer-substring-no-properties start end)))
+      (shell-command (concat "echo '" text "' | clip.exe")))))
 
 
 ;; TODO: test on linux
@@ -381,3 +381,81 @@
              )
 (add-hook 'after-init-hook 'global-company-mode)
 
+(straight-use-package
+  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+
+(require 'nano)
+
+;; mail setup
+;; https://github.com/DiamondBond/emacs/blob/master/config.org#prerequisites
+(defun mu-setup/init-mu ()
+  "Initializes 'mu' db."
+  (interactive)
+  (async-shell-command "/usr/local/bin/mu init --maildir=/home/morp/mail/ --my-address=your-email@example.com"))
+
+(defun mu-setup/build-mu-index ()
+  "Builds 'mu' index."
+  (interactive)
+  (async-shell-command "/usr/local/bin/mu  index"))
+
+;; (use-package mu4e
+;;              :straight ( :host github
+;;                                :repo "djcb/mu"
+;;                                :branch "master"
+;;                                :files ("build/mu4e/*")
+;;                                :pre-build (("./autogen.sh") ("make")))
+;;              :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
+;;              :config
+;;              ;; default
+;;              (require 'org-mu4e)
+;;              (setq mu4e-maildir (expand-file-name "~/mail"))
+;;
+;;              ;; set folders
+;;              (setq mu4e-drafts-folder "/[Gmail].Drafts")
+;;              (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
+;;              (setq mu4e-trash-folder  "/[Gmail].Trash")
+;;
+;;              ;; don't save message to Sent Messages, GMail/IMAP will take care of this
+;;              (setq mu4e-sent-messages-behavior 'delete)
+;;
+;;              ;; composing mail
+;;              (setq mu4e-compose-dont-reply-to-self t)
+;;
+;;              ;; don't keep message buffers around
+;;              (setq message-kill-buffer-on-exit t)
+;;
+;;              ;; display options
+;;              (setq mu4e-view-show-images t)
+;;              (setq mu4e-view-show-addresses 't)
+;;
+;;              ;; make sure that moving a message (like to Trash) causes the
+;;              ;; message to get a new file name.  This helps to avoid the
+;;              ;; dreaded "UID is N beyond highest assigned" error.
+;;              ;; See this link for more info: https://stackoverflow.com/a/43461973
+;;              (setq mu4e-change-filenames-when-moving t)
+;;
+;;              ;; setup some handy shortcuts
+;;              (setq mu4e-maildir-shortcuts
+;;                    '(("/INBOX"             . ?i)
+;;                      ("/[Gmail].Sent Mail" . ?s)
+;;                      ("/[Gmail].Trash"     . ?t)))
+;;
+;;              ;; inbox-query
+;;              (setq db/mu4e-inbox-query
+;;                    "(maildir:/Inbox OR maildir:/INBOX) AND flag:unread")
+;;
+;;              ;; go-to-inbox function
+;;              (defun db/go-to-inbox ()
+;;                (interactive)
+;;                (mu4e-headers-search dw/mu4e-inbox-query))
+;;
+;;              ;; allow for updating mail using 'U' in the main view:
+;;              (setq mu4e-get-mail-command "offlineimap")
+;;
+;;              ;; why would I want to leave my message open after I've sent it?
+;;              (setq message-kill-buffer-on-exit t)
+;;              ;; don't ask for a 'context' upon opening mu4e
+;;              (setq mu4e-context-policy 'pick-first)
+;;              ;; don't ask to quit
+;;              (setq mu4e-confirm-quit nil))
+;;
