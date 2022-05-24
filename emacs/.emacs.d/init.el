@@ -127,7 +127,7 @@
     (setq browse-url-generic-program  cmd-exe
           browse-url-generic-args     cmd-args
           browse-url-browser-function 'browse-url-generic
-          search-web-default-browser 'browse-url-generic))))
+          search-web-default-browser 'browse-url-generic)))
 
 ;; TODO: test on linux
 (defmacro with-system (type &rest body)
@@ -260,8 +260,6 @@
 (use-package command-log-mode
              :commands command-log-mode)
 
-(use-package doom-themes
-             :init (load-theme 'doom-dracula t))
 
 (global-hl-todo-mode)
 (setq hl-todo-keyword-faces
@@ -391,10 +389,6 @@
              )
 (add-hook 'after-init-hook 'global-company-mode)
 
-;; (straight-use-package
-;;   '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
-;;
-;; (require 'nano)
 
 ;; mail setup
 ;; https://github.com/DiamondBond/emacs/blob/master/config.org#prerequisites
@@ -485,3 +479,25 @@
 
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
+
+;; nano theme
+;; (straight-use-package
+;;   '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+;;
+;; (require 'nano)
+;; (setq nano-font-family-proportional nil)
+;; (setq nano-font-size 14)
+;; (nano-faces)
+;; (nano-theme)
+;; (nano-theme--mu4e)
+;; (nano-splash)
+;; (nano-mu4e)
+
+
+;; colorscheme
+;; (straight-use-package '(nano-theme :type git :host github
+;;                                    :repo "rougier/nano-theme"))
+
+(use-package doom-themes
+             :init (load-theme 'doom-gruvbox t))
+                           
