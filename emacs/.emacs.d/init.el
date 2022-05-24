@@ -82,7 +82,7 @@
 (scroll-bar-mode -1)        ; visible scrollbar
 (tool-bar-mode -1)          ; the toolbar
 (tooltip-mode -1)           ; tooltips
-;;(set-fringe-mode 90)       ; space to left
+(set-fringe-mode 90)       ; space to left
 (menu-bar-mode t)           ; the menu bar
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
@@ -299,49 +299,49 @@
 (auto-image-file-mode 1)
 
 ;; R-markdown for pdfs
-(require 'color)
-
-(use-package ess
-             :ensure t
-             :init (require 'ess-site))
-
-(use-package polymode
-             :ensure t
-             :config
-             (use-package poly-R)
-             (use-package poly-markdown)
-             ;;; MARKDOWN
-             (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
-             ;;; R modes
-             (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
-             (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
-             (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
-             (markdown-toggle-math t)
-             (defun ess-rmarkdown ()
-               "Compile R markdown (.Rmd). Should work for any output type."
-               (interactive)
-               ; Check if attached R-session
-               (condition-case nil
-                               (ess-get-process)
-                               (error
-                                 (ess-switch-process)))
-               (let* ((rmd-buf (current-buffer)))
-                 (save-excursion
-                   (let* ((sprocess (ess-get-process ess-current-process-name))
-                          (sbuffer (process-buffer sprocess))
-                          (buf-coding (symbol-name buffer-file-coding-system))
-                          (R-cmd
-                            (format "library(rmarkdown); rmarkdown::render(\"%s\")"
-                                    buffer-file-name)))
-                     (message "Running rmarkdown on %s" buffer-file-name)
-                     (ess-execute R-cmd 'buffer nil nil)
-                     (switch-to-buffer rmd-buf)
-                     (ess-show-buffer (buffer-name sbuffer) nil)))))
-             )
-;; (define-key polymode-mode-map "\M-ns" 'ess-rmarkdown)
-(with-eval-after-load 'polymode
-                      (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
-
+;; (require 'color)
+;;
+;; (use-package ess
+;;              :ensure t
+;;              :init (require 'ess-site))
+;;
+;; (use-package polymode
+;;              :ensure t
+;;              :config
+;;              (use-package poly-R)
+;;              (use-package poly-markdown)
+;;              ;;; MARKDOWN
+;;              (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
+;;              ;;; R modes
+;;              (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
+;;              (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
+;;              (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
+;;              (markdown-toggle-math t)
+;;              (defun ess-rmarkdown ()
+;;                "Compile R markdown (.Rmd). Should work for any output type."
+;;                (interactive)
+;;                ; Check if attached R-session
+;;                (condition-case nil
+;;                                (ess-get-process)
+;;                                (error
+;;                                  (ess-switch-process)))
+;;                (let* ((rmd-buf (current-buffer)))
+;;                  (save-excursion
+;;                    (let* ((sprocess (ess-get-process ess-current-process-name))
+;;                           (sbuffer (process-buffer sprocess))
+;;                           (buf-coding (symbol-name buffer-file-coding-system))
+;;                           (R-cmd
+;;                             (format "library(rmarkdown); rmarkdown::render(\"%s\")"
+;;                                     buffer-file-name)))
+;;                      (message "Running rmarkdown on %s" buffer-file-name)
+;;                      (ess-execute R-cmd 'buffer nil nil)
+;;                      (switch-to-buffer rmd-buf)
+;;                      (ess-show-buffer (buffer-name sbuffer) nil)))))
+;;              )
+;; ;; (define-key polymode-mode-map "\M-ns" 'ess-rmarkdown)
+;; (with-eval-after-load 'polymode
+;;                       (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
+;;
 (require 'calendar)
 
 
@@ -425,6 +425,34 @@
 ;; display options
 (setq mu4e-view-show-images t)
 (setq mu4e-view-show-addresses 't)
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+  (imagemagick-register-types))
+
+    ;; mu4e toggle html images
+    (defvar killdash9/mu4e~view-html-images nil
+      "Whether to show images in html messages")
+    
+    (defun killdash9/mu4e-view-toggle-html-images ()
+      "Toggle image-display of html message."
+      (interactive)
+      (setq-local killdash9/mu4e~view-html-images (not killdash9/mu4e~view-html-images))
+      (message "Images are %s" (if killdash9/mu4e~view-html-images "on" "off"))
+      (mu4e-view-refresh))
+
+    (defun mu4e-shr2text (msg)
+      "Convert html in MSG to text using the shr engine; this can be
+used in `mu4e-html2text-command' in a new enough emacs. Based on
+code by Titus von der Malsburg."
+      (lexical-let ((view-images killdash9/mu4e~view-html-images))
+        (mu4e~html2text-wrapper
+         (lambda ()
+	       (let ((shr-inhibit-images (not view-images)))
+	         (shr-render-region (point-min) (point-max)))) msg)))
+    
+    (define-key mu4e-view-mode-map "i" 'killdash9/mu4e-view-toggle-html-images)
+
+
 
 ;; make sure that moving a message (like to Trash) causes the
 ;; message to get a new file name.  This helps to avoid the
@@ -470,8 +498,11 @@
              :config
              (setq message-send-mail-function 'smtpmail-send-it
                    starttls-use-gnutls t
+                   user-mail-address "your-email@example.com"
                    smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
                    smtpmail-auth-credentials (expand-file-name "~/.offlineimappass.gpg")
+                   smtpmail-smtp-user "morpkuff"
+                   smtpmail-local-domain "gmail.com"
                    smtpmail-default-smtp-server "smtp.gmail.com"
                    smtpmail-smtp-server "smtp.gmail.com"
                    smtpmail-smtp-service 587
