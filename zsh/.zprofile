@@ -11,7 +11,13 @@ export GOPATH=$HOME/.local/share/go
 export VISUAL=nvim
 export EDITOR=nvim
 export TERMINAL=kitty
-export BROWSER="brave-browser"
+
+# if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
+#     # WSL environment
+#     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+# else
+#     export BROWSER="brave-browser"
+# fi
 
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
@@ -21,6 +27,7 @@ export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 
+export LEDGER_FILE=$HOME/Dropbox/Finances/main.journal    # use this file by default
 
 export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"

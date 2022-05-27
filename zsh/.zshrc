@@ -213,6 +213,13 @@ mkd() {
   fi
 }
 
+if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
+    # WSL environment
+    export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+else
+    export BROWSER="brave-browser"
+fi
+
 case "$(uname -s)" in
   Darwin)
     [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
