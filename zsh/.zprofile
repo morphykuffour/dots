@@ -12,12 +12,13 @@ export VISUAL=nvim
 export EDITOR=nvim
 export TERMINAL=kitty
 
-# if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
-#     # WSL environment
-#     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
-# else
-#     export BROWSER="brave-browser"
-# fi
+if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
+    # WSL environment
+    export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+    # export DISPLAY="$(hostname).local:0.0"
+else
+    export BROWSER="brave-browser"
+fi
 
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
@@ -31,6 +32,7 @@ export LEDGER_FILE=$HOME/Dropbox/Finances/main.journal    # use this file by def
 
 export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 
 case "$(uname -s)" in
   Darwin)

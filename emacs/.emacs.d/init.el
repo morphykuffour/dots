@@ -1,5 +1,5 @@
-;emacs os config
-
+;; ;emacs os config
+;;
 (defvar bootstrap-version)
 (let ((bootstrap-file
         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -37,7 +37,7 @@
              :diminish
              :bind (("C-s" . swiper)
                     :map ivy-minibuffer-map
-                    ("TAB" . ivy-alt-done)	
+                    ("TAB" . ivy-alt-done)
                     :map ivy-switch-buffer-map
                     ("C-d" . ivy-switch-buffer-kill)
                     :map ivy-reverse-i-search-map
@@ -48,7 +48,7 @@
 
 ;;; UNDO
 (use-package undo-fu)
-
+;;
 ;;; Vim Bindings
 (use-package evil
              :demand t
@@ -74,6 +74,12 @@
              :config
              (vertico-mode))
 
+;; tressiter for syntax higlighting
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
 ;; PERSONAL SETTINGS
 (set-face-attribute 'mode-line nil  :height 150)
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
@@ -82,14 +88,14 @@
 (scroll-bar-mode -1)        ; visible scrollbar
 (tool-bar-mode -1)          ; the toolbar
 (tooltip-mode -1)           ; tooltips
-(set-fringe-mode 90)       ; space to left
-(menu-bar-mode t)           ; the menu bar
+;; (set-fringe-mode 90)       ; space to left
+(menu-bar-mode nil)           ; the menu bar
 (setq inhibit-startup-message t)
 (evil-commentary-mode)
 (column-number-mode)
 (setq custom-file (concat user-emacs-directory "/custom.el"))
 (setq shell-command-switch "-ic")
-(setq counsel-find-file-at-point t)  
+(setq counsel-find-file-at-point t) 
 (pixel-scroll-precision-mode)
 
 (defun reload-config ()
@@ -112,6 +118,7 @@
 
 (load-user-file "personal.el")
 (load-user-file "utils.el")
+(load-user-file "mail.el")
 
 ;; WSL specific
 (defun copy-selected-text (start end)
@@ -136,27 +143,27 @@
   `(when (eq system-type ',type)
      ,@body))
 
-(with-system darwin (custom-set-variables
-                      '(markdown-command "/opt/homebrew/bin/pandoc")))
-
-;; pandoc mode
-(add-hook 'markdown-mode-hook 'pandoc-mode)
-(add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
-
-;; md mode
-(use-package markdown-mode
-             :ensure t
-             :commands (markdown-mode gfm-mode)
-             :mode (("README\\.md\\'" . gfm-mode)
-                    ("\\.md\\'" . markdown-mode)
-                    ("\\.rmd\\'" . markdown-mode)
-                    ("\\.markdown\\'" . markdown-mode))
-             :init (setq markdown-command "multimarkdown"))
-
-;; Wrap line in markdown.
-(add-hook 'markdown-mode-hook (lambda () (visual-line-mode 1)))
-(setq markdown-enable-math t)
-
+;; (with-system darwin (custom-set-variables
+;;                       '(markdown-command "/opt/homebrew/bin/pandoc")))
+;;
+;; ;; pandoc mode
+;; (add-hook 'markdown-mode-hook 'pandoc-mode)
+;; (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+;;
+;; ;; md mode
+;; (use-package markdown-mode
+;;              :ensure t
+;;              :commands (markdown-mode gfm-mode)
+;;              :mode (("README\\.md\\'" . gfm-mode)
+;;                     ("\\.md\\'" . markdown-mode)
+;;                     ("\\.rmd\\'" . markdown-mode)
+;;                     ("\\.markdown\\'" . markdown-mode))
+;;              :init (setq markdown-command "multimarkdown"))
+;;
+;; ;; Wrap line in markdown.
+;; ;; (add-hook 'markdown-mode-hook (lambda () (visual-line-mode 1)))
+;; ;; (setq markdown-enable-math t)
+;;
 ;; org-roam
 (require 'org)
 (require 'org-roam)
@@ -182,40 +189,40 @@
              (org-roam-db-autosync-mode)
              (require 'org-roam-protocol)) ;; If using org-roam-protocol
 
-(setq org-roam-graph-executable "dot")
+;; (setq org-roam-graph-executable "dot")
 
-;; md-roam
-(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-(setq org-roam-file-extensions '("org" "md"))
-(add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam")
-(require 'md-roam)
-(md-roam-mode 1)
-(setq md-roam-file-extension "md")
-(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-
-
-;; TODO add aliases and roam_refs
-(add-to-list 'org-roam-capture-templates
-             '("m" "Markdown" plain "" :target
-               (file+head "%<%Y-%m-%dT%H%M%S>.md"
-                          "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-               :unnarrowed t))
-
-;; org-roam-ui
-(use-package websocket
-             :after org-roam)
-
-(use-package org-roam-ui
-             :after org-roam 
-             :config
-             (setq org-roam-ui-sync-theme t
-                   org-roam-ui-follow t
-                   org-roam-ui-update-on-save t
-                   org-roam-ui-open-on-start t))
-;; PDFs
-(pdf-loader-install)
-(add-to-list 'auto-mode-alist '("\\.pdf\\'" . auto-revert))
-
+;; md-roam TODO find reason why md-roam slows down emacs
+;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+;; (setq org-roam-file-extensions '("org" "md"))
+;; (add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam")
+;; (require 'md-roam)
+;; (md-roam-mode 1)
+;; (setq md-roam-file-extension "md")
+;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+;;
+;;
+;; ;; TODO add aliases and roam_refs
+;; (add-to-list 'org-roam-capture-templates
+;;              '("m" "Markdown" plain "" :target
+;;                (file+head "%<%Y-%m-%dT%H%M%S>.md"
+;;                           "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+;;                :unnarrowed t))
+;;
+;; ;; org-roam-ui
+;; (use-package websocket
+;;              :after org-roam)
+;;
+;; (use-package org-roam-ui
+;;              :after org-roam 
+;;              :config
+;;              (setq org-roam-ui-sync-theme t
+;;                    org-roam-ui-follow t
+;;                    org-roam-ui-update-on-save t
+;;                    org-roam-ui-open-on-start t))
+;; ;; PDFs
+;; (pdf-loader-install)
+;; (add-to-list 'auto-mode-alist '("\\.pdf\\'" . auto-revert))
+;;
 ;; shell paths
 (getenv "SHELL")
 (when (memq window-system '(mac ns x))
@@ -269,8 +276,7 @@
         ("GOTCHA" . "#FF4500")
         ("STUB"   . "#1E90FF")))
 
-(require 'dashboard)
-(dashboard-setup-startup-hook)
+
 ;; Or if you use use-package
 (use-package dashboard
              :ensure t
@@ -282,253 +288,133 @@
 
 (use-package all-the-icons
              :if (display-graphic-p))
-
-;; make backup to a designated dir, mirroring the full path
-(defun my-backup-file-name (fpath)
-  (let* (
-         (backupRootDir "~/Documents/emacs-backup/")
-         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
-         )
-    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-    backupFilePath
-    )
-  )
-(setq make-backup-file-name-function 'my-backup-file-name)
-
-(require 'olivetti)
-(auto-image-file-mode 1)
-
-;; R-markdown for pdfs
-;; (require 'color)
 ;;
-;; (use-package ess
-;;              :ensure t
-;;              :init (require 'ess-site))
+;; ;; make backup to a designated dir, mirroring the full path
+;; (defun my-backup-file-name (fpath)
+;;   (let* (
+;;          (backupRootDir "~/Documents/emacs-backup/")
+;;          (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
+;;          )
+;;     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
+;;     backupFilePath
+;;     )
+;;   )
+;; (setq make-backup-file-name-function 'my-backup-file-name)
 ;;
-;; (use-package polymode
+;; (require 'olivetti)
+;; (auto-image-file-mode 1)
+;;
+;; ;; R-markdown for pdfs
+;; ;; (require 'color)
+;; ;;
+;; ;; (use-package ess
+;; ;;              :ensure t
+;; ;;              :init (require 'ess-site))
+;; ;;
+;; ;; (use-package polymode
+;; ;;              :ensure t
+;; ;;              :config
+;; ;;              (use-package poly-R)
+;; ;;              (use-package poly-markdown)
+;; ;;              ;;; MARKDOWN
+;; ;;              (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
+;; ;;              ;;; R modes
+;; ;;              (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
+;; ;;              (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
+;; ;;              (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
+;; ;;              (markdown-toggle-math t)
+;; ;;              (defun ess-rmarkdown ()
+;; ;;                "Compile R markdown (.Rmd). Should work for any output type."
+;; ;;                (interactive)
+;; ;;                ; Check if attached R-session
+;; ;;                (condition-case nil
+;; ;;                                (ess-get-process)
+;; ;;                                (error
+;; ;;                                  (ess-switch-process)))
+;; ;;                (let* ((rmd-buf (current-buffer)))
+;; ;;                  (save-excursion
+;; ;;                    (let* ((sprocess (ess-get-process ess-current-process-name))
+;; ;;                           (sbuffer (process-buffer sprocess))
+;; ;;                           (buf-coding (symbol-name buffer-file-coding-system))
+;; ;;                           (R-cmd
+;; ;;                             (format "library(rmarkdown); rmarkdown::render(\"%s\")"
+;; ;;                                     buffer-file-name)))
+;; ;;                      (message "Running rmarkdown on %s" buffer-file-name)
+;; ;;                      (ess-execute R-cmd 'buffer nil nil)
+;; ;;                      (switch-to-buffer rmd-buf)
+;; ;;                      (ess-show-buffer (buffer-name sbuffer) nil)))))
+;; ;;              )
+;; ;; ;; (define-key polymode-mode-map "\M-ns" 'ess-rmarkdown)
+;; ;; (with-eval-after-load 'polymode
+;; ;;                       (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
+;; ;;
+;; (require 'calendar)
+;;
+;;
+;; (dired-recent-mode 1)
+;; (use-package dired-recent
+;;              :load-path "~/.emacs.d/contrib/dired-recent.el/"
+;;              :config
+;;              (require 'dired-recent)
+;;              (dired-recent-mode 1))
+;;
+;; (defun my-dired-recent-dirs ()
+;;   "Present a list of recently used directories and open the selected one in dired"
+;;   (interactive)
+;;   (let ((dir (ivy-read "Directory: "
+;;                        dired-recent-directories
+;;                        :re-builder #'ivy--regex
+;;                        :sort nil
+;;                        :initial-input nil)))
+;;     (dired dir)))
+;;
+;; (global-set-key (kbd "C-z") 'my-dired-recent-dirs)
+;;
+;; ;; Transparency
+;; (set-frame-parameter (selected-frame) 'alpha '(100))
+;; (add-to-list 'default-frame-alist '(alpha . (100)))
+;;
+;; ;; Company
+;; ;; Autocomplete popups
+;; (use-package company
 ;;              :ensure t
 ;;              :config
-;;              (use-package poly-R)
-;;              (use-package poly-markdown)
-;;              ;;; MARKDOWN
-;;              (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
-;;              ;;; R modes
-;;              (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
-;;              (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
-;;              (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
-;;              (markdown-toggle-math t)
-;;              (defun ess-rmarkdown ()
-;;                "Compile R markdown (.Rmd). Should work for any output type."
-;;                (interactive)
-;;                ; Check if attached R-session
-;;                (condition-case nil
-;;                                (ess-get-process)
-;;                                (error
-;;                                  (ess-switch-process)))
-;;                (let* ((rmd-buf (current-buffer)))
-;;                  (save-excursion
-;;                    (let* ((sprocess (ess-get-process ess-current-process-name))
-;;                           (sbuffer (process-buffer sprocess))
-;;                           (buf-coding (symbol-name buffer-file-coding-system))
-;;                           (R-cmd
-;;                             (format "library(rmarkdown); rmarkdown::render(\"%s\")"
-;;                                     buffer-file-name)))
-;;                      (message "Running rmarkdown on %s" buffer-file-name)
-;;                      (ess-execute R-cmd 'buffer nil nil)
-;;                      (switch-to-buffer rmd-buf)
-;;                      (ess-show-buffer (buffer-name sbuffer) nil)))))
+;;              (progn
+;;                (setq company-idle-delay 0.2
+;;                      ;; min prefix of 2 chars
+;;                      company-minimum-prefix-length 2
+;;                      company-selection-wrap-around t
+;;                      company-show-numbers t
+;;                      company-dabbrev-downcase nil
+;;                      company-echo-delay 0
+;;                      company-tooltip-limit 20
+;;                      company-transformers '(company-sort-by-occurrence)
+;;                      company-begin-commands '(self-insert-command)
+;;                      )
+;;                (global-company-mode))
 ;;              )
-;; ;; (define-key polymode-mode-map "\M-ns" 'ess-rmarkdown)
-;; (with-eval-after-load 'polymode
-;;                       (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
+;; (add-hook 'after-init-hook 'global-company-mode)
+;; ;; markdown-mode math support enabled
+;; ;; nano theme
+;; ;; (straight-use-package
+;; ;;   '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+;; ;;
+;; ;; (require 'nano)
+;; ;; (setq nano-font-family-proportional nil)
+;; ;; (setq nano-font-size 14)
+;; ;; (nano-faces)
+;; ;; (nano-theme)
+;; ;; (nano-theme--mu4e)
+;; ;; (nano-splash)
+;; ;; (nano-mu4e)
 ;;
-(require 'calendar)
-
-
-(dired-recent-mode 1)
-(use-package dired-recent
-             :load-path "~/.emacs.d/contrib/dired-recent.el/"
-             :config
-             (require 'dired-recent)
-             (dired-recent-mode 1))
-
-(defun my-dired-recent-dirs ()
-  "Present a list of recently used directories and open the selected one in dired"
-  (interactive)
-  (let ((dir (ivy-read "Directory: "
-                       dired-recent-directories
-                       :re-builder #'ivy--regex
-                       :sort nil
-                       :initial-input nil)))
-    (dired dir)))
-
-(global-set-key (kbd "C-z") 'my-dired-recent-dirs)
-
-;; Transparency
-(set-frame-parameter (selected-frame) 'alpha '(100))
-(add-to-list 'default-frame-alist '(alpha . (100)))
-
-;; Company
-;; Autocomplete popups
-(use-package company
-             :ensure t
-             :config
-             (progn
-               (setq company-idle-delay 0.2
-                     ;; min prefix of 2 chars
-                     company-minimum-prefix-length 2
-                     company-selection-wrap-around t
-                     company-show-numbers t
-                     company-dabbrev-downcase nil
-                     company-echo-delay 0
-                     company-tooltip-limit 20
-                     company-transformers '(company-sort-by-occurrence)
-                     company-begin-commands '(self-insert-command)
-                     )
-               (global-company-mode))
-             )
-(add-hook 'after-init-hook 'global-company-mode)
-
-
-;; mail setup
-;; https://github.com/DiamondBond/emacs/blob/master/config.org#prerequisites
-(defun mu-setup/init-mu ()
-  "Initializes 'mu' db."
-  (interactive)
-  (async-shell-command "/usr/local/bin/mu init --maildir=/home/morp/mail/ --my-address=your-email@example.com"))
-
-(defun mu-setup/build-mu-index ()
-  "Builds 'mu' index."
-  (interactive)
-  (async-shell-command "/usr/local/bin/mu  index"))
-
-(add-to-list  'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
-(require 'mu4e)
-
-(require 'org-mu4e)
-(setq mu4e-maildir (expand-file-name "~/mail"))
-
-;; set folders
-(setq mu4e-drafts-folder "/[Gmail].Drafts")
-(setq mu4e-sent-folder   "/[Gmail].Sent Mail")
-(setq mu4e-trash-folder  "/[Gmail].Trash")
-
-;; don't save message to Sent Messages, GMail/IMAP will take care of this
-(setq mu4e-sent-messages-behavior 'delete)
-
-;; composing mail
-(setq mu4e-compose-dont-reply-to-self t)
-
-;; don't keep message buffers around
-(setq message-kill-buffer-on-exit t)
-
-;; display options
-(setq mu4e-view-show-images t)
-(setq mu4e-view-show-addresses 't)
-;; use imagemagick, if available
-(when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
-
-    ;; mu4e toggle html images
-    (defvar killdash9/mu4e~view-html-images nil
-      "Whether to show images in html messages")
-    
-    (defun killdash9/mu4e-view-toggle-html-images ()
-      "Toggle image-display of html message."
-      (interactive)
-      (setq-local killdash9/mu4e~view-html-images (not killdash9/mu4e~view-html-images))
-      (message "Images are %s" (if killdash9/mu4e~view-html-images "on" "off"))
-      (mu4e-view-refresh))
-
-    (defun mu4e-shr2text (msg)
-      "Convert html in MSG to text using the shr engine; this can be
-used in `mu4e-html2text-command' in a new enough emacs. Based on
-code by Titus von der Malsburg."
-      (lexical-let ((view-images killdash9/mu4e~view-html-images))
-        (mu4e~html2text-wrapper
-         (lambda ()
-	       (let ((shr-inhibit-images (not view-images)))
-	         (shr-render-region (point-min) (point-max)))) msg)))
-    
-    (define-key mu4e-view-mode-map "i" 'killdash9/mu4e-view-toggle-html-images)
-
-
-
-;; make sure that moving a message (like to Trash) causes the
-;; message to get a new file name.  This helps to avoid the
-;; dreaded "UID is N beyond highest assigned" error.
-;; See this link for more info: https://stackoverflow.com/a/43461973
-(setq mu4e-change-filenames-when-moving t)
-
-;; setup some handy shortcuts
-(setq mu4e-maildir-shortcuts
-      '( (:maildir "/INBOX"              :key ?i)
-        (:maildir "/[Gmail].Sent Mail"  :key ?s)
-        (:maildir "/[Gmail].Trash"      :key ?t)
-        (:maildir "/[Gmail].All Mail"   :key ?a)))
-
-;; inbox-query
-(setq db/mu4e-inbox-query
-      "(maildir:/Inbox OR maildir:/INBOX) AND flag:unread")
-
-;; go-to-inbox function
-(defun db/go-to-inbox ()
-  (interactive)
-  (mu4e-headers-search dw/mu4e-inbox-query))
-
-;; allow for updating mail using 'U' in the main view:
-(setq mu4e-get-mail-command "offlineimap")
-
-;; why would I want to leave my message open after I've sent it?
-(setq message-kill-buffer-on-exit t)
-;; don't ask for a 'context' upon opening mu4e
-(setq mu4e-context-policy 'pick-first)
-;; don't ask to quit
-(setq mu4e-confirm-quit nil)
-
-;; function to sync mail
-(defun sync/mail ()
-  "Sync email."
-  (interactive)
-  (async-shell-command "offlineimap")
-  (mu4e-update-index))
-
-(use-package smtpmail
-             :straight t
-             :config
-             (setq message-send-mail-function 'smtpmail-send-it
-                   starttls-use-gnutls t
-                   user-mail-address "your-email@example.com"
-                   smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-                   smtpmail-auth-credentials (expand-file-name "~/.offlineimappass.gpg")
-                   smtpmail-smtp-user "morpkuff"
-                   smtpmail-local-domain "gmail.com"
-                   smtpmail-default-smtp-server "smtp.gmail.com"
-                   smtpmail-smtp-server "smtp.gmail.com"
-                   smtpmail-smtp-service 587
-                   smtpmail-debug-info t))
-
-;; don't keep message buffers around
-(setq message-kill-buffer-on-exit t)
-
-;; nano theme
-;; (straight-use-package
-;;   '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
 ;;
-;; (require 'nano)
-;; (setq nano-font-family-proportional nil)
-;; (setq nano-font-size 14)
-;; (nano-faces)
-;; (nano-theme)
-;; (nano-theme--mu4e)
-;; (nano-splash)
-;; (nano-mu4e)
-
-
 ;; colorscheme
 ;; (straight-use-package '(nano-theme :type git :host github
 ;;                                    :repo "rougier/nano-theme"))
 
 (use-package doom-themes
              :init (load-theme 'doom-gruvbox t))
-                           
+
+;; nyxt browser integration
+(setq inferior-lisp-program "sbcl")
