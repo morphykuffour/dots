@@ -10,4 +10,3 @@ export GOPATH=$HOME/.local/share/go
 export PATH=$PATH:./node_modules/.bin
 export PATH="$HOME/.poetry/bin:$PATH"
 export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
-e
