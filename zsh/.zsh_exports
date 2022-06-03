@@ -6,6 +6,7 @@ export PATH="$HOME/bin":$PATH
 
 export EDITOR=nvim
 export VISUAL=nvim
+export TERMINAL=kitty
 
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
@@ -45,3 +46,13 @@ export NVM_DIR="$HOME/.nvm"
 
 # hledger 
 export LEDGER_FILE=$HOME/Dropbox/Finances/main.journal    # use this file by default
+
+
+# WSL environment
+if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
+    # WSL environment
+    export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+    export DISPLAY="$(hostname).local:0.0"
+else
+    export BROWSER="brave-browser"
+fi
