@@ -1,0 +1,93 @@
+#!/bin/zsh
+
+# -------------------------------- FUNCTIONS ---------------------------------
+
+# Top ten memory hogs
+# http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
+memtop() {ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead}
+zle -N memtop
+
+# Use lf to switch directories and bind it to ctrl-o
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp" >/dev/null
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+bindkey -s '^o' 'lfcd\n'
+
+change_background() {
+    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
+}
+
+myip () {
+  curl ifconfig.me
+}
+
+# strg+x,s adds sudo to the line
+run-with-sudo() {
+  LBUFFER="sudo $LBUFFER"
+}
+zle -N run-with-sudo
+bindkey '^Xs' run-with-sudo
+
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+addToPath() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$PATH:$1
+    fi
+}
+
+addToPathFront() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+# create a new script, automatically populating the shebang line, editing the script, and making it executable.
+shebang() {
+# $ shebang perl test.pl
+    if i=$(which $1);
+    then
+        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
+    else
+        echo "'which' could not find $1, is it in your \$PATH?";
+    fi;
+    rehash
+}
+
+commitDotFiles() {
+    cd $HOME/dotfiles
+    git add .
+    git commit -am "dotfile update"
+    git push 
+}
+
+mkd() {
+  if [ ! -n "$1" ]; then
+    echo "Enter a directory name"
+  elif [ -d $1 ]; then
+    echo "\`$1' already exists"
+  else
+    mkdir $1 && cd $1
+  fi
+}
+
+_zsh_autosuggest_strategy_histdb_top_here() {
+    local query="select commands.argv from
+history left join commands on history.command_id = commands.rowid
+left join places on history.place_id = places.rowid
+where places.dir LIKE '$(sql_escape $PWD)%'
+and commands.argv LIKE '$(sql_escape $1)%'
+group by commands.argv order by count(*) desc limit 1"
+    suggestion=$(_histdb_query "$query")
+}
+
+ZSH_AUTOSUGGEST_STRATEGY=histdb_top_here

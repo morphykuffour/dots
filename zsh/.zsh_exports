@@ -2,14 +2,16 @@
 export PATH="$HOME/.local/bin":$PATH
 export PATH="$HOME/bin":$PATH
 # export MANPAGER='nvim +Man!'
+# export MANWIDTH=999
+
 export EDITOR=nvim
 export VISUAL=nvim
-export MANWIDTH=999
+
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
 export DOTFILES=$HOME/dotfiles
-# export TERM="screen-256color"
+export TERM="screen-256color"
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
@@ -40,3 +42,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+
+# hledger 
+export LEDGER_FILE=$HOME/Dropbox/Finances/main.journal    # use this file by default

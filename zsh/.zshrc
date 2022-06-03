@@ -4,6 +4,7 @@ COLOR_SCHEME=dark # dark/light
 # --------------------------------- ALIASES -----------------------------------
 source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
+source $HOME/.zsh_functions
 
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
@@ -27,7 +28,7 @@ setopt PROMPT_SUBST
 setopt SHARE_HISTORY
 
 # -------------------------------- HISTORY ------------------------------------
-HISTFILE=~/.cache/zsh/history
+HISTFILE=~/.zsh_history
 HIST_STAMPS=mm/dd/yyyy
 HISTSIZE=10000000
 SAVEHIST=10000000
@@ -133,93 +134,14 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 zstyle ':fzf-tab:*' switch-group ',' '.'
 
-# -------------------------------- FUNCTIONS ---------------------------------
-
-# Top ten memory hogs
-# http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
-memtop() {ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead}
-zle -N memtop
-
-# Use lf to switch directories and bind it to ctrl-o
-lfcd () {
-    tmp="$(mktemp)"
-    lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp" >/dev/null
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
-}
-bindkey -s '^o' 'lfcd\n'
-
-change_background() {
-    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
-}
-
-myip () {
-  curl ifconfig.me
-}
-
-# strg+x,s adds sudo to the line
-run-with-sudo() {
-  LBUFFER="sudo $LBUFFER"
-}
-zle -N run-with-sudo
-bindkey '^Xs' run-with-sudo
-
-die () {
-    echo >&2 "$@"
-    exit 1
-}
-
-addToPath() {
-    if [[ "$PATH" != *"$1"* ]]; then
-        export PATH=$PATH:$1
-    fi
-}
-
-addToPathFront() {
-    if [[ "$PATH" != *"$1"* ]]; then
-        export PATH=$1:$PATH
-    fi
-}
-
-# create a new script, automatically populating the shebang line, editing the script, and making it executable.
-shebang() {
-# $ shebang perl test.pl
-    if i=$(which $1);
-    then
-        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
-    else
-        echo "'which' could not find $1, is it in your \$PATH?";
-    fi;
-    rehash
-}
-
-commitDotFiles() {
-    cd $HOME/dotfiles
-    git add .
-    git commit -am "dotfile update"
-    git push 
-}
-
-mkd() {
-  if [ ! -n "$1" ]; then
-    echo "Enter a directory name"
-  elif [ -d $1 ]; then
-    echo "\`$1' already exists"
-  else
-    mkdir $1 && cd $1
-  fi
-}
-
+# WSL environment
 if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
-    # WSL environment
     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
 else
     export BROWSER="brave-browser"
 fi
 
+# open vscode from terminal in Mac OS
 case "$(uname -s)" in
   Darwin)
     [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
@@ -246,19 +168,6 @@ source $HOME/.zsh/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
 source $HOME/.zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+source $HOME/.zsh/zsh-histdb/sqlite-history.zsh
+autoload -Uz add-zsh-hook
 
