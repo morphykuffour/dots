@@ -1,10 +1,30 @@
 #!/bin/zsh
 
 # -------------------------------- FUNCTIONS ---------------------------------
+# Function to source files if they exist
+function zsh_add_file() {
+    [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
+}
+
+function zsh_add_plugin() {
+  PLUGIN_NAME=$(basename $1 | cut -f 1 -d '.')
+    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
+        # For plugins
+        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
+        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+    else
+        git clone "https://github.com/$1.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+    fi
+}
+
+
+
 
 # Top ten memory hogs
 # http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
-memtop() {ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead}
+memtop() {
+  ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead
+}
 zle -N memtop
 
 # Use lf to switch directories and bind it to ctrl-o
