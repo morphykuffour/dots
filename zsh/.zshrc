@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+export ZDOTDIR=$HOME/.zsh
+
 COLOR_SCHEME=dark # dark/light
 # --------------------------------- ALIASES -----------------------------------
 source $HOME/.zsh_aliases
