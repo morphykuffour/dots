@@ -1,14 +1,14 @@
-#!/bin/zsh
+#!/usr/bin/env sh
 
 # -------------------------------- FUNCTIONS ---------------------------------
 
 # Function to source files if they exist
-function zsh_add_file() {
+zsh_add_file() {
     [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
 }
 
-function zsh_add_plugin() {
-  PLUGIN_NAME=$(basename $1 | cut -f 1 -d '.')
+zsh_add_plugin() {
+  PLUGIN_NAME=$(basename "$1" | cut -f 1 -d '.')
     if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
         # For plugins
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
@@ -33,7 +33,7 @@ lfcd () {
     if [ -f "$tmp" ]; then
         dir="$(cat "$tmp")"
         rm -f "$tmp" >/dev/null
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir" || exit
     fi
 }
 bindkey -s '^o' 'lfcd\n'
@@ -47,7 +47,7 @@ myip () {
 }
 
 # strg+x,s adds sudo to the line
-run-with-sudo() {
+run_with_sudo() {
   LBUFFER="sudo $LBUFFER"
 }
 zle -N run-with-sudo
@@ -83,19 +83,19 @@ shebang() {
 }
 
 commitDotFiles() {
-    cd $HOME/dotfiles
+    cd "$HOME"/dotfiles || exit
     git add .
     git commit 
     # git push 
 }
 
 mkd() {
-  if [ ! -n "$1" ]; then
+  if [ -z "$1" ]; then
     echo "Enter a directory name"
-  elif [ -d $1 ]; then
+  elif [ -d "$1" ]; then
     echo "\`$1' already exists"
   else
-    mkdir $1 && cd $1
+    mkdir "$1" && cd "$1" || exit
   fi
 }
 
@@ -128,5 +128,5 @@ _zsh_autosuggest_strategy_histdb_top() {
 
 ZSH_AUTOSUGGEST_STRATEGY=histdb_top
 
-source $HOME/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
+source "$HOME"/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
 bindkey '^s' _histdb-isearch
