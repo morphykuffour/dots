@@ -130,5 +130,3 @@ alias batcat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
 alias less='batcat'
 
-# xplr
-alias xcd='cd "$(xplr --print-pwd-as-result)"'
