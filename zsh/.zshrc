@@ -1,9 +1,6 @@
 #!/usr/bin/env zsh
 
 export ZDOTDIR=$HOME/.zsh
-
-COLOR_SCHEME=dark # dark/light
-# --------------------------------- ALIASES -----------------------------------
 source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
 source $HOME/.zsh_functions
@@ -57,8 +54,8 @@ zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
-# ----------------------------------- MISC -----------------------------------
 
+# ----------------------------------- MISC -----------------------------------
 # enable terminal linewrap
 setterm -linewrap on 2> /dev/null
 
@@ -165,11 +162,14 @@ eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
+
 source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
 source $HOME/.zsh/plugins/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
 source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $HOME/.zsh/plugins/zsh-histdb/sqlite-history.zsh
+
+# histdb
 autoload -Uz add-zsh-hook
 
