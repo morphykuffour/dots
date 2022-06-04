@@ -117,6 +117,29 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
+# source:https://stackoverflow.com/a/65375231/2571881
+# ~/.dotfiles/zsh/autoload/vif
+function vif() {
+    local fname
+    local current_dir=$PWD
+    cd ~/dotfiles || exit
+    fname=$(fzf) || return
+    vim "$fname"
+    cd $current_dir
+}
+# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
+bindkey -s '^p' 'vif^M'
+
+source "$HOME"/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
+bindkey '^s' _histdb-isearch
+
+
+# xplr
+xcd() {
+  cd "$(xplr --print-pwd-as-result)"
+}
+# alias xcd='cd "$(xplr --print-pwd-as-result)"'
+bindkey -s '^q' 'xcd^M'
 
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 bindkey '^[[P' delete-char
