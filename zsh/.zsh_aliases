@@ -79,9 +79,12 @@ alias t="tmux -2"
 alias v="nvim"
 
 # Edit config files
-alias zrc="$EDITOR $HOME/dotfiles/zsh/.zshrc"
-alias zrca="$EDITOR $HOME/dotfiles/zsh/.zsh_aliases"
-alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
+# alias zrc="$EDITOR $HOME/dotfiles/zsh/.zshrc"
+# alias zrca="$EDITOR $HOME/dotfiles/zsh/.zsh_aliases"
+# alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
+alias zrc="nvim $HOME/dotfiles/zsh/.zshrc"
+alias zra="nvim $HOME/dotfiles/zsh/.zsh_aliases"
+alias vrc="nvim $HOME/.config/nvim/init.lua"
 
 # system management aliases
 alias hibernate="systemctl suspend"
