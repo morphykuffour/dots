@@ -13,11 +13,9 @@ function zsh_add_plugin() {
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
-        git clone "https://github.com/$1.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        git clone $1 "$ZDOTDIR/plugins/$PLUGIN_NAME"
     fi
 }
-
-
 
 
 # Top ten memory hogs
@@ -129,5 +127,5 @@ _zsh_autosuggest_strategy_histdb_top() {
 
 ZSH_AUTOSUGGEST_STRATEGY=histdb_top
 
-source $HOME/.zsh/zsh-histdb/histdb-interactive.zsh
+source $HOME/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
 bindkey '^s' _histdb-isearch
