@@ -165,11 +165,11 @@ eval "$(mcfly init zsh)"
 eval "$(starship init zsh)"
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
-source $HOME/.zsh/git-flow-completion/git-flow-completion.zsh
-source $HOME/.zsh/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
-source $HOME/.zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $HOME/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $HOME/.zsh/zsh-histdb/sqlite-history.zsh
+source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
+source $HOME/.zsh/plugins/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
+source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
+source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source $HOME/.zsh/plugins/zsh-histdb/sqlite-history.zsh
 autoload -Uz add-zsh-hook
 
