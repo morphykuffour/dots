@@ -84,6 +84,7 @@ alias v="nvim"
 # alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
 alias zrc="nvim $HOME/dotfiles/zsh/.zshrc"
 alias zra="nvim $HOME/dotfiles/zsh/.zsh_aliases"
+alias zrf="nvim $HOME/dotfiles/zsh/.zsh_functions"
 alias vrc="nvim $HOME/.config/nvim/init.lua"
 
 # system management aliases
