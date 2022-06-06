@@ -1,9 +1,0 @@
-replace sxiv with kitty icat
-learn intricates of lf LukeSmith will shell direcoty shell scripts incoprorated
-
-QMK keyboards key mods
-
-PageUp -> KC_WWW_SEARCH
-MT(MOD_LCTL, KC_ESC) 
-LT(1, KC_TAB)
-MT(MOD_LCTL | MOD_LALT, KC_CTL)
