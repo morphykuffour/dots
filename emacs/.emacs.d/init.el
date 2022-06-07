@@ -1,38 +1,46 @@
-;; ;emacs os config
-;;
-(defvar bootstrap-version)
-(let ((bootstrap-file
-        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-      (url-retrieve-synchronously
-        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-        'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+;; emacs os config for writing and organization
 
-;;; PACKAGE LIST
+;;; use-package
 (require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-
-;;; USE-PACKAGE
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-(setq use-package-always-ensure t)
-(unless (package-installed-p 'use-package)
+;; ensure use-package is installed.
+(when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
-(eval-when-compile (require 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
 
-;; PACKAGES
-(use-package command-log-mode)
+;; define user-init-dir
+(defconst user-init-dir
+          (cond ((boundp 'user-emacs-directory) user-emacs-directory)
+                ((boundp 'user-init-directory) user-init-directory)
+                (t "~/.emacs.d/")))
+
+;; copy pasta
+(defun load-user-file (file)
+  (interactive "f")
+  "Load a file in current user's configuration directory"
+  (load-file (expand-file-name file user-init-dir)))
+
+(load-user-file "sensible-defaults.el")
+(load-user-file "font-resize.el")
+;; (load-user-file "my-org.el") TODO fix org
+(load-user-file "keymaps.el")
+(load-user-file "utils.el")
+;; (load-user-file "mail.el") TODO change smtpmail to use-package
+;; https://yiufung.net/post/anki-org/ TODO add anki-org
+
+;; sensible settings from hrs
+(require 'sensible-defaults)
+(sensible-defaults/use-all-settings)
+(sensible-defaults/use-all-keybindings)
+(sensible-defaults/backup-to-temp-directory)
+
+;; pusihing p
+(use-package command-log-mode
+             :commands command-log-mode)
 (use-package ivy
              :diminish
              :bind (("C-s" . swiper)
@@ -46,10 +54,10 @@
              :config
              (ivy-mode 1))
 
-;;; UNDO
+;;; kung fu
 (use-package undo-fu)
-;;
-;;; Vim Bindings
+
+;; evil deeds for a bad bad boy
 (use-package evil
              :demand t
              :bind (("<escape>" . keyboard-escape-quit))
@@ -59,73 +67,169 @@
              ;; no vim insert bindings
              (setq evil-undo-system 'undo-fu)
              :config
-             (evil-mode 1))
+             (evil-mode 1)
+             (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle))
 
-;;; Vim Bindings Everywhere else
+;;; 666 the number of the beast
 (use-package evil-collection
              :ensure t
              :after evil
              :config
              (setq evil-want-integration t)
+	      (setq evil-collection-mode-list
+		    '(deadgrep
+		      dired
+		      elfeed
+		      ibuffer
+		      magit
+		      mu4e
+		      pdf-view
+		      which-key))
              (evil-collection-init))
 
-;; vertico
+;; tpope surround
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+;; more vert
 (use-package vertico
              :config
              (vertico-mode))
 
-;; tressiter for syntax higlighting
+;; always on demon time
+(use-package evil-org
+  :after org
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+(evil-commentary-mode)
+
+;; ui tweaks
+(tooltip-mode -1)
+(tool-bar-mode nil)
+(menu-bar-mode nil)
+(column-number-mode)
+(scroll-bar-mode -1)
+(setq visible-bell nil)
+(pixel-scroll-precision-mode)
+(setq inhibit-startup-message t)
+(global-prettify-symbols-mode t)
+(setq shell-command-switch "-ic")
+(setq counsel-find-file-at-point t)
+(setq ring-bell-function 'ignore)
+(global-hl-line-mode)
+(set-window-scroll-bars (minibuffer-window) nil nil)
+(setq frame-title-format '((:eval (projectile-project-name))))
+
+;; colorscheme
+(use-package spacemacs-theme
+  :defer t
+  :init
+  (setq spacemacs-theme-org-bold nil
+        spacemacs-theme-org-height nil)
+  :config
+  (load-theme 'spacemacs-light t))
+(load-theme 'spacemacs-light t)
+
+;; hide minor modes
+(use-package minions
+  :config
+  (setq minions-mode-line-lighter "?"
+        minions-mode-line-delimiters (cons "" ""))
+  (minions-mode 1))
+
+;; modeline
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
+;; ;; highlight those diffs
+;; (use-package diff-hl
+;;   :config
+;;   :hook ((text-mode prog-mode vc-dir-mode) . turn-on-diff-hl-mode))
+
+;; ripgrep for searching
+(use-package deadgrep
+  :config
+  (defun deadgrep--include-args (rg-args)
+    (push "--hidden" rg-args))
+  (advice-add 'deadgrep--arguments
+              :filter-return #'deadgrep--include-args))
+
+
+;; treesitter for syntax highlighting
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
-;; PERSONAL SETTINGS
-(set-face-attribute 'mode-line nil  :height 150)
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 100)
-(setq visible-bell nil)
-(setq ring-bell-function 'ignore)
-(scroll-bar-mode -1)        ; visible scrollbar
-(tool-bar-mode -1)          ; the toolbar
-(tooltip-mode -1)           ; tooltips
-;; (set-fringe-mode 90)       ; space to left
-(menu-bar-mode nil)           ; the menu bar
-(setq inhibit-startup-message t)
-(evil-commentary-mode)
-(column-number-mode)
-(setq custom-file (concat user-emacs-directory "/custom.el"))
-(setq shell-command-switch "-ic")
-(setq counsel-find-file-at-point t) 
-(pixel-scroll-precision-mode)
+;; company for completion
+(use-package company
+  :hook (prog-mode . company-mode)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-selection))
 
-(defun reload-config ()
-  "Reload Emacs Configuration."
-  (interactive)
-  (load-file (concat user-emacs-directory "init.el")))
+  :custom
+  (company-backends '((company-capf company-dabbrev-code)))
+  (company-idle-delay 0)
+  (company-minimum-prefix-length 3)
+  (company-tooltip-align-annotations t)
+  (company-tooltip-limit 20)
 
+  :config
+  (setq lsp-completion-provider :capf))
+(use-package all-the-icons)
+(use-package company-box
+  :after company
+  :hook (company-mode . company-box-mode)
 
-(defconst user-init-dir
-          (cond ((boundp 'user-emacs-directory)
-                 user-emacs-directory)
-                ((boundp 'user-init-directory)
-                 user-init-directory)
-                (t "~/.emacs.d/")))
+  :config
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
-(defun load-user-file (file)
-  (interactive "f")
-  "Load a file in current user's configuration directory"
-  (load-file (expand-file-name file user-init-dir)))
+;; syntax checking
+(use-package let-alist)
+(use-package flycheck
+  :init (global-flycheck-mode))
 
-(load-user-file "personal.el")
-(load-user-file "utils.el")
-(load-user-file "mail.el")
+;; projectile
+(use-package projectile
+  :bind
+  ("C-c v" . deadgrep)
 
-;; WSL specific
-(defun copy-selected-text (start end)
-  (interactive "r")
-  (if (use-region-p)
-    (let ((text (buffer-substring-no-properties start end)))
-      (shell-command (concat "echo '" text "' | clip.exe")))))
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+  (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
+  (evil-define-key 'motion deadgrep-mode-map (kbd "C-p") 'projectile-find-file)
+  (evil-define-key 'motion rspec-mode-map (kbd "C-p") 'projectile-find-file)
+  (evil-define-key 'motion rspec-compilation-mode-map (kbd "C-p") 'projectile-find-file)
+
+  (setq projectile-completion-system 'ivy
+        projectile-switch-project-action 'projectile-dired
+        projectile-require-project-root nil)
+
+  (projectile-global-mode))
+
+;; git
+(use-package magit
+  :hook (with-editor-mode . evil-insert-state)
+  :bind ("C-x g" . magit-status)
+
+  :config
+  (use-package git-commit)
+  (use-package magit-section)
+  (use-package with-editor)
+
+  (require 'git-rebase)
+
+  (setq magit-push-always-verify nil
+        git-commit-summary-max-length 50))
+
+;; page through history of a file
+(use-package git-timemachine)
 
 ;; Teach Emacs how to open links in your default Windows browser
 (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
@@ -136,35 +240,7 @@
           browse-url-browser-function 'browse-url-generic
           search-web-default-browser 'browse-url-generic)))
 
-;; TODO: test on linux
-(defmacro with-system (type &rest body)
-  "Evaluate BODY if `system-type' equals TYPE."
-  (declare (indent defun))
-  `(when (eq system-type ',type)
-     ,@body))
-
-;; (with-system darwin (custom-set-variables
-;;                       '(markdown-command "/opt/homebrew/bin/pandoc")))
-;;
-;; ;; pandoc mode
-;; (add-hook 'markdown-mode-hook 'pandoc-mode)
-;; (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
-;;
-;; ;; md mode
-;; (use-package markdown-mode
-;;              :ensure t
-;;              :commands (markdown-mode gfm-mode)
-;;              :mode (("README\\.md\\'" . gfm-mode)
-;;                     ("\\.md\\'" . markdown-mode)
-;;                     ("\\.rmd\\'" . markdown-mode)
-;;                     ("\\.markdown\\'" . markdown-mode))
-;;              :init (setq markdown-command "multimarkdown"))
-;;
-;; ;; Wrap line in markdown.
-;; ;; (add-hook 'markdown-mode-hook (lambda () (visual-line-mode 1)))
-;; ;; (setq markdown-enable-math t)
-;;
-;; org-roam
+;; org-roam TODO move to my-org.el
 (require 'org)
 (require 'org-roam)
 
@@ -187,33 +263,31 @@
              :config
              (org-roam-setup)
              (org-roam-db-autosync-mode)
-             (require 'org-roam-protocol)) ;; If using org-roam-protocol
+             (require 'org-roam-protocol))
 
-;; (setq org-roam-graph-executable "dot")
 
 ;; md-roam TODO find reason why md-roam slows down emacs
 ;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
 ;; (setq org-roam-file-extensions '("org" "md"))
-;; (add-to-list  'load-path "~/.emacs.d/elispfiles/md-roam")
+;; (add-to-list  'load-path "~/.emacs.d/personal/md-roam")
 ;; (require 'md-roam)
 ;; (md-roam-mode 1)
 ;; (setq md-roam-file-extension "md")
 ;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-;;
-;;
-;; ;; TODO add aliases and roam_refs
-;; (add-to-list 'org-roam-capture-templates
-;;              '("m" "Markdown" plain "" :target
-;;                (file+head "%<%Y-%m-%dT%H%M%S>.md"
-;;                           "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-;;                :unnarrowed t))
-;;
+
+;; TODO add aliases and roam_refs
+(add-to-list 'org-roam-capture-templates
+             '("m" "Markdown" plain "" :target
+               (file+head "%<%Y-%m-%dT%H%M%S>.md"
+                          "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+               :unnarrowed t))
+
 ;; ;; org-roam-ui
 ;; (use-package websocket
 ;;              :after org-roam)
 ;;
 ;; (use-package org-roam-ui
-;;              :after org-roam 
+;;              :after org-roam
 ;;              :config
 ;;              (setq org-roam-ui-sync-theme t
 ;;                    org-roam-ui-follow t
@@ -231,7 +305,6 @@
 
 (use-package rainbow-delimiters
              :hook (prog-mode . rainbow-delimiters-mode))
-
 
 (use-package which-key
              :init (which-key-mode)
@@ -264,8 +337,6 @@
              ([remap describe-key] . helpful-key))
 
 
-(use-package command-log-mode
-             :commands command-log-mode)
 
 
 (global-hl-todo-mode)
@@ -288,133 +359,91 @@
 
 (use-package all-the-icons
              :if (display-graphic-p))
-;;
-;; ;; make backup to a designated dir, mirroring the full path
-;; (defun my-backup-file-name (fpath)
-;;   (let* (
-;;          (backupRootDir "~/Documents/emacs-backup/")
-;;          (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
-;;          )
-;;     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-;;     backupFilePath
-;;     )
-;;   )
-;; (setq make-backup-file-name-function 'my-backup-file-name)
-;;
-;; (require 'olivetti)
-;; (auto-image-file-mode 1)
-;;
-;; ;; R-markdown for pdfs
-;; ;; (require 'color)
-;; ;;
-;; ;; (use-package ess
-;; ;;              :ensure t
-;; ;;              :init (require 'ess-site))
-;; ;;
-;; ;; (use-package polymode
-;; ;;              :ensure t
-;; ;;              :config
-;; ;;              (use-package poly-R)
-;; ;;              (use-package poly-markdown)
-;; ;;              ;;; MARKDOWN
-;; ;;              (add-to-list 'auto-mode-alist '("\\.md\\'" . poly-markdown-mode))
-;; ;;              ;;; R modes
-;; ;;              (add-to-list 'auto-mode-alist '("\\.Snw\\'" . poly-noweb+r-mode))
-;; ;;              (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . poly-noweb+r-mode))
-;; ;;              (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-markdown+r-mode))
-;; ;;              (markdown-toggle-math t)
-;; ;;              (defun ess-rmarkdown ()
-;; ;;                "Compile R markdown (.Rmd). Should work for any output type."
-;; ;;                (interactive)
-;; ;;                ; Check if attached R-session
-;; ;;                (condition-case nil
-;; ;;                                (ess-get-process)
-;; ;;                                (error
-;; ;;                                  (ess-switch-process)))
-;; ;;                (let* ((rmd-buf (current-buffer)))
-;; ;;                  (save-excursion
-;; ;;                    (let* ((sprocess (ess-get-process ess-current-process-name))
-;; ;;                           (sbuffer (process-buffer sprocess))
-;; ;;                           (buf-coding (symbol-name buffer-file-coding-system))
-;; ;;                           (R-cmd
-;; ;;                             (format "library(rmarkdown); rmarkdown::render(\"%s\")"
-;; ;;                                     buffer-file-name)))
-;; ;;                      (message "Running rmarkdown on %s" buffer-file-name)
-;; ;;                      (ess-execute R-cmd 'buffer nil nil)
-;; ;;                      (switch-to-buffer rmd-buf)
-;; ;;                      (ess-show-buffer (buffer-name sbuffer) nil)))))
-;; ;;              )
-;; ;; ;; (define-key polymode-mode-map "\M-ns" 'ess-rmarkdown)
-;; ;; (with-eval-after-load 'polymode
-;; ;;                       (define-key polymode-minor-mode-map (kbd "<f5>") 'ess-rmarkdown))
-;; ;;
+
+(require 'olivetti)
+(auto-image-file-mode 1)
+
 ;; (require 'calendar)
-;;
-;;
-;; (dired-recent-mode 1)
-;; (use-package dired-recent
-;;              :load-path "~/.emacs.d/contrib/dired-recent.el/"
-;;              :config
-;;              (require 'dired-recent)
-;;              (dired-recent-mode 1))
-;;
-;; (defun my-dired-recent-dirs ()
-;;   "Present a list of recently used directories and open the selected one in dired"
-;;   (interactive)
-;;   (let ((dir (ivy-read "Directory: "
-;;                        dired-recent-directories
-;;                        :re-builder #'ivy--regex
-;;                        :sort nil
-;;                        :initial-input nil)))
-;;     (dired dir)))
-;;
-;; (global-set-key (kbd "C-z") 'my-dired-recent-dirs)
-;;
-;; ;; Transparency
+
+;; Transparency
 ;; (set-frame-parameter (selected-frame) 'alpha '(100))
 ;; (add-to-list 'default-frame-alist '(alpha . (100)))
-;;
-;; ;; Company
-;; ;; Autocomplete popups
-;; (use-package company
-;;              :ensure t
-;;              :config
-;;              (progn
-;;                (setq company-idle-delay 0.2
-;;                      ;; min prefix of 2 chars
-;;                      company-minimum-prefix-length 2
-;;                      company-selection-wrap-around t
-;;                      company-show-numbers t
-;;                      company-dabbrev-downcase nil
-;;                      company-echo-delay 0
-;;                      company-tooltip-limit 20
-;;                      company-transformers '(company-sort-by-occurrence)
-;;                      company-begin-commands '(self-insert-command)
-;;                      )
-;;                (global-company-mode))
-;;              )
-;; (add-hook 'after-init-hook 'global-company-mode)
-;; ;; markdown-mode math support enabled
-;; ;; nano theme
-;; ;; (straight-use-package
-;; ;;   '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
-;; ;;
-;; ;; (require 'nano)
-;; ;; (setq nano-font-family-proportional nil)
-;; ;; (setq nano-font-size 14)
-;; ;; (nano-faces)
-;; ;; (nano-theme)
-;; ;; (nano-theme--mu4e)
-;; ;; (nano-splash)
-;; ;; (nano-mu4e)
-;;
-;;
-;; colorscheme
-;; (straight-use-package '(nano-theme :type git :host github
-;;                                    :repo "rougier/nano-theme"))
 
-(use-package doom-themes
-             :init (load-theme 'doom-gruvbox t))
+(use-package dired
+  :ensure nil
 
-;; nyxt browser integration
-(setq inferior-lisp-program "sbcl")
+  :config
+  (defun hrs/dired-slideshow ()
+    (interactive)
+    (start-process "dired-slideshow" nil "s" (dired-current-directory)))
+
+  (evil-define-key 'normal dired-mode-map (kbd "o") 'dired-find-file-other-window)
+  (evil-define-key 'normal dired-mode-map (kbd "v") 'hrs/dired-slideshow)
+
+  (setq-default dired-listing-switches
+                (combine-and-quote-strings '("-l"
+                                             "-v"
+                                             "-g"
+                                             "--no-group"
+                                             "--human-readable"
+                                             "--time-style=+%Y-%m-%d"
+                                             "--almost-all")))
+  (setq dired-clean-up-buffers-too t
+        dired-dwim-target t
+        dired-recursive-copies 'always
+        dired-recursive-deletes 'top
+        global-auto-revert-non-file-buffers t))
+
+(use-package dired-hide-dotfiles
+  :config
+  (dired-hide-dotfiles-mode 1)
+  (evil-define-key 'normal dired-mode-map "." 'dired-hide-dotfiles-mode))
+
+(use-package dired-open
+  :config
+  (setq dired-open-extensions
+        '(("avi" . "mpv")
+          ("cbr" . "zathura")
+          ("doc" . "abiword")
+          ("docx" . "abiword")
+          ("gif" . "ffplay")
+          ("gnumeric" . "gnumeric")
+          ("jpeg" . "s")
+          ("jpg" . "s")
+          ("mkv" . "mpv")
+          ("mov" . "mpv")
+          ("mp3" . "mpv")
+          ("mp4" . "mpv")
+          ("pdf" . "zathura")
+          ("png" . "s")
+          ("webm" . "mpv")
+          ("xls" . "gnumeric")
+          ("xlsx" . "gnumeric"))))
+
+;; perform dired actions asynchronously
+(use-package async
+  :config
+  (dired-async-mode 1))
+
+;; programming specific
+;;TODO  add LSP
+;;TODO  add DAP
+;;TODO  add SLIME for lisp
+;;TODO  tressiter for syntax higlighting
+;;TODO  nyxt browser integration
+;;(setq inferior-lisp-program "sbcl")
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(async dired-hide-dotfiles dired-open company-box deadgrep diff-hl smtpmail-multi yasnippet which-key vertico use-package undo-fu tree-sitter-langs spacemacs-theme slime rainbow-delimiters projectile poly-R pdf-tools pandoc-mode org-roam-ui olivetti moody minions ivy-rich hl-todo helpful evil-surround evil-org evil-commentary evil-collection ess doom-themes dired-recent dashboard counsel company command-log-mode circadian all-the-icons)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(italic ((t (:slant italic)))))
