@@ -24,15 +24,17 @@
   "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
 
-(load-user-file "sensible-defaults.el")
+;; (load-user-file "sensible-defaults.el")
 (load-user-file "font-resize.el")
 ;; (load-user-file "my-org.el") TODO fix org
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
 ;; (load-user-file "mail.el") TODO change smtpmail to use-package
 ;; https://yiufung.net/post/anki-org/ TODO add anki-org
+;; TODO jekyll blogging automation: https://github.com/hrs/dotfiles/blob/main/emacs/.config/emacs/configuration.org#blogging
 
 ;; sensible settings from hrs
+(add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
 (require 'sensible-defaults)
 (sensible-defaults/use-all-settings)
 (sensible-defaults/use-all-keybindings)

@@ -102,7 +102,7 @@ code by Titus von der Malsburg."
   (mu4e-update-index))
 
 (use-package smtpmail
-             :straight t
+             ;; :straight t
              :config
              (setq message-send-mail-function 'smtpmail-send-it
                    starttls-use-gnutls t
