@@ -49,8 +49,8 @@ alias explorer='/mnt/c/Windows/explorer.exe'
 alias rd="rmdir"
 alias ip='ip -color=auto'
 alias grep='grep --color=auto'
-alias pip='pip3'
-alias python='python3'
+# alias pip='pip3'
+# alias python='python3'
 alias py="python3"
 alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 alias weather='curl wttr.in'
