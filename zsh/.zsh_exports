@@ -14,7 +14,7 @@ export PATH=$HOME/.local/share/go/bin:$PATH
 export GOPATH=$HOME/.local/share/go
 export DOTFILES=$HOME/dotfiles
 # export TERM="screen-256color"
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
@@ -41,6 +41,7 @@ export LESSHISTFILE=-
 export MCFLY_KEY_SCHEME=vim
 export STARSHIP_CONFIG='$HOME/.config/starship/starship.toml'
 export PKG_CONFIG_PATH=/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
+export NODE_PATH="/home/morp/Downloads/node-v16.15.1-linux-x64/lib/node_modules"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
