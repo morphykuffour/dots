@@ -59,6 +59,8 @@ else
     export BROWSER="brave-browser"
 fi
 
+# paste with <p> in vi-mode zsh with tmux support
+typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
