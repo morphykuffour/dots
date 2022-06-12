@@ -2,7 +2,8 @@
 
 # Easier navigation: .., ..., ~ and -
 alias dots="cd ~/dotfiles"
-alias o="open"
+# alias open="xdg-open"
+# alias o="open"
 alias ls="exa"
 alias cd..="cd .."
 alias ..="cd .."
