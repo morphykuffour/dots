@@ -125,14 +125,14 @@
 (setq frame-title-format '((:eval (projectile-project-name))))
 
 ;; colorscheme
-(use-package spacemacs-theme
-  :defer t
-  :init
-  (setq spacemacs-theme-org-bold nil
-        spacemacs-theme-org-height nil)
-  :config
-  (load-theme 'spacemacs-light t))
-(load-theme 'spacemacs-light t)
+;; (use-package spacemacs-theme
+;;   :defer t
+;;   :init
+;;   (setq spacemacs-theme-org-bold nil
+;;         spacemacs-theme-org-height nil)
+;;   :config
+;;   (load-theme 'spacemacs-light t))
+;; (load-theme 'spacemacs-light t)
 
 ;; hide minor modes
 (use-package minions
