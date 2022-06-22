@@ -41,13 +41,24 @@ zsh_add_plugin() {
     fi
 }
 
+# ranger change dir
+ranger-cd() {
+    local IFS=$'\t\n'
+    local tempfile="$(mktemp -t tmp.XXXXXX)"
+    local ranger_cmd=(
+        command
+        ranger
+        --cmd="map Q chain shell echo %d > "$tempfile"; quitall"
+    )
 
-# Top ten memory hogs
-# http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
-memtop() {
-  ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead
+    ${ranger_cmd[@]} "$@"
+    if [[ -f "$tempfile" ]] && [[ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]]; then
+        cd -- "$(cat "$tempfile")" || return
+    fi
+    command rm -f -- "$tempfile" 2>/dev/null
 }
-zle -N memtop
+alias rcd=ranger-cd
+bindkey -s '^o' 'rcd\n'
 
 # Use lf to switch directories and bind it to ctrl-o
 lfcd () {
@@ -59,7 +70,14 @@ lfcd () {
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir" || exit
     fi
 }
-bindkey -s '^o' 'lfcd\n'
+# bindkey -s '^o' 'lfcd\n'
+
+# Top ten memory hogs
+# http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
+memtop() {
+  ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead
+}
+zle -N memtop
 
 change_background() {
     feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
