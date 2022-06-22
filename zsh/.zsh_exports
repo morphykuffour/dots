@@ -44,6 +44,8 @@ if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
     # WSL environment
     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
     export DISPLAY="$(hostname).local:0.0"
+    export LIBGL_ALWAYS_INDIRECT=0
+
 else
     export BROWSER="brave-browser"
 fi
