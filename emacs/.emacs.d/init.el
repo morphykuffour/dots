@@ -441,6 +441,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("7a7b1d475b42c1a0b61f3b1d1225dd249ffa1abb1b7f726aec59ac7ca3bf4dae" default))
  '(package-selected-packages
    '(async dired-hide-dotfiles dired-open company-box deadgrep diff-hl smtpmail-multi yasnippet which-key vertico use-package undo-fu tree-sitter-langs spacemacs-theme slime rainbow-delimiters projectile poly-R pdf-tools pandoc-mode org-roam-ui olivetti moody minions ivy-rich hl-todo helpful evil-surround evil-org evil-commentary evil-collection ess doom-themes dired-recent dashboard counsel company command-log-mode circadian all-the-icons)))
 (custom-set-faces
