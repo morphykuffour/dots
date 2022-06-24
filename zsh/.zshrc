@@ -7,6 +7,8 @@ source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
 source $HOME/.zsh_functions
 
+compdef _gnu_generic delta
+
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
 setopt BEEP
@@ -232,3 +234,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+alias luamake=/home/morp/.cache/nvim/nlua/sumneko_lua/lua-language-server/3rd/luamake/luamake

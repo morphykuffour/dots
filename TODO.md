@@ -4,4 +4,5 @@
 - [x] MT(MOD_LCTL, KC_ESC) 
 - [x] LT(1, KC_TAB)
 - [x] MT(MOD_LCTL | MOD_LALT, KC_CTL)
-- [ ] move everything to Nix OS
+- [ ] move everything to Nix OS 
+  - [ ]  Support for WSL, Linux, Mac OS X
