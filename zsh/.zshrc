@@ -7,7 +7,6 @@ source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
 source $HOME/.zsh_functions
 
-compdef _gnu_generic delta
 
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
@@ -43,6 +42,7 @@ TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 # ------------------------------ ZSH completion system ------------------------
 autoload -Uz compinit
 compinit -d ~/.cache/zsh/zcompdump
+compdef _gnu_generic delta
 _comp_options+=(globdots)		# Include hidden files.
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
@@ -141,8 +141,8 @@ function vif() {
 # https://jdhao.github.io/2019/06/13/zsh_bind_keys/
 bindkey -s '^p' 'vif^M'
 
-source "$HOME"/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
-bindkey '^s' _histdb-isearch
+# source "$HOME"/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
+# bindkey '^s' _histdb-isearch
 
 
 # xplr
@@ -181,7 +181,7 @@ case "$(uname -s)" in
     code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
     ;;
   Linux)
-    source /usr/share/autojump/autojump.zsh
+    source $HOME/.zsh/completions/autojump.zsh
     open () { xdg-open "$*" &}
     ;;
   CYGWIN*|MINGW32*|MSYS*|MINGW*)
@@ -206,33 +206,18 @@ eval "$(starship init zsh)"
 # ------------------------------- ZSH PLUGINS ---------------------------------
 
 source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
-source $HOME/.zsh/plugins/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
+# source $HOME/.zsh/plugins/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
 source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $HOME/.zsh/plugins/zsh-histdb/sqlite-history.zsh
+# source $HOME/.zsh/plugins/zsh-histdb/sqlite-history.zsh
 
 # histdb
-autoload -Uz add-zsh-hook
+# autoload -Uz add-zsh-hook
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/morp/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/morp/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/morp/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/morp/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# export PYENV_ROOT="$HOME/.pyenv"
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 
 alias luamake=/home/morp/.cache/nvim/nlua/sumneko_lua/lua-language-server/3rd/luamake/luamake
