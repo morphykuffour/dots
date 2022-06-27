@@ -114,7 +114,7 @@
 (column-number-mode)
 (scroll-bar-mode -1)
 (setq visible-bell nil)
-(pixel-scroll-precision-mode)
+;; (pixel-scroll-precision-mode)
 (setq inhibit-startup-message t)
 (global-prettify-symbols-mode t)
 (setq shell-command-switch "-ic")
@@ -125,14 +125,14 @@
 (setq frame-title-format '((:eval (projectile-project-name))))
 
 ;; colorscheme
-;; (use-package spacemacs-theme
-;;   :defer t
-;;   :init
-;;   (setq spacemacs-theme-org-bold nil
-;;         spacemacs-theme-org-height nil)
-;;   :config
-;;   (load-theme 'spacemacs-light t))
-;; (load-theme 'spacemacs-light t)
+(use-package spacemacs-theme
+  :defer t
+  :init
+  (setq spacemacs-theme-org-bold nil
+        spacemacs-theme-org-height nil)
+  :config
+  (load-theme 'spacemacs-light t))
+(load-theme 'spacemacs-light t)
 
 ;; hide minor modes
 (use-package minions
@@ -244,28 +244,28 @@
 
 ;; org-roam TODO move to my-org.el
 (require 'org)
-(require 'org-roam)
+;; (require 'org-roam)
 
-(use-package org-roam
-             :after org
-             :ensure t
-             :init
-             (setq org-roam-v2-ack t)
-             :custom
-             (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-             :bind (("C-c n l" . org-roam-buffer-toggle)
-                    ("C-c n f" . org-roam-node-find)
-                    ("C-c n g" . org-roam-ui-open)
-                    ("C-c n i" . org-roam-node-insert)
-                    ("C-c n c" . org-roam-capture)
-                    ("C-c n a" . org-roam-alias-add)
-                    :map org-mode-map
-                    ("C-M-i" . completion-at-point)
-                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-             :config
-             (org-roam-setup)
-             (org-roam-db-autosync-mode)
-             (require 'org-roam-protocol))
+;; (use-package org-roam
+;;              :after org
+;;              :ensure t
+;;              :init
+;;              (setq org-roam-v2-ack t)
+;;              :custom
+;;              (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+;;              :bind (("C-c n l" . org-roam-buffer-toggle)
+;;                     ("C-c n f" . org-roam-node-find)
+;;                     ("C-c n g" . org-roam-ui-open)
+;;                     ("C-c n i" . org-roam-node-insert)
+;;                     ("C-c n c" . org-roam-capture)
+;;                     ("C-c n a" . org-roam-alias-add)
+;;                     :map org-mode-map
+;;                     ("C-M-i" . completion-at-point)
+;;                     ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
+;;              :config
+;;              (org-roam-setup)
+;;              (org-roam-db-autosync-mode)
+;;              (require 'org-roam-protocol))
 
 
 ;; md-roam TODO find reason why md-roam slows down emacs
@@ -278,11 +278,11 @@
 ;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
-(add-to-list 'org-roam-capture-templates
-             '("m" "Markdown" plain "" :target
-               (file+head "%<%Y-%m-%dT%H%M%S>.md"
-                          "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-               :unnarrowed t))
+;; (add-to-list 'org-roam-capture-templates
+;;              '("m" "Markdown" plain "" :target
+;;                (file+head "%<%Y-%m-%dT%H%M%S>.md"
+;;                           "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+;;                :unnarrowed t))
 
 ;; ;; org-roam-ui
 ;; (use-package websocket
