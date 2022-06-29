@@ -8,6 +8,8 @@ export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 export EDITOR=nvim
 export VISUAL=nvim
 export TERMINAL=kitty
+# export FILE=caja TODO use caja-dropbox
+export FILE=ranger
 
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.local/share/go/bin:$PATH

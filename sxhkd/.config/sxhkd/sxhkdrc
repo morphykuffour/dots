@@ -47,7 +47,7 @@ alt + s
 
 # my-take-on.tech #
 # Show clipmenu
-alt + v
+alt + f
     CM_LAUNCHER=rofi clipmenu \
         -location 1 \
         -m -3 \
