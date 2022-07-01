@@ -6,7 +6,7 @@ export ZDOTDIR=$HOME/.zsh
 source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
 source $HOME/.zsh_functions
-
+fpath+=$HOME/.zsh/completions
 
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
@@ -182,6 +182,8 @@ case "$(uname -s)" in
     ;;
   Linux)
     source $HOME/.zsh/completions/autojump.zsh
+    # source $HOME/.zsh/completions/home-manager.zsh
+    source $HOME/.zsh/completions/gh.zsh
     open () { xdg-open "$*" &}
     ;;
   CYGWIN*|MINGW32*|MSYS*|MINGW*)

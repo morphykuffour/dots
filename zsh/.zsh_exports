@@ -7,6 +7,8 @@ export XDG_DATA_HOME="$HOME/.local/share"
 
 export PATH="$HOME/.local/bin":$PATH
 export PATH="$HOME/bin":$PATH
+export PATH="/var/lib/flatpak/exports/share":$PATH
+export PATH="/home/morp/.local/share/flatpak/exports/share":$PATH
 # export MANPAGER='nvim +Man!'
 # export MANWIDTH=999
 export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
@@ -55,7 +57,7 @@ if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
     export LIBGL_ALWAYS_INDIRECT=0
 
 else
-    export BROWSER="brave-browser"
+    export BROWSER="brave"
 fi
 
 # paste with <p> in vi-mode zsh with tmux support
