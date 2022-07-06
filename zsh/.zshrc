@@ -2,6 +2,14 @@
 
 # conda config --set auto_activate_base false
 
+# kitty integration
+if [[ -n $KITTY_INSTALLATION_DIR ]]; then
+    export KITTY_SHELL_INTEGRATION="enabled"
+    autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+    kitty-integration
+    unfunction kitty-integration
+fi
+
 export ZDOTDIR=$HOME/.zsh
 source $HOME/.zsh_aliases
 source $HOME/.zsh_exports

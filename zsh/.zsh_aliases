@@ -92,6 +92,9 @@ alias vrc="nvim $HOME/.config/nvim/init.lua"
 alias hibernate="systemctl suspend"
 alias pacman="yay"
 
+# system keybindings
+alias keysoup="sudo systemctl restart keyd && sudo systemctl enable keyd && sudo systemctl start keyd && setxkbmap -option compose:menu"
+
 # utility commands
 alias q="exit"
 alias mypw="pwgen -c -n -s -y 16 -1"
