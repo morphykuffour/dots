@@ -112,6 +112,11 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
+# Edit line in vim with ctrl-e:
+autoload edit-command-line
+zle -N edit-command-line
+
+
 export VI_MODE_SET_CURSOR=true
 
 # Use vim keys in tab complete menu:
@@ -119,6 +124,10 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect '/' vi-history-search-backward
+bindkey -M vicmd '^e' edit-command-line
+bindkey '^e' edit-command-line
+
 bindkey -v '^?' backward-delete-char
 bindkey '^U' backward-kill-line
 bindkey '^[[2~' overwrite-mode
@@ -136,22 +145,6 @@ bindkey '^[[Z' undo
 bindkey ' ' magic-space
 
 
-# source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
-function vif() {
-    local fname
-    local current_dir=$PWD
-    cd ~/dotfiles || exit
-    fname=$(fzf) || return
-    vim "$fname"
-    cd $current_dir
-}
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
-bindkey -s '^p' 'vif^M'
-
-# source "$HOME"/.zsh/plugins/zsh-histdb/histdb-interactive.zsh
-# bindkey '^s' _histdb-isearch
-
 
 # xplr
 function xcd() {
@@ -163,9 +156,6 @@ bindkey -s '^q' 'xcd^M'
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 bindkey '^[[P' delete-char
 
-# Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
 
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
 export LESSOPEN='| ~/.local/bin/lessfilter %s'
@@ -203,10 +193,7 @@ esac
 # ------------------------------- ZSH APPS ------------------------------------
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
-
 bindkey '^r' _atuin_search_widget
-
-# depends on terminal mode
 bindkey '^[[A' _atuin_search_widget
 bindkey '^[OA' _atuin_search_widget
 
@@ -214,20 +201,12 @@ bindkey '^[OA' _atuin_search_widget
 eval "$(starship init zsh)"
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
-
 source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
-# source $HOME/.zsh/plugins/zsh-pandoc-completion/zsh-pandoc-completion.plugin.zsh
 source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-# source $HOME/.zsh/plugins/zsh-histdb/sqlite-history.zsh
 
-# histdb
-# autoload -Uz add-zsh-hook
-
-# export PYENV_ROOT="$HOME/.pyenv"
-# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-# eval "$(pyenv init -)"
+source $HOME/.zsh/plugins/fzf-gems/fzf_git_functions.sh
+source $HOME/.zsh/plugins/fzf-gems/fzf_git_keybindings.zsh
 
 
-alias luamake=/home/morp/.cache/nvim/nlua/sumneko_lua/lua-language-server/3rd/luamake/luamake
