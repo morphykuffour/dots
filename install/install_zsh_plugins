@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+git clone https://github.com/bobthecow/git-flow-completion.git $HOME/.zsh/plugins/git-flow-completion/
+# git clone $HOME/.zsh/plugins/zsh-system-clipboard/
+# git clone $HOME/.zsh/plugins/zsh-autosuggestions/
+# git clone $HOME/.zsh/plugins/fast-syntax-highlighting/
+
+
+
+
+
