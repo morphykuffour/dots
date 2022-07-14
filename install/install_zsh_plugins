@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-git clone https://github.com/bobthecow/git-flow-completion.git $HOME/.zsh/plugins/git-flow-completion/
-# git clone $HOME/.zsh/plugins/zsh-system-clipboard/
-# git clone $HOME/.zsh/plugins/zsh-autosuggestions/
-# git clone $HOME/.zsh/plugins/fast-syntax-highlighting/
+git clone https://github.com/kutsan/zsh-system-clipboard.git $HOME/.zsh/plugins/zsh-system-clipboard/
+git clone https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.zsh/plugins/zsh-autosuggestions/
+git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git $HOME/.zsh/plugins/fast-syntax-highlighting/
+git clone https://github.com/teto/fzf-gems.git $HOME/.zsh/plugins/fzf-gems/
 
 
 
