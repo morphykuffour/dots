@@ -7,6 +7,7 @@
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
+
 ;; ensure use-package is installed.
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
@@ -24,14 +25,13 @@
   "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
 
-;; (load-user-file "sensible-defaults.el")
 (load-user-file "font-resize.el")
 ;; (load-user-file "my-org.el") TODO fix org
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
-;; (load-user-file "mail.el") TODO change smtpmail to use-package
-;; https://yiufung.net/post/anki-org/ TODO add anki-org
-;; TODO jekyll blogging automation: https://github.com/hrs/dotfiles/blob/main/emacs/.config/emacs/configuration.org#blogging
+
+;; TODO change smtpmail to use-package FIXME
+;; (load-user-file "mail.el")
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -40,9 +40,11 @@
 (sensible-defaults/use-all-keybindings)
 (sensible-defaults/backup-to-temp-directory)
 
+
 ;; pusihing p
 (use-package command-log-mode
              :commands command-log-mode)
+
 (use-package ivy
              :diminish
              :bind (("C-s" . swiper)
@@ -72,7 +74,7 @@
              (evil-mode 1)
              (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle))
 
-;;; 666 the number of the beast
+;;; 666, the number of the beast
 (use-package evil-collection
              :ensure t
              :after evil
@@ -114,6 +116,10 @@
 (column-number-mode)
 (scroll-bar-mode -1)
 (setq visible-bell nil)
+(tool-bar-mode -1)
+(menu-bar-mode 1)
+(set-fringe-mode 10)
+
 ;; (pixel-scroll-precision-mode)
 (setq inhibit-startup-message t)
 (global-prettify-symbols-mode t)
@@ -124,15 +130,22 @@
 (set-window-scroll-bars (minibuffer-window) nil nil)
 (setq frame-title-format '((:eval (projectile-project-name))))
 
-;; colorscheme
-(use-package spacemacs-theme
-  :defer t
-  :init
-  (setq spacemacs-theme-org-bold nil
-        spacemacs-theme-org-height nil)
+
+;; Install additinal themes from melpa
+;; make sure to use :defer keyword
+(use-package apropospriate-theme :ensure :defer)
+(use-package nord-theme :ensure :defer)
+
+(use-package circadian
+  :ensure t
   :config
-  (load-theme 'spacemacs-light t))
-(load-theme 'spacemacs-light t)
+  (setq calendar-latitude 53.6)
+  (setq calendar-longitude -2.43)
+  (setq circadian-themes '((:sunrise . apropospriate-light)
+  ;; (setq circadian-themes '((:sunrise . nord)
+                           (:sunset  . dracula)))
+  (circadian-setup))
+
 
 ;; hide minor modes
 (use-package minions
@@ -142,12 +155,11 @@
   (minions-mode 1))
 
 ;; modeline
-(use-package moody
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
-
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 25)))
+(set-face-attribute 'mode-line nil :height 100)
+(set-face-attribute 'mode-line-inactive nil :height 100)
 ;; ;; highlight those diffs
 ;; (use-package diff-hl
 ;;   :config
@@ -183,18 +195,15 @@
 
   :config
   (setq lsp-completion-provider :capf))
-(use-package all-the-icons)
+(use-package all-the-icons
+  :ensure t)
+
 (use-package company-box
   :after company
   :hook (company-mode . company-box-mode)
 
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; syntax checking
-(use-package let-alist)
-(use-package flycheck
-  :init (global-flycheck-mode))
 
 ;; projectile
 (use-package projectile
@@ -229,6 +238,10 @@
 
   (setq magit-push-always-verify nil
         git-commit-summary-max-length 50))
+(use-package magit-popup
+  :ensure t ; make sure it is installed
+  :demand t ; make sure it is loaded
+  )
 
 ;; page through history of a file
 (use-package git-timemachine)
@@ -244,28 +257,28 @@
 
 ;; org-roam TODO move to my-org.el
 (require 'org)
-;; (require 'org-roam)
+(require 'org-roam)
 
-;; (use-package org-roam
-;;              :after org
-;;              :ensure t
-;;              :init
-;;              (setq org-roam-v2-ack t)
-;;              :custom
-;;              (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-;;              :bind (("C-c n l" . org-roam-buffer-toggle)
-;;                     ("C-c n f" . org-roam-node-find)
-;;                     ("C-c n g" . org-roam-ui-open)
-;;                     ("C-c n i" . org-roam-node-insert)
-;;                     ("C-c n c" . org-roam-capture)
-;;                     ("C-c n a" . org-roam-alias-add)
-;;                     :map org-mode-map
-;;                     ("C-M-i" . completion-at-point)
-;;                     ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-;;              :config
-;;              (org-roam-setup)
-;;              (org-roam-db-autosync-mode)
-;;              (require 'org-roam-protocol))
+(use-package org-roam
+             :after org
+             :ensure t
+             :init
+             (setq org-roam-v2-ack t)
+             :custom
+             (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+             :bind (("C-c n l" . org-roam-buffer-toggle)
+                    ("C-c n f" . org-roam-node-find)
+                    ("C-c n g" . org-roam-ui-open)
+                    ("C-c n i" . org-roam-node-insert)
+                    ("C-c n c" . org-roam-capture)
+                    ("C-c n a" . org-roam-alias-add)
+                    :map org-mode-map
+                    ("C-M-i" . completion-at-point)
+                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
+             :config
+             (org-roam-setup)
+             (org-roam-db-autosync-mode)
+             (require 'org-roam-protocol))
 
 
 ;; md-roam TODO find reason why md-roam slows down emacs
@@ -305,6 +318,7 @@
   (exec-path-from-shell-initialize))
 
 
+(require 'rainbow-delimiters)
 (use-package rainbow-delimiters
              :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -427,24 +441,82 @@
   :config
   (dired-async-mode 1))
 
+;; engine mode
+(use-package engine-mode
+  :ensure t
+
+  :config
+  (engine-mode t))
+
+;; (setq engine/browser-function 'eww-browse-url)
+
+(defengine github
+  "https://github.com/search?ref=simplesearch&q=%s"
+  :keybinding "c")
+
+(defengine duckduckgo
+  "https://duckduckgo.com/?q=%s"
+  :keybinding "d")
+
+(defengine google
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+  :keybinding "g")
+
+(use-package vterm
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))
+
+(when (eq system-type 'windows-nt)
+  (setq explicit-shell-file-name "powershell.exe")
+  (setq explicit-powershell.exe-args '()))
+
+(defun efs/configure-eshell ()
+  ;; Save command history when commands are entered
+  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+  ;; Truncate buffer for performance
+  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+  ;; Bind some useful keys for evil-mode
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+  (evil-normalize-keymaps)
+
+  (setq eshell-history-size         10000
+        eshell-buffer-maximum-lines 10000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t))
+
+(use-package eshell-git-prompt
+  :after eshell)
+
+(use-package eshell
+  :hook (eshell-first-time-mode . efs/configure-eshell)
+  :config
+
+  (with-eval-after-load 'esh-opt
+    (setq eshell-destroy-buffer-when-process-dies t)
+    (setq eshell-visual-commands '("htop" "zsh" "vim")))
+
+  (eshell-git-prompt-use-theme 'powerline))
+
+
 ;; programming specific
 ;;TODO  add LSP
 ;;TODO  add DAP
+
 ;;TODO  add SLIME for lisp
-;;TODO  tressiter for syntax higlighting
-;;TODO  nyxt browser integration
-;;(setq inferior-lisp-program "sbcl")
-
-
+(setq inferior-lisp-program "sbcl")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("7a7b1d475b42c1a0b61f3b1d1225dd249ffa1abb1b7f726aec59ac7ca3bf4dae" default))
  '(package-selected-packages
-   '(async dired-hide-dotfiles dired-open company-box deadgrep diff-hl smtpmail-multi yasnippet which-key vertico use-package undo-fu tree-sitter-langs spacemacs-theme slime rainbow-delimiters projectile poly-R pdf-tools pandoc-mode org-roam-ui olivetti moody minions ivy-rich hl-todo helpful evil-surround evil-org evil-commentary evil-collection ess doom-themes dired-recent dashboard counsel company command-log-mode circadian all-the-icons)))
+   '(eshell-git-prompt vterm dracula-theme nord-theme apropospriate-theme circadian engine-mode which-key vertico use-package undo-fu tree-sitter-langs spacemacs-theme slime rainbow-delimiters org-roam-ui olivetti moody minions magit-popup ivy-rich hl-todo gruvbox-theme git-timemachine git-commit flycheck exec-path-from-shell evil-surround evil-org evil-commentary evil-collection dired-open dired-hide-dotfiles deadgrep dashboard counsel async all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

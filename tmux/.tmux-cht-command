@@ -39,3 +39,6 @@ gparted
 parted
 gpg
 cscope
+emacs
+nvim
+vim
