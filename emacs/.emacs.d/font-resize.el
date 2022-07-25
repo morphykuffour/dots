@@ -2,7 +2,7 @@
  '(italic ((t (:slant italic)))))
 
 (setq hrs/default-fixed-font "JetBrainsMono Nerd Font Mono")
-(setq hrs/default-fixed-font-size 70)
+(setq hrs/default-fixed-font-size 100)
 (setq hrs/current-fixed-font-size hrs/default-fixed-font-size)
 (set-face-attribute 'default nil
                     :family hrs/default-fixed-font
@@ -12,7 +12,7 @@
                     :height hrs/current-fixed-font-size)
 
 (setq hrs/default-variable-font "JetBrainsMono Nerd Font Mono")
-(setq hrs/default-variable-font-size 80)
+(setq hrs/default-variable-font-size 100)
 (setq hrs/current-variable-font-size hrs/default-variable-font-size)
 (set-face-attribute 'variable-pitch nil
                     :family hrs/default-variable-font
