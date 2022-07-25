@@ -15,7 +15,7 @@ bind-git-helper() {
 }
 # need this for git things to work
 bindkey -r "^G"bindkey -r "^G"
-bind-git-helper s b t r l
+bind-git-helper f b t r h
 unset -f bind-git-helper
 
 ## KEYMAPS FOR GIT ZSH
