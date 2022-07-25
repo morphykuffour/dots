@@ -13,7 +13,6 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; define user-init-dir
 (defconst user-init-dir
           (cond ((boundp 'user-emacs-directory) user-emacs-directory)
                 ((boundp 'user-init-directory) user-init-directory)
@@ -26,9 +25,11 @@
   (load-file (expand-file-name file user-init-dir)))
 
 (load-user-file "font-resize.el")
-;; (load-user-file "my-org.el") TODO fix org
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
+
+;; TODO fix org
+;; (load-user-file "my-org.el")
 
 ;; TODO change smtpmail to use-package FIXME
 ;; (load-user-file "mail.el")
@@ -131,21 +132,6 @@
 (setq frame-title-format '((:eval (projectile-project-name))))
 
 
-;; Install additinal themes from melpa
-;; make sure to use :defer keyword
-(use-package apropospriate-theme :ensure :defer)
-(use-package nord-theme :ensure :defer)
-
-(use-package circadian
-  :ensure t
-  :config
-  (setq calendar-latitude 53.6)
-  (setq calendar-longitude -2.43)
-  (setq circadian-themes '((:sunrise . apropospriate-light)
-  ;; (setq circadian-themes '((:sunrise . nord)
-                           (:sunset  . dracula)))
-  (circadian-setup))
-
 
 ;; hide minor modes
 (use-package minions
@@ -158,12 +144,9 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 25)))
-(set-face-attribute 'mode-line nil :height 100)
-(set-face-attribute 'mode-line-inactive nil :height 100)
-;; ;; highlight those diffs
-;; (use-package diff-hl
-;;   :config
-;;   :hook ((text-mode prog-mode vc-dir-mode) . turn-on-diff-hl-mode))
+
+(set-face-attribute 'mode-line nil :height 120)
+(set-face-attribute 'mode-line-inactive nil :height 120)
 
 ;; ripgrep for searching
 (use-package deadgrep
@@ -364,15 +347,6 @@
         ("STUB"   . "#1E90FF")))
 
 
-;; Or if you use use-package
-(use-package dashboard
-             :ensure t
-             :config
-             (dashboard-setup-startup-hook)
-             (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-             (setq dashboard-startup-banner 'nil) ; 'logo -> logo
-             )
-
 (use-package all-the-icons
              :if (display-graphic-p))
 
@@ -503,23 +477,94 @@
 
   (eshell-git-prompt-use-theme 'powerline))
 
+;; sly
+(setq inferior-lisp-program "sbcl")
+
+(use-package apropospriate-theme :ensure :defer)
+(use-package nord-theme :ensure :defer)
+
+(use-package circadian
+  :ensure t
+  :config
+  (setq calendar-latitude 40.0)
+  (setq calendar-longitude -70.0)
+  (setq circadian-themes '((:sunrise . apropospriate-light)
+                           (:sunset  . nord)))
+  (circadian-setup))
+
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 ;; programming specific
 ;;TODO  add LSP
 ;;TODO  add DAP
 
-;;TODO  add SLIME for lisp
-(setq inferior-lisp-program "sbcl")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(eshell-git-prompt vterm dracula-theme nord-theme apropospriate-theme circadian engine-mode which-key vertico use-package undo-fu tree-sitter-langs spacemacs-theme slime rainbow-delimiters org-roam-ui olivetti moody minions magit-popup ivy-rich hl-todo gruvbox-theme git-timemachine git-commit flycheck exec-path-from-shell evil-surround evil-org evil-commentary evil-collection dired-open dired-hide-dotfiles deadgrep dashboard counsel async all-the-icons)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(italic ((t (:slant italic)))))
+(defun efs/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook (lsp-mode . efs/lsp-mode-setup)
+  :init
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package lsp-ivy
+  :after lsp)
+
+(use-package dap-mode
+  ;; Uncomment the config below if you want all UI panes to be hidden by default!
+  ;; :custom
+  ;; (lsp-enable-dap-auto-configure nil)
+  ;; :config
+  ;; (dap-ui-mode 1)
+  :commands dap-debug
+  :config
+  ;; Set up Node debugging
+  (require 'dap-node)
+  (dap-node-setup) ;; Automatically installs Node debug adapter if needed
+
+  ;; Bind `C-c l d` to `dap-hydra` for easy access
+  (general-define-key
+    :keymaps 'lsp-mode-map
+    :prefix lsp-keymap-prefix
+    "d" '(dap-hydra t :wk "debugger")))
+
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :custom
+  ;; NOTE: Set these if Python 3 is called "python3" on your system!
+  (python-shell-interpreter "python3")
+  (dap-python-executable "python3")
+  (dap-python-debugger 'debugpy)
+  :config
+  (require 'dap-python))
+
+(use-package pyvenv
+  :after python-mode
+  :config
+  (pyvenv-mode 1))
+
+;; place custom-set-variables into its own file
+(setq custom-file (concat user-emacs-directory "/custom.el"))
+(load-file custom-file)

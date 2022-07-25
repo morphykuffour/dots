@@ -177,19 +177,6 @@ function fzf-rm() {
   fi
 }
 
-# Man without options will use fzf to select a page
-# function fzf-man() {
-# MAN=$(which man);
-# 	if [ -n "$1" ]; then
-# 		$MAN "$@"
-# 		return $?
-# 	else
-# 		$MAN -k . | fzf --reverse --preview="echo {1,2} | sed 's/ (/./' | sed -E 's/\)\s*$//' | xargs $MAN" | awk '{print $1 "." $2}' | tr -d '()' | xargs -r $MAN
-# 		return $?
-# 	fi
-# }
-
-
 #Eval commands on the fly
 fzf-eval() {
    echo | fzf -q "$*" --preview-window=up:99% --preview="eval {q}"
@@ -320,3 +307,50 @@ fzf-checkout(){
         echo "Can't check out or create branch. Not in a git repo"
     fi
 }
+
+# git commit browser show with fzf 
+git-commit-show() {
+
+  # param validation
+  if [[ ! `git log -n 1 $@ | head -n 1` ]] ;then
+    return
+  fi
+
+  # filter by file string
+  local filter
+  # param existed, git log for file if existed
+  if [ -n $@ ] && [ -f $@ ]; then
+    filter="-- $@"
+  fi
+
+  # git command
+  local gitlog=(
+    git log
+    --graph --color=always
+    --abbrev=7
+    --format='%C(auto)%h %an %C(blue)%s %C(yellow)%cr'
+    $@
+  )
+
+  # fzf command
+  local fzf=(
+    fzf
+    --ansi --no-sort --reverse --tiebreak=index
+    --preview "f() { set -- \$(echo -- \$@ | grep -o '[a-f0-9]\{7\}'); [ \$# -eq 0 ] || git show --color=always \$1 $filter; }; f {}"
+    --bind "ctrl-q:abort,ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % $filter | less -R') << 'FZF-EOF'
+                {}
+                FZF-EOF"
+   --preview-window=right:60%
+  )
+
+  # piping them
+  $gitlog | $fzf
+}
+
+zle -N git-commit-show
+# bindkey '^g' fzf-git-status
+
+
+

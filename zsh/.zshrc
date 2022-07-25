@@ -206,7 +206,7 @@ source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
-source $HOME/.zsh/plugins/fzf-gems/fzf_git_functions.sh
-source $HOME/.zsh/plugins/fzf-gems/fzf_git_keybindings.zsh
+. $HOME/.zsh/plugins/fzf-gems/fzf_git_functions.sh
+. $HOME/.zsh/plugins/fzf-gems/fzf_git_keybindings.zsh
 
 
