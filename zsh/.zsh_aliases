@@ -126,7 +126,7 @@ alias diff='diff --color=auto'
 alias ip='ip --color=auto'
 alias ll='ls -la'
 alias la='ls -a'
-alias l='ls -F'
+# alias l='ls -F'
 alias tree='colorls --tree'
 alias bat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
@@ -135,3 +135,8 @@ alias batcat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
 alias less='batcat'
 
+# zshmarks
+alias gt="jump"
+alias b="bookmark"
+alias d="deletemark"
+alias s="showmarks"

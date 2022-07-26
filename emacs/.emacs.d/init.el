@@ -66,7 +66,7 @@
 (use-package evil
              :demand t
              :bind (("<escape>" . keyboard-escape-quit))
-             :init
+	     :init
              (setq evil-search-module 'evil-search)
              (setq evil-want-keybinding nil)
              ;; no vim insert bindings
@@ -131,8 +131,6 @@
 (set-window-scroll-bars (minibuffer-window) nil nil)
 (setq frame-title-format '((:eval (projectile-project-name))))
 
-
-
 ;; hide minor modes
 (use-package minions
   :config
@@ -145,8 +143,8 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 25)))
 
-(set-face-attribute 'mode-line nil :height 120)
-(set-face-attribute 'mode-line-inactive nil :height 120)
+(set-face-attribute 'mode-line nil :height 150)
+(set-face-attribute 'mode-line-inactive nil :height 150)
 
 ;; ripgrep for searching
 (use-package deadgrep
@@ -564,6 +562,13 @@
   :after python-mode
   :config
   (pyvenv-mode 1))
+
+;; colemak dh
+;; (use-package evil-colemak-basics
+;;   :init
+;;   (setq evil-colemak-basics-layout-mod 'mod-dh)
+;;   :config
+;;   (global-evil-colemak-basics-mode))
 
 ;; place custom-set-variables into its own file
 (setq custom-file (concat user-emacs-directory "/custom.el"))
