@@ -1,0 +1,94 @@
+{
+	"name": "Vimium C",
+	"@time": "7/27/2022, 3:31:07 PM",
+	"time": 1658950267044,
+	"environment": {
+		"extension": "1.98.3",
+		"platform": "linux",
+		"chromium": "101"
+	},
+	"allBrowserUrls": true,
+	"exclusionRules": [
+		{
+			"passKeys": "",
+			"pattern": ":https://mail.google.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://monkeytype.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://monkeytype.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://leetcode.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://leetcode.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://config.qmk.fm/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://config.qmk.fm/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://gnusenpai.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://gnusenpai.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.colemak.academy/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.colemak.academy/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://first20hours.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://first20hours.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://type-fu.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://type-fu.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://10fastfingers.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.keybr.com/"
+		}
+	],
+	"keyMappings": [
+		"#!no-check",
+		"# Make a current tab zoom in ",
+		"map z zoomIn",
+		"",
+		"# Make a current tab zoom out ",
+		"map Z zoomOut",
+		"",
+		"# Make a current tab zoom reset to 100%",
+		"map = zoomReset",
+		""
+	],
+	"vimSync": true
+}
