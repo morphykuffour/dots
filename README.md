@@ -25,6 +25,3 @@ bash ~/dotfiles/install/install_tools.sh;
 bash ~/dotfiles/install/deploy.sh;
 
 ```
-## Programs
-
-An updated list of all the programs I use can be found in the `programs` directory
