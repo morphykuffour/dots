@@ -14,5 +14,6 @@
 (global-set-key (kbd "C-c e t") 'counsel-load-theme)
 (global-set-key (kbd "C-c e m") 'mu4e)
 (global-set-key (kbd "C-c e o") 'olivetti-mode)
+(global-set-key (kbd "C-c e r") 'org-babel-execute-src-block)
 (global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
 (global-set-key (kbd "<space><space>") 'previous-buffer)

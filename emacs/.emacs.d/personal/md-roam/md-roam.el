@@ -1,11 +1,11 @@
 ;;; md-roam.el --- description -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2020-2021 Noboru Ota
+;; Copyright (C) 2020-2022 Noboru Ota
 ;;
 ;; Author: Noboru Ota <https://github.com/nobiot>
 ;; URL: https://github.com/nobiot/md-roam
-;; Version: 2.0.0
-;; Last Modified: 2021-11-09
+;; Version: 2.0.1
+;; Last Modified: 2021-03-19
 ;; Package-Requires: ((emacs "27.1") (org-roam "2.1.0") (markdown-mode "2.5"))
 ;; Keywords: markdown, zettelkasten, note-taking, writing, org, org-roam
 
@@ -72,7 +72,7 @@ This is for `md-roam-node-insert'.  If 'title-and-alias, the
 resultant wiki link will be \"[[title]]\.  If 'ID, it will be
 \"[[ID]] title\"."
   :type '(choice (const :tag "Title or alias" title-or-alias)
-                 (const :tag "Node ID" ID))
+                 (const :tag "Node ID" id))
   :group 'md-roam)
 
 ;;;; Variables
@@ -205,27 +205,50 @@ It needs to be turned on before `org-roam-db-autosync-mode'."
       (advice-add #'org-roam-node-insert :before-until #'md-roam-node-insert)
       (advice-add #'markdown-follow-wiki-link :before-until #'md-roam-follow-wiki-link)
       ;; This avoids capture process to add ID in the Org property drawer
+      (add-hook 'org-roam-capture-preface-hook #'md-roam-capture-preface)
       (advice-add #'org-id-get :before-until #'md-roam-id-get)
       ;; `org-roam-mode' buffer
-      (advice-add #'org-roam-node-at-point :before-until #'md-roam-node-at-point)
-      (advice-add #'org-roam-preview-get-contents :before-until #'md-roam-preview-get-contents)
+      (advice-add #'org-roam-node-at-point
+                  :before-until #'md-roam-node-at-point)
+      (advice-add #'org-roam-preview-get-contents
+                  :before-until #'md-roam-preview-get-contents)
       ;; For `before-save-hook'
-      (advice-add #'org-roam--replace-roam-links-on-save-h :before-until #'md-roam--replace-roam-links-on-save-h)
+      (advice-add #'org-roam--replace-roam-links-on-save-h
+                  :before-until #'md-roam--replace-roam-links-on-save-h)
+      ;; For `org-roam-buffer-p'
+      (advice-add #'org-roam-buffer-p :before-until #'md-roam-buffer-p)
+      ;; Avoid invalid-regexp in `org-roam-node-open'
+      (advice-add #'org-show-context :before-until #'md-roam-do-not-show-context)
+      ;; Insert wiki-link when inserting a new note with using `org-roam-insert'
+      (advice-add #'org-roam-capture--finalize-insert-link
+                  :before-until #'md-roam-capture--finalize-insert-link)
       ;; Completion-at-point
       ;; Append to the back of the functions list so that md-roam's one get called
       ;; before org-roam ones (org-roam dolist, resulting in reversing the order)
       (add-to-list 'org-roam-completion-functions
-                   #'md-roam-complete-wiki-link-at-point 'append)))
+                   #'md-roam-complete-wiki-link-at-point 'append)
+      (add-to-list 'org-roam-completion-functions
+                   #'md-roam-complete-everywhere 'append)))
    (t
     ;; Deactivate
     (advice-remove #'org-roam-db-update-file #'md-roam-db-update-file)
     (advice-remove #'org-roam-node-insert #'md-roam-node-insert)
     (advice-remove #'markdown-follow-wiki-link #'md-roam-follow-wiki-link)
+    (remove-hook 'org-roam-capture-preface-hook #'md-roam-capture-preface)
     (advice-remove #'org-id-get #'md-roam-id-get)
     (advice-remove #'org-roam-node-at-point #'md-roam-node-at-point)
-    (advice-remove #'org-roam-preview-get-contents #'md-roam-preview-get-contents)
-    (advice-remove #'org-roam--replace-roam-links-on-save-h #'md-roam--replace-roam-links-on-save-h)
-    (remove-hook 'org-roam-completion-functions #'md-roam-complete-wiki-link-at-point))))
+    (advice-remove #'org-roam-preview-get-contents
+                   #'md-roam-preview-get-contents)
+    (advice-remove #'org-roam--replace-roam-links-on-save-h
+                   #'md-roam--replace-roam-links-on-save-h)
+    (advice-remove #'org-roam-buffer-p #'md-roam-buffer-p)
+    (advice-remove #'org-show-context #'md-roam-do-not-show-context)
+    (advice-remove #'org-roam-capture--finalize-insert-link
+                   #'md-roam-capture--finalize-insert-link)
+    (remove-hook 'org-roam-completion-functions
+                 #'md-roam-complete-wiki-link-at-point)
+    (remove-hook 'org-roam-completion-functions
+                 #'md-roam-complete-everywhere))))
 
 ;;;; Functions
 
@@ -375,14 +398,20 @@ files are in `org-roam-directory'."
                ;; If there url-type is nil then it can be a file link.
                ;; File links require tye type to be id for Org-roam
                (type (or (url-type parsed-url) "id"))
-               (file-path (when (string-equal type "id")
+               (file-path (when (and (string-equal type "id")
+                                     ;; Avoid inserting the link to DB if it's not `md-roam-file-extension'
+                                     (string-equal (url-file-extension (url-filename parsed-url))
+                                                   (concat "." md-roam-file-extension)))
                             ;; file-path, if exists, needs to be an absolute
                             ;; path as that's what Org-roam stores in the cache.
-                            (buffer-file-name
-                             (find-file-noselect (url-filename parsed-url)))))
+                            (buffer-file-name (find-file-noselect (url-filename parsed-url) 'NOWARN))))
                ;; If file-path is non-nil, check Org-roam db if it is in
-               ;; Org-roam cache. Set ID to path.  If file-path is nil, get URL
-               ;; for refs.
+               ;; Org-roam cache. Set ID to path.  If file-path is nil,
+               ;; get URL for refs.
+               ;; TODO Need refactoring. path is set to nil when
+               ;; file-path is nil (when a file is not
+               ;; md-roam-file-extension).  The behaviour is correct,
+               ;; but it's not explicit.
                (path (if file-path (md-roam-db-id-from-file-path file-path)
                        ;; If file-path is nil, then
                        (string-match org-link-plain-re url)
@@ -498,12 +527,9 @@ The INFO, if provided, is passed to the underlying `org-roam-capture-'."
                     (delete-region beg end)
                     (set-marker beg nil)
                     (set-marker end nil))
-                  (insert (concat "[["
-                                  (cond
-                                   ((eq md-roam-node-insert-type 'id)
-                                    (concat (org-roam-node-id node) "]] " description))
-                                   ((eq md-roam-node-insert-type 'title-or-alias)
-                                    (concat (org-roam-node-title node) "]]")))))
+                  (insert (md-roam--wiki-link-create (org-roam-node-id node)
+                                                     description
+                                                     (org-roam-node-title node)))
                   ;; for advice
                   t)
               (org-roam-capture-
@@ -521,6 +547,31 @@ The INFO, if provided, is passed to the underlying `org-roam-capture-'."
       (deactivate-mark)
       ;; for advice
       t)))
+
+(defun md-roam-capture--finalize-insert-link ()
+  "Insert a wiki-link to ID when `org-roam-insert' for a new note.
+This is md-roam equivalent of `org-roam-capture--finalize-insert-link'."
+  (when (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer)))
+    (when-let* ((mkr (org-roam-capture--get :call-location))
+                (buf (marker-buffer mkr)))
+      (with-current-buffer buf
+        (when-let ((region (org-roam-capture--get :region)))
+          (org-roam-unshield-region (car region) (cdr region))
+          (delete-region (car region) (cdr region))
+          (set-marker (car region) nil)
+          (set-marker (cdr region) nil))
+        (let* ((id (org-roam-capture--get :id))
+               (description (org-roam-capture--get :link-description))
+               (link (md-roam--wiki-link-create id description description)))
+          (if (eq (point) (marker-position mkr))
+              (insert link)
+            (org-with-point-at mkr
+              (insert link)))
+          (run-hook-with-args 'org-roam-post-node-insert-hook
+                              id
+                              description))))
+    ;; for advice
+    t))
 
 (defun md-roam-follow-wiki-link (name &optional other)
   "Follow wiki link NAME if there is the linked file exists.
@@ -561,6 +612,12 @@ the source file to cache the link from source to target."
           (md-roam-db-do-update))
         (find-file new-file)))))
 
+(defun md-roam-do-not-show-context ()
+  "Used in `org-roam-node-open' to avoid error.
+invalid-regexp \"Invalid regular expression\"."
+  (when (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer)))
+    t))
+
 ;;------------------------------------------------------------------------------
 ;;;;; Functions for `org-roam-capture'
 
@@ -575,6 +632,25 @@ process \(for _create argument\).
 TODO CREATE process to insert a new ID within frontmatter."
   (when (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer)))
     (md-roam-get-id)))
+
+(defun md-roam-capture-preface ()
+  "."
+  (advice-add #'org-entry-put :before-until #'md-roam-entry-put)
+  (add-hook 'org-capture-after-finalize-hook #'md-roam-capture-after-finalize)
+  ;; Need to retrun nil for `org-roam-capture--prepare-buffer' to run the normal
+  ;; process.
+  nil)
+
+(defun md-roam-entry-put (_pom _property _value)
+  "Return t and do nothing when current buffer visiting markdown file.
+Only for `md-roam'."
+  (when (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer)))
+    t))
+
+(defun md-roam-capture-after-finalize ()
+  "Remove the advice from `org-entry-put'."
+  (advice-remove #'org-entry-put #'md-roam-entry-put)
+  (remove-hook 'org-capture-after-finalize-hook #'md-roam-capture-after-finalize))
 
 ;;------------------------------------------------------------------------------
 ;;;;; Functions for `org-roam-buffer'
@@ -696,6 +772,29 @@ It puts the title, not IDs."
               (lambda (&rest _)
                 (forward-char 2)))))))
 
+(defun md-roam-complete-everywhere ()
+  "Complete symbol at point as a link completion to an Org-roam node.
+This is a `completion-at-point' function, and is active when
+`org-roam-completion-everywhere' is non-nil.
+
+Unlike `org-roam-complete-link-at-point' this will complete even
+outside of the bracket syntax for wiki links (i.e. \"[[|]]\"),
+hence \"everywhere\"."
+  (when (and (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer)))
+             org-roam-completion-everywhere
+             (thing-at-point 'word)
+             (not (save-match-data (org-in-regexp org-link-any-re))))
+    (let ((bounds (bounds-of-thing-at-point 'word)))
+      (list (car bounds) (cdr bounds)
+            (org-roam--get-titles)
+            :exit-function
+            (lambda (str _status)
+              (delete-char (- (length str)))
+              (insert "[[" str "]]"))
+            ;; Proceed with the next completion function if the returned titles
+            ;; do not match. This allows the default Org capfs or custom capfs
+            ;; of lower priority to run.
+            :exclusive 'no))))
 
 ;;------------------------------------------------------------------------------
 ;;;;; Replace roam links
@@ -708,6 +807,16 @@ Md-roam files."
   (when (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer)))
     ;; do nothing for now and return t for advice
     t))
+
+;;------------------------------------------------------------------------------
+;;;;; `md-roam-buffer-p' for `org-roam-buffer-list'
+
+(defun md-roam-buffer-p (&optional buffer)
+  "Return t if BUFFER is for an Md-roam file.
+If BUFFER is not specified, use the current buffer."
+  (let ((buffer (or buffer (current-buffer))))
+    (with-current-buffer buffer
+      (md-roam--markdown-file-p (buffer-file-name (buffer-base-buffer))))))
 
 ;;------------------------------------------------------------------------------
 ;;;;; Utility functions
@@ -762,6 +871,31 @@ These should be equally valid."
       (let ((items (split-string-and-unquote
                     (match-string-no-properties 2 seq) separator)))
         (mapcar #'md-roam--remove-single-quotes items)))))
+
+(defun md-roam--yaml-split-seq (seq)
+  "."
+  (let ((regexp "\\(\s*\\)\\(.*\\)\\(\s*\\)")
+        (separator ",\s*"))
+    (when (string-match regexp seq)
+      (let ((items (split-string-and-unquote
+                    (match-string-no-properties 2 seq) separator)))
+        (mapcar #'md-roam--remove-single-quotes items)))))
+
+(defun md-roam--wiki-link-create (id description title)
+  "Return wiki-link string.
+This function uses `md-roam-node-insert-type' to return the
+approapriate wiki-link.
+
+ID is the node ID.  DESCRIPTION is description used in
+`org-roam-insert'.  TITLE is the title, alias, or description of
+the node being inserted."
+  
+    (concat "[["
+            (cond
+             ((eq md-roam-node-insert-type 'id)
+              (concat id "]] " description))
+             ((eq md-roam-node-insert-type 'title-or-alias)
+              (concat title "]]")))))
 
 (provide 'md-roam)
 ;;; md-roam.el ends here
