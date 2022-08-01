@@ -31,3 +31,7 @@
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
 
+;; (org-babel-do-load-languages
+;; 'org-babel-load-languages
+;;  '((shell . t)
+;;   (python . t)))
