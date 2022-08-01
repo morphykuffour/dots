@@ -27,10 +27,8 @@
 (load-user-file "font-resize.el")
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
-
-;; TODO fix org
-;; (load-user-file "my-org.el")
-
+(load-user-file "my-org.el")
+;;(load-user-file "org-mode.el")		;
 ;; TODO change smtpmail to use-package FIXME
 ;; (load-user-file "mail.el")
 
@@ -40,7 +38,6 @@
 (sensible-defaults/use-all-settings)
 (sensible-defaults/use-all-keybindings)
 (sensible-defaults/backup-to-temp-directory)
-
 
 ;; pusihing p
 (use-package command-log-mode
@@ -118,7 +115,7 @@
 (scroll-bar-mode -1)
 (setq visible-bell nil)
 (tool-bar-mode -1)
-(menu-bar-mode 1)
+(menu-bar-mode nil)
 (set-fringe-mode 10)
 
 ;; (pixel-scroll-precision-mode)
@@ -143,8 +140,8 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 25)))
 
-(set-face-attribute 'mode-line nil :height 150)
-(set-face-attribute 'mode-line-inactive nil :height 150)
+(set-face-attribute 'mode-line nil :height 160)
+(set-face-attribute 'mode-line-inactive nil :height 160)
 
 ;; ripgrep for searching
 (use-package deadgrep
@@ -153,7 +150,6 @@
     (push "--hidden" rg-args))
   (advice-add 'deadgrep--arguments
               :filter-return #'deadgrep--include-args))
-
 
 ;; treesitter for syntax highlighting
 (require 'tree-sitter)
@@ -176,6 +172,7 @@
 
   :config
   (setq lsp-completion-provider :capf))
+
 (use-package all-the-icons
   :ensure t)
 
@@ -263,13 +260,13 @@
 
 
 ;; md-roam TODO find reason why md-roam slows down emacs
-;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-;; (setq org-roam-file-extensions '("org" "md"))
-;; (add-to-list  'load-path "~/.emacs.d/personal/md-roam")
-;; (require 'md-roam)
-;; (md-roam-mode 1)
-;; (setq md-roam-file-extension "md")
-;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+(setq org-roam-file-extensions '("org" "md"))
+(add-to-list  'load-path "~/.emacs.d/personal/md-roam")
+(require 'md-roam)
+(md-roam-mode 1)
+(setq md-roam-file-extension "md")
+(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
 ;; (add-to-list 'org-roam-capture-templates
@@ -282,13 +279,13 @@
 ;; (use-package websocket
 ;;              :after org-roam)
 ;;
-;; (use-package org-roam-ui
-;;              :after org-roam
-;;              :config
-;;              (setq org-roam-ui-sync-theme t
-;;                    org-roam-ui-follow t
-;;                    org-roam-ui-update-on-save t
-;;                    org-roam-ui-open-on-start t))
+(use-package org-roam-ui
+             :after org-roam
+             :config
+             (setq org-roam-ui-sync-theme t
+                   org-roam-ui-follow t
+                   org-roam-ui-update-on-save t
+                   org-roam-ui-open-on-start t))
 ;; ;; PDFs
 ;; (pdf-loader-install)
 ;; (add-to-list 'auto-mode-alist '("\\.pdf\\'" . auto-revert))
@@ -573,3 +570,54 @@
 ;; place custom-set-variables into its own file
 (setq custom-file (concat user-emacs-directory "/custom.el"))
 (load-file custom-file)
+
+;; -- -- orgmode settings
+;; -- vim.opt.shellslash = true
+;; -- vim.cmd("language en_US.utf8")
+;; -- vim.opt.conceallevel = 2
+;; -- vim.opt.concealcursor = "nc"
+;; --
+;; -- require("orgmode").setup_ts_grammar()
+;; --
+;; -- require("orgmode").setup({
+;; -- 	org_agenda_files = { "~/Dropbox/Zettelkasten/org/**/*" },
+;; -- 	org_default_notes_file = "~/Dropbox/Zettelkasten/org/refile.org ",
+;; -- 	org_deadline_warning_days = 5,
+;; -- 	org_agenda_start_on_weekday = 7,
+;; -- 	org_highlight_latex_and_related = "native",
+;; -- 	org_todo_keywords = { "TODO(t)", "PROGRESS(p)", "|", "DONE(d)", "REJECTED(r)" },
+;; --
+;; -- 	mappings = {
+;; -- 		org = {
+;; -- 			org_next_visible_heading = "g}",
+;; -- 			org_previous_visible_heading = "g{",
+;; -- 		},
+;; -- 	},
+;; --
+;; -- 	-- notifications = { enabled = true },
+;; --
+;; -- 	org_agenda_templates = {
+;; -- 		d = {
+;; -- 			description = "Daily",
+;; -- 			template = "* Daily %U \n  %?",
+;; -- 			target = "~/Dropbox/Zettelkasten/org/daily.org",
+;; -- 			headline = "Meetings",
+;; -- 		},
+;; -- 		i = {
+;; -- 			description = "Thoughts",
+;; -- 			template = "** %?",
+;; -- 			target = "~/Dropbox/Zettelkasten/org/life.org",
+;; -- 			headline = "Thoughts",
+;; -- 		},
+;; -- 		r = {
+;; -- 			description = "CRandom note",
+;; -- 			template = "* %?",
+;; -- 			target = "~/Dropbox/Zettelkasten/org/random.org",
+;; -- 		},
+;; -- 		t = {
+;; -- 			description = "Todo",
+;; -- 			template = "* TODO: %?",
+;; -- 			target = "~/Dropbox/Zettelkasten/org/todo.org",
+;; -- 		},
+;; -- 	},
+;; -- })
