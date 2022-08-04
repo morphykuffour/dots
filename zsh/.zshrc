@@ -2,6 +2,16 @@
 
 # conda config --set auto_activate_base false
 
+# nix-shell integration
+if [[ -n "$IN_NIX_SHELL" ]]; then
+  label="nix-shell"
+  if [[ "$name" != "$label" ]]; then
+    label="$label:$name"
+  fi
+  export PS1=$'%{$fg[green]%}'"$label $PS1"
+  unset label
+fi
+
 # kitty integration
 if [[ -n $KITTY_INSTALLATION_DIR ]]; then
     export KITTY_SHELL_INTEGRATION="enabled"
