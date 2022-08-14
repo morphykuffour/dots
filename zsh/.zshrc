@@ -25,6 +25,8 @@ source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
 source $HOME/.zsh_functions
 fpath+=$HOME/.zsh/completions
+fpath=($HOME/.zsh/completions/nix-zsh-completions $fpath)
+
 
 # --------------------------------- SETTINGS ----------------------------------
 setopt AUTO_CD
@@ -179,7 +181,7 @@ zstyle ':fzf-tab:*' switch-group ',' '.'
 if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
 else
-    export BROWSER="brave-browser"
+    export BROWSER="brave"
 fi
 
 # open vscode from terminal in Mac OS
@@ -216,6 +218,7 @@ source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $HOME/.zsh/plugins/zshmarks/zshmarks.plugin.zsh
+source $HOME/.zsh/completions/nix-zsh-completions/nix-zsh-completions.plugin.zsh
 
 . $HOME/.zsh/fzf-gems/fzf_git_functions.sh
 . $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
