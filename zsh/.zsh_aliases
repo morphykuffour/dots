@@ -140,3 +140,9 @@ alias gt="jump"
 alias b="bookmark"
 alias d="deletemark"
 alias s="showmarks"
+
+# nix
+# Nix Install
+alias ni='nix-env -iA'
+# Nix Search
+alias ns='nix-env -qaP'

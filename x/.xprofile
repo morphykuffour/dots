@@ -1,7 +1,7 @@
 # Status Bar
 
 # Random Photo Every Login
-feh --bg-fill --randomize ~/Pictures/wallpapers/* &
+# feh --bg-fill --randomize ~/Pictures/wallpapers/* &
 
 # Monitor Config
 # xrandr --auto --output DVI-D-0 --mode 2560x1440 --left-of HDMI-0
