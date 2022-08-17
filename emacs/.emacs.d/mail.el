@@ -3,12 +3,12 @@
 (defun mu-setup/init-mu ()
   "Initializes 'mu' db."
   (interactive)
-  (async-shell-command "/usr/local/bin/mu init --maildir=/home/morp/mail/ --my-address=your-email@example.com"))
+  (async-shell-command "/home/morp/.nix-profile/bin/mu init --maildir=/home/morp/mail/ --my-address=your-email@example.com"))
 
 (defun mu-setup/build-mu-index ()
   "Builds 'mu' index."
   (interactive)
-  (async-shell-command "/usr/local/bin/mu  index"))
+  (async-shell-command "/home/morp/.nix-profile/bin/mu  index"))
 
 (add-to-list  'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
@@ -40,7 +40,7 @@
     ;; mu4e toggle html images
     (defvar killdash9/mu4e~view-html-images nil
       "Whether to show images in html messages")
-   
+
     (defun killdash9/mu4e-view-toggle-html-images ()
       "Toggle image-display of html message."
       (interactive)
@@ -57,7 +57,7 @@ code by Titus von der Malsburg."
          (lambda ()
 	       (let ((shr-inhibit-images (not view-images)))
 	         (shr-render-region (point-min) (point-max)))) msg)))
-   
+
     (define-key mu4e-view-mode-map "i" 'killdash9/mu4e-view-toggle-html-images)
 
 
@@ -115,4 +115,3 @@ code by Titus von der Malsburg."
                    smtpmail-smtp-server "smtp.gmail.com"
                    smtpmail-smtp-service 587
                    smtpmail-debug-info t))
-

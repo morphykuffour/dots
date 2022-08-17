@@ -30,7 +30,7 @@
 (load-user-file "my-org.el")
 ;;(load-user-file "org-mode.el")		;
 ;; TODO change smtpmail to use-package FIXME
-;; (load-user-file "mail.el")
+(load-user-file "mail.el")
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -39,7 +39,9 @@
 (sensible-defaults/use-all-keybindings)
 (sensible-defaults/backup-to-temp-directory)
 
-;; pusihing p
+;; dwim-shell-command
+(require 'dwim-shell-command)
+
 (use-package command-log-mode
              :commands command-log-mode)
 
@@ -224,8 +226,8 @@
 ;; page through history of a file
 (use-package git-timemachine)
 
-;; Teach Emacs how to open links in your default Windows browser
-(let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+;; teach emacs how to open links in your default windows browser
+(let ((cmd-exe "/mnt/c/windows/system32/cmd.exe")
       (cmd-args '("/c" "start")))
   (when (file-exists-p cmd-exe)
     (setq browse-url-generic-program  cmd-exe
@@ -233,10 +235,14 @@
           browse-url-browser-function 'browse-url-generic
           search-web-default-browser 'browse-url-generic)))
 
-;; org-roam TODO move to my-org.el
+;; org-roam
 (require 'org)
-(require 'org-roam)
 
+(add-to-list  'load-path "~/.emacs.d/personal/alert")
+(require 'alert)
+(require 'org-gcal)
+
+(require 'org-roam)
 (use-package org-roam
              :after org
              :ensure t
@@ -570,54 +576,3 @@
 ;; place custom-set-variables into its own file
 (setq custom-file (concat user-emacs-directory "/custom.el"))
 (load-file custom-file)
-
-;; -- -- orgmode settings
-;; -- vim.opt.shellslash = true
-;; -- vim.cmd("language en_US.utf8")
-;; -- vim.opt.conceallevel = 2
-;; -- vim.opt.concealcursor = "nc"
-;; --
-;; -- require("orgmode").setup_ts_grammar()
-;; --
-;; -- require("orgmode").setup({
-;; -- 	org_agenda_files = { "~/Dropbox/Zettelkasten/org/**/*" },
-;; -- 	org_default_notes_file = "~/Dropbox/Zettelkasten/org/refile.org ",
-;; -- 	org_deadline_warning_days = 5,
-;; -- 	org_agenda_start_on_weekday = 7,
-;; -- 	org_highlight_latex_and_related = "native",
-;; -- 	org_todo_keywords = { "TODO(t)", "PROGRESS(p)", "|", "DONE(d)", "REJECTED(r)" },
-;; --
-;; -- 	mappings = {
-;; -- 		org = {
-;; -- 			org_next_visible_heading = "g}",
-;; -- 			org_previous_visible_heading = "g{",
-;; -- 		},
-;; -- 	},
-;; --
-;; -- 	-- notifications = { enabled = true },
-;; --
-;; -- 	org_agenda_templates = {
-;; -- 		d = {
-;; -- 			description = "Daily",
-;; -- 			template = "* Daily %U \n  %?",
-;; -- 			target = "~/Dropbox/Zettelkasten/org/daily.org",
-;; -- 			headline = "Meetings",
-;; -- 		},
-;; -- 		i = {
-;; -- 			description = "Thoughts",
-;; -- 			template = "** %?",
-;; -- 			target = "~/Dropbox/Zettelkasten/org/life.org",
-;; -- 			headline = "Thoughts",
-;; -- 		},
-;; -- 		r = {
-;; -- 			description = "CRandom note",
-;; -- 			template = "* %?",
-;; -- 			target = "~/Dropbox/Zettelkasten/org/random.org",
-;; -- 		},
-;; -- 		t = {
-;; -- 			description = "Todo",
-;; -- 			template = "* TODO: %?",
-;; -- 			target = "~/Dropbox/Zettelkasten/org/todo.org",
-;; -- 		},
-;; -- 	},
-;; -- })

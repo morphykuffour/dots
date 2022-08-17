@@ -6,7 +6,15 @@
 # in
 # ${builtins.getEnv "HOME"}
 # with ; {
-
+let
+  tex = (pkgs.texlive.combine {
+    inherit (pkgs.texlive) scheme-full
+      dvisvgm dvipng # for preview and export as html
+      xcolor wrapfig amsmath ulem hyperref capt-of;
+      #(setq org-latex-compiler "lualatex")
+      #(setq org-preview-latex-default-process 'dvisvgm)
+  });
+in
 {
   imports =
     [
@@ -34,6 +42,7 @@
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
+        obs-gstreamer
       ];
     };
   };
@@ -82,14 +91,17 @@
       msmtp # send mail
       pass # encrypt passwords
       himalaya
+      offlineimap    
 
       # productivity
       calibre
       emacs 
       slides 
+      uxplay
 
       # windows
       sxhkd
+      tex
 
       # creativity
       davinci-resolve
@@ -98,7 +110,6 @@
       blender
       kicad
       ffmpeg
-
       eva
       aria2
       hyperfine 
