@@ -156,6 +156,7 @@ bindkey -s '^q' 'xcd^M'
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 bindkey '^[[P' delete-char
 
+bindkey -s '^z' 'fg\n'
 
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
 export LESSOPEN='| ~/.local/bin/lessfilter %s'
