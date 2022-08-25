@@ -48,6 +48,8 @@ in
   };
   nixpkgs.config.allowUnfree = true;
 
+# nixpkgs.overlays = [(self: super: { discord = super.discord.overrideAttrs (_: { src = builtins.fetchTarball <link-to-tarball>; });})];
+
   home = {
     username = "morp";
     homeDirectory = "/home/morp";
@@ -130,8 +132,8 @@ in
       nix-index
       vial
       redshift
-      discord
       termite
+      discord
 
       # neovim
       neovim-unwrapped

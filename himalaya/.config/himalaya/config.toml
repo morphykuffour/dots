@@ -1,0 +1,23 @@
+# ~/.config/himalaya/config.toml
+
+name = "Morphy Kuffour"
+downloads-dir = "/home/morp/mail/"
+signature = """
+Thank you,
+Morphy Kuffour
+"""
+
+[gmail]
+default = true
+email = "your-email@example.com"
+# email = "your-email@example.com"
+
+imap-host = "imap.gmail.com"
+imap-port = 993
+imap-login = "your.email@gmail.com"
+imap-passwd-cmd = "pass show gmail"
+
+smtp-host = "smtp.gmail.com"
+smtp-port = 465
+smtp-login = "your.email@gmail.com"
+smtp-passwd-cmd = "pass show gmail"

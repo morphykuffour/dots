@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+sudo kmonad ~/nix/hosts/xps17-nixos/keeb/colemak-dh-extend-ansi.kbd
