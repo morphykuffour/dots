@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-
 # kitty integration
 if [[ -n $KITTY_INSTALLATION_DIR ]]; then
     export KITTY_SHELL_INTEGRATION="enabled"
@@ -150,7 +149,13 @@ bindkey ' ' magic-space
 function xcd() {
   cd "$(xplr --print-pwd-as-result)"
 }
-# alias xcd='cd "$(xplr --print-pwd-as-result)"'
+
+# ls after cd
+chpwd() {
+    exa
+}
+
+# alias xcd=ii'cd "$(xplr --print-pwd-as-result)"'
 bindkey -s '^q' 'xcd^M'
 
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
