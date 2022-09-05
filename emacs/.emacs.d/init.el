@@ -28,7 +28,7 @@
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
 (load-user-file "my-org.el")
-;;(load-user-file "org-mode.el")		;
+;; (load-user-file "org-mode.el")
 ;; TODO change smtpmail to use-package FIXME
 (load-user-file "mail.el")
 
@@ -275,11 +275,11 @@
 (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
 ;; TODO add aliases and roam_refs
-;; (add-to-list 'org-roam-capture-templates
-;;              '("m" "Markdown" plain "" :target
-;;                (file+head "%<%Y-%m-%dT%H%M%S>.md"
-;;                           "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-;;                :unnarrowed t))
+(add-to-list 'org-roam-capture-templates
+             '("m" "Markdown" plain "" :target
+               (file+head "%<%Y-%m-%dT%H%M%S>.md"
+                          "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
+               :unnarrowed t))
 
 ;; ;; org-roam-ui
 ;; (use-package websocket
