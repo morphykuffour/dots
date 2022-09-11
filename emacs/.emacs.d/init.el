@@ -27,7 +27,7 @@
 (load-user-file "font-resize.el")
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
-(load-user-file "my-org.el")
+;; (load-user-file "my-org.el")
 ;; (load-user-file "org-mode.el")
 ;; TODO change smtpmail to use-package FIXME
 (load-user-file "mail.el")
@@ -74,6 +74,10 @@
              (evil-mode 1)
              (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle))
 
+(use-package pdf-tools
+  :init
+  (pdf-tools-install))
+
 ;;; 666, the number of the beast
 (use-package evil-collection
              :ensure t
@@ -87,7 +91,6 @@
 		      ibuffer
 		      magit
 		      mu4e
-		      pdf-view
 		      which-key))
              (evil-collection-init))
 
@@ -235,7 +238,7 @@
           browse-url-browser-function 'browse-url-generic
           search-web-default-browser 'browse-url-generic)))
 
-;; org-roam
+;; org
 (require 'org)
 
 (add-to-list  'load-path "~/.emacs.d/personal/alert")
@@ -265,26 +268,20 @@
              (require 'org-roam-protocol))
 
 
-;; md-roam TODO find reason why md-roam slows down emacs
-(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-(setq org-roam-file-extensions '("org" "md"))
 (add-to-list  'load-path "~/.emacs.d/personal/md-roam")
+(setq org-roam-file-extensions '("org" "md"))
 (require 'md-roam)
-(md-roam-mode 1)
+;; (md-roam-mode 1)
 (setq md-roam-file-extension "md")
+(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
 (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
 
-;; TODO add aliases and roam_refs
 (add-to-list 'org-roam-capture-templates
-             '("m" "Markdown" plain "" :target
-               (file+head "%<%Y-%m-%dT%H%M%S>.md"
-                          "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \nroam_refs: \nroam_aliases: \n---\n")
-               :unnarrowed t))
+    '("m" "Markdown" plain "" :target
+        (file+head "%<%Y-%m-%dT%H%M%S>.md"
+"---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
+    :unnarrowed t))
 
-;; ;; org-roam-ui
-;; (use-package websocket
-;;              :after org-roam)
-;;
 (use-package org-roam-ui
              :after org-roam
              :config
@@ -292,11 +289,6 @@
                    org-roam-ui-follow t
                    org-roam-ui-update-on-save t
                    org-roam-ui-open-on-start t))
-;; ;; PDFs
-;; (pdf-loader-install)
-;; (add-to-list 'auto-mode-alist '("\\.pdf\\'" . auto-revert))
-;;
-;; shell paths
 (getenv "SHELL")
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))

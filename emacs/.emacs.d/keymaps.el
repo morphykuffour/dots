@@ -17,3 +17,4 @@
 (global-set-key (kbd "C-c e r") 'org-babel-execute-src-block)
 (global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
 (global-set-key (kbd "<space><space>") 'previous-buffer)
+(global-set-key (kbd "C-x |") 'toggle-window-split)
