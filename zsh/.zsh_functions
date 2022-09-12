@@ -105,6 +105,10 @@ change_background() {
     feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
 }
 
+# mate_change_background() {
+#     dconf write /org/mate/desktop/background/picture-filename "'$HOME/dotfiles/backgrounds/$(ls ~/Pictures/wallpapers | fzf)'"
+# }
+
 myip () {
   curl ifconfig.me
 }
