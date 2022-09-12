@@ -50,3 +50,11 @@ BgBlue = "\x1b[44m"
 BgMagenta = "\x1b[45m"
 BgCyan = "\x1b[46m"
 BgWhite = "\x1b[47m"
+
+# mate with i3
+`https://www.youtube.com/watch?v=IYAzUIFonEo`
+
+- laptop sleeps if lid closed when external monitor is connected #318
+```bash
+gsettings get org.mate.power-manager button-lid-ac 'nothing'
+```
