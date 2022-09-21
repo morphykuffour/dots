@@ -1,3 +1,4 @@
+from threading import Thread
 from ranger.api.commands import Command
 
 class edir(Command):
@@ -33,3 +34,15 @@ class fzf_select(Command):
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)
+
+
+class dragon(Command):
+
+    def execute(self):
+        th = Thread(target=self.dragondaemon, daemon=True)
+        th.start()
+        th.join()
+
+    def dragondaemon(self):
+        arguments = 'kitty --class dragon-term -e dragon-daemon {}'.format(" ".join(self.args[1:]))
+        self.fm.execute_command(arguments)
