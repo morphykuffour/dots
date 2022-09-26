@@ -568,3 +568,8 @@
 ;; place custom-set-variables into its own file
 (setq custom-file (concat user-emacs-directory "/custom.el"))
 (load-file custom-file)
+
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
