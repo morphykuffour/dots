@@ -108,7 +108,7 @@ alias rl="exec zsh -l"
 
 # git configs
 alias g="git"
-alias gca="git commit --all --verbose"
+alias gca="git add .; git commit"
 alias gco="git checkout"
 alias gs="git status"
 alias gp="git push -u origin HEAD"
