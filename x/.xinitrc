@@ -1,1 +1,3 @@
-i3
+# i3
+exec mate-session
+
