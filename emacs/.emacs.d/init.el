@@ -30,7 +30,7 @@
 ;; (load-user-file "my-org.el")
 ;; (load-user-file "org-mode.el")
 ;; TODO change smtpmail to use-package FIXME
-(load-user-file "mail.el")
+;; (load-user-file "mail.el")
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -158,9 +158,8 @@
 
 ;; treesitter for syntax highlighting
 (require 'tree-sitter)
-(require 'tree-sitter-langs)
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+;; (require 'tree-sitter-langspglobal-tree-sitter-mode)
+;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 ;; company for completion
 (use-package company
@@ -181,12 +180,12 @@
 (use-package all-the-icons
   :ensure t)
 
-(use-package company-box
-  :after company
-  :hook (company-mode . company-box-mode)
+;; (use-package company-box
+;;   :after company
+;;   :hook (company-mode . company-box-mode)
 
-  :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+;;   :config
+;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 ;; projectile
 (use-package projectile
@@ -241,54 +240,58 @@
 ;; org
 (require 'org)
 
-(add-to-list  'load-path "~/.emacs.d/personal/alert")
-(require 'alert)
-(require 'org-gcal)
+;; (add-to-list  'load-path "~/.emacs.d/personal/alert")
+;; (require 'alert)
+;; (require 'org-gcal)
 
-(require 'org-roam)
-(use-package org-roam
-             :after org
-             :ensure t
-             :init
-             (setq org-roam-v2-ack t)
-             :custom
-             (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-             :bind (("C-c n l" . org-roam-buffer-toggle)
-                    ("C-c n f" . org-roam-node-find)
-                    ("C-c n g" . org-roam-ui-open)
-                    ("C-c n i" . org-roam-node-insert)
-                    ("C-c n c" . org-roam-capture)
-                    ("C-c n a" . org-roam-alias-add)
-                    :map org-mode-map
-                    ("C-M-i" . completion-at-point)
-                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-             :config
-             (org-roam-setup)
-             (org-roam-db-autosync-mode)
-             (require 'org-roam-protocol))
+;; (org-roam-directory (file-truename "/mnt/c/Users/NAmoa/Dropbox"))
+
+;; (org-roam-directory (file-truename "C:\Users\NAmoa\Dropbox\Zettelkasten"))
+
+;; (require 'org-roam)
+;; (use-package org-roam
+;;              :after org
+;;              :ensure t
+;;              :init
+;;              (setq org-roam-v2-ack t)
+;; 	 	:custom
+;; 		(org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+;;              :bind (("C-c n l" . org-roam-buffer-toggle)
+;;                     ("C-c n f" . org-roam-node-find)
+;;                     ("C-c n g" . org-roam-ui-open)
+;;                     ("C-c n i" . org-roam-node-insert)
+;;                     ("C-c n c" . org-roam-capture)
+;;                     ("C-c n a" . org-roam-alias-add)
+;;                     :map org-mode-map
+;;                     ("C-M-i" . completion-at-point)
+;;                     ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
+;;              :config
+;;              (org-roam-setup)
+;;              (org-roam-db-autosync-mode)
+;;              (require 'org-roam-protocol))
 
 
-(add-to-list  'load-path "~/.emacs.d/personal/md-roam")
-(setq org-roam-file-extensions '("org" "md"))
-(require 'md-roam)
-;; (md-roam-mode 1)
-(setq md-roam-file-extension "md")
-(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-
-(add-to-list 'org-roam-capture-templates
-    '("m" "Markdown" plain "" :target
-        (file+head "%<%Y-%m-%dT%H%M%S>.md"
-"---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
-    :unnarrowed t))
-
-(use-package org-roam-ui
-             :after org-roam
-             :config
-             (setq org-roam-ui-sync-theme t
-                   org-roam-ui-follow t
-                   org-roam-ui-update-on-save t
-                   org-roam-ui-open-on-start t))
+;; (add-to-list  'load-path "~/.emacs.d/personal/md-roam")
+;; (setq org-roam-file-extensions '("org" "md"))
+;; (require 'md-roam)
+;; ;; (md-roam-mode 1)
+;; (setq md-roam-file-extension "md")
+;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+;; 
+;; (add-to-list 'org-roam-capture-templates
+;;     '("m" "Markdown" plain "" :target
+;;         (file+head "%<%Y-%m-%dT%H%M%S>.md"
+;; "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
+;;     :unnarrowed t))
+;; 
+;; (use-package org-roam-ui
+;;              :after org-roam
+;;              :config
+;;              (setq org-roam-ui-sync-theme t
+;;                    org-roam-ui-follow t
+;;                    org-roam-ui-update-on-save t
+;;                    org-roam-ui-open-on-start t))
 (getenv "SHELL")
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))

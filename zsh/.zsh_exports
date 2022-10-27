@@ -63,7 +63,8 @@ export LEDGER_FILE=$HOME/Dropbox/Finances/main.journal    # use this file by def
 if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
     # WSL environment
     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
-    export DISPLAY="$(hostname).local:0.0"
+    # export DISPLAY="$(hostname).local:0.0"
+    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
     export LIBGL_ALWAYS_INDIRECT=0
 
 else
