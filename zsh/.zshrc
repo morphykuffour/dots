@@ -211,7 +211,6 @@ source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
 source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
 source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $HOME/.zsh/plugins/zshmarks/zshmarks.plugin.zsh
 
 . $HOME/.zsh/fzf-gems/fzf_git_functions.sh
 . $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
