@@ -62,7 +62,7 @@
 (use-package undo-fu)
 
 ;; evil deeds for a bad bad boy
-(use-package evi
+(use-package evil
              :demand t
              :bind (("<escape>" . keyboard-escape-quit))
 	     :init
@@ -254,6 +254,7 @@
 ;; =======
 ;; >>>>>>> Stashed changes
 ;; active Babel languages
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
@@ -267,7 +268,6 @@
 (add-to-list  'load-path "~/.emacs.d/personal/alert")
 (require 'alert)
 (require 'org-gcal)
->>>>>>> Stashed changes
 
 (require 'org-roam)
 (use-package org-roam
