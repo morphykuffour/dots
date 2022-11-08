@@ -99,7 +99,7 @@
   :config
   (global-evil-surround-mode 1))
 
-;; more vert
+;; completion
 (use-package vertico
              :config
              (vertico-mode))
@@ -161,21 +161,21 @@
 ;; (require 'tree-sitter-langspglobal-tree-sitter-mode)
 ;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
-;; company for completion
-(use-package company
-  :hook (prog-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection))
+;; ;; company for completion
+;; (use-package company
+;;   :hook (prog-mode . company-mode)
+;;   :bind (:map company-active-map
+;;               ("<tab>" . company-complete-selection))
 
-  :custom
-  (company-backends '((company-capf company-dabbrev-code)))
-  (company-idle-delay 0)
-  (company-minimum-prefix-length 3)
-  (company-tooltip-align-annotations t)
-  (company-tooltip-limit 20)
+;;   :custom
+;;   (company-backends '((company-capf company-dabbrev-code)))
+;;   (company-idle-delay 0)
+;;   (company-minimum-prefix-length 3)
+;;   (company-tooltip-align-annotations t)
+;;   (company-tooltip-limit 20)
 
-  :config
-  (setq lsp-completion-provider :capf))
+;;   :config
+;;   (setq lsp-completion-provider :capf))
 
 (use-package all-the-icons
   :ensure t
@@ -241,6 +241,7 @@
 ;; org
 (require 'org)
 
+<<<<<<< Updated upstream
 ;; (add-to-list  'load-path "~/.emacs.d/personal/alert")
 ;; (require 'alert)
 ;; (require 'org-gcal)
@@ -248,6 +249,22 @@
 ;; (org-roam-directory (file-truename "/mnt/c/Users/NAmoa/Dropbox"))
 
 ;; (org-roam-directory (file-truename "C:\Users\NAmoa\Dropbox\Zettelkasten"))
+=======
+;; active Babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+    (R . t)
+    (C . t)
+    (shell . t)
+    (python . t)
+    (js . t)
+    (emacs-lisp . t)))
+
+(add-to-list  'load-path "~/.emacs.d/personal/alert")
+(require 'alert)
+(require 'org-gcal)
+>>>>>>> Stashed changes
 
 (require 'org-roam)
 (use-package org-roam
@@ -577,3 +594,5 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook))
+
+(setq tramp-default-method "ssh")
