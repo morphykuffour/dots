@@ -248,27 +248,27 @@
 
 ;; (org-roam-directory (file-truename "C:\Users\NAmoa\Dropbox\Zettelkasten"))
 
-;; (require 'org-roam)
-;; (use-package org-roam
-;;              :after org
-;;              :ensure t
-;;              :init
-;;              (setq org-roam-v2-ack t)
-;; 	 	:custom
-;; 		(org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-;;              :bind (("C-c n l" . org-roam-buffer-toggle)
-;;                     ("C-c n f" . org-roam-node-find)
-;;                     ("C-c n g" . org-roam-ui-open)
-;;                     ("C-c n i" . org-roam-node-insert)
-;;                     ("C-c n c" . org-roam-capture)
-;;                     ("C-c n a" . org-roam-alias-add)
-;;                     :map org-mode-map
-;;                     ("C-M-i" . completion-at-point)
-;;                     ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-;;              :config
-;;              (org-roam-setup)
-;;              (org-roam-db-autosync-mode)
-;;              (require 'org-roam-protocol))
+(require 'org-roam)
+(use-package org-roam
+             :after org
+             :ensure t
+             :init
+             (setq org-roam-v2-ack t)
+	 	:custom
+		(org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+             :bind (("C-c n l" . org-roam-buffer-toggle)
+                    ("C-c n f" . org-roam-node-find)
+                    ("C-c n g" . org-roam-ui-open)
+                    ("C-c n i" . org-roam-node-insert)
+                    ("C-c n c" . org-roam-capture)
+                    ("C-c n a" . org-roam-alias-add)
+                    :map org-mode-map
+                    ("C-M-i" . completion-at-point)
+                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
+             :config
+             (org-roam-setup)
+             (org-roam-db-autosync-mode)
+             (require 'org-roam-protocol))
 
 
 ;; (add-to-list  'load-path "~/.emacs.d/personal/md-roam")
@@ -278,13 +278,13 @@
 ;; (setq md-roam-file-extension "md")
 ;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
 ;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-;; 
+;;
 ;; (add-to-list 'org-roam-capture-templates
 ;;     '("m" "Markdown" plain "" :target
 ;;         (file+head "%<%Y-%m-%dT%H%M%S>.md"
 ;; "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
 ;;     :unnarrowed t))
-;; 
+;;
 ;; (use-package org-roam-ui
 ;;              :after org-roam
 ;;              :config
