@@ -241,15 +241,18 @@
 ;; org
 (require 'org)
 
-<<<<<<< Updated upstream
-;; (add-to-list  'load-path "~/.emacs.d/personal/alert")
-;; (require 'alert)
-;; (require 'org-gcal)
-
-;; (org-roam-directory (file-truename "/mnt/c/Users/NAmoa/Dropbox"))
-
-;; (org-roam-directory (file-truename "C:\Users\NAmoa\Dropbox\Zettelkasten"))
-=======
+;; <<<<<<< Updated upstream
+;; <<<<<<< Updated upstream
+;; ;; (add-to-list  'load-path "~/.emacs.d/personal/alert")
+;; ;; (require 'alert)
+;; ;; (require 'org-gcal)
+;;
+;; ;; (org-roam-directory (file-truename "/mnt/c/Users/NAmoa/Dropbox"))
+;;
+;; ;; (org-roam-directory (file-truename "C:\Users\NAmoa\Dropbox\Zettelkasten"))
+;; =======
+;; =======
+;; >>>>>>> Stashed changes
 ;; active Babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
