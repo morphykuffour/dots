@@ -62,7 +62,7 @@
 (use-package undo-fu)
 
 ;; evil deeds for a bad bad boy
-(use-package evil
+(use-package evi
              :demand t
              :bind (("<escape>" . keyboard-escape-quit))
 	     :init
@@ -178,7 +178,8 @@
   (setq lsp-completion-provider :capf))
 
 (use-package all-the-icons
-  :ensure t)
+  :ensure t
+    :if (display-graphic-p))
 
 ;; (use-package company-box
 ;;   :after company
