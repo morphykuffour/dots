@@ -1,0 +1,24 @@
+IMAPAccount proton
+Host 127.0.0.1
+Port 1143
+User your-email@example.com
+PassCmd "cat ~/.protonBridgePass"
+SSLType STARTTLS
+SSLVersions TLSv1.2
+CertificateFile ~/.config/protonmail/bridge/cert.pem
+
+IMAPStore proton-remote
+Account proton
+
+MaildirStore proton-local
+Subfolders Verbatim
+Path ~/mail/proton/
+Inbox ~/mail/proton/inbox/
+
+Channel proton
+Far :proton-remote:
+Near :proton-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *
