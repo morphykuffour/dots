@@ -3,6 +3,7 @@ slock/
 zsh.old/
 tmux/.tmux/resurrect/*
 notes.txt
+keyd/.config/keyd/app.log
 *zcompdump*
 
 # -*- mode: gitignore; -*-
