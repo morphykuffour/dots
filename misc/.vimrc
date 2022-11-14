@@ -3,6 +3,7 @@
 " or load it with :source vim "
 "-----------------------------"
 
+colorscheme desert
 " my own indentation for C using the coding styles
 set cindent
 set tabstop=8
