@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sudo ln -s /etc/profiles/per-user/morp/bin/python3 /usr/bin/python3
+keyd-application-mapper -d
