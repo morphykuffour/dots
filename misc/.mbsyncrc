@@ -1,5 +1,6 @@
 IMAPAccount proton
-Host 127.0.0.1
+#Host 127.0.0.1
+Host 137.99.128.111
 Port 1143
 User your-email@example.com
 PassCmd "cat ~/.protonBridgePass"

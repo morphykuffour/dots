@@ -309,7 +309,7 @@
 
 ;; (add-to-list  'load-path "~/.emacs.d/personal/alert")
 ;; (require 'alert)
-(require 'org-gcal)
+;; (require 'org-gcal)
 
 (require 'org-roam)
 (use-package org-roam
