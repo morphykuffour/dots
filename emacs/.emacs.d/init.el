@@ -28,7 +28,7 @@
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
 ;; (load-user-file "my-org.el")
-;; (load-user-file "org-mode.el")
+(load-user-file "org-mode.el")
 
 ;; (use-package mu4e
 ;;   :straight nil
@@ -495,6 +495,12 @@
   "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
   :keybinding "g")
 
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "brave")
+(setq browse-url-browser-function 'browse-url-default-windows-browser)
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+
 (use-package vterm
   :commands vterm
   :config
@@ -548,7 +554,7 @@
   (setq calendar-latitude 40.0)
   (setq calendar-longitude -70.0)
   (setq circadian-themes '((:sunrise . apropospriate-light)
-                           (:sunset  . nord)))
+                           (:sunset  . dracula)))
   (circadian-setup))
 
 
