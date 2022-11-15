@@ -68,3 +68,9 @@ tmux/.tmux/plugins/*
 zsh/.zsh/zsh-pandoc-completion/
 
 zsh/.zsh/.zsh_history
+tmux/.tmux/plugins/tmux-modal
+tmux/.tmux/plugins/tmux-open
+tmux/.tmux/plugins/tmux-resurrect
+zsh/.zsh/plugins/fast-syntax-highlighting
+zsh/.zsh/plugins/zsh-system-clipboard
+
