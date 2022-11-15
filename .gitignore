@@ -58,3 +58,12 @@ flycheck_*.el
 /misc/.muttrc
 
 /.ccls-cache/*
+
+emacs/.emacs.d/.org-generic-id-locations
+emacs/.emacs.d/bookmarks
+emacs/.emacs.d/org-roam.db
+emacs/.emacs.d/recentf
+emacs/.emacs.d/transient/
+tmux/.tmux/plugins/*
+zsh/.zsh/zsh-pandoc-completion/
+
