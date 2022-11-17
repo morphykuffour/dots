@@ -264,10 +264,8 @@
 
   (setq magit-push-always-verify nil
         git-commit-summary-max-length 50))
-(use-package magit-popup
-  :ensure t ; make sure it is installed
-  :demand t ; make sure it is loaded
-  )
+
+(use-package magit-popup :ensure t :demand t)
 
 ;; page through history of a file
 (use-package git-timemachine)
