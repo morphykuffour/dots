@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=PDF reader
+Exec=/etc/profiles/per-user/morp/bin/zathura %u
