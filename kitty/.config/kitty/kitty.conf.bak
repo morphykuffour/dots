@@ -6,9 +6,15 @@ include ./config/bell.conf
 include ./config/window.conf
 # include ./config/tabbar.conf
 # include ./config/colors.conf
-include ./config/snazzy.conf
+# include ./config/snazzy.conf
 include ./config/shell.conf
 include ./config/tweaks.conf
 include ./config/mappings.conf
 
-background_opacity 0.5
+# background_opacity 0.5
+
+
+# BEGIN_KITTY_THEME
+# Tokyo Night Storm
+include current-theme.conf
+# END_KITTY_THEME
