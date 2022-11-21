@@ -165,6 +165,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode nil)
 (set-fringe-mode 10)
+(setq confirm-kill-emacs nil)
 
 ;; (pixel-scroll-precision-mode)
 (setq inhibit-startup-message t)
