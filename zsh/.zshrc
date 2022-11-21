@@ -146,9 +146,9 @@ bindkey ' ' magic-space
 
 
 # xplr
-function xcd() {
-  cd "$(xplr --print-pwd-as-result)"
-}
+# function xcd() {
+#   cd "$(xplr --print-pwd-as-result)"
+# }
 
 # ls after cd
 chpwd() {
@@ -156,9 +156,8 @@ chpwd() {
 }
 
 # alias xcd=ii'cd "$(xplr --print-pwd-as-result)"'
-bindkey -s '^q' 'xcd^M'
+# bindkey -s '^q' 'xcd^M'
 
-bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 bindkey '^[[P' delete-char
 
 bindkey -s '^z' 'fg\n'
