@@ -20,6 +20,12 @@ function vif() {
 # https://jdhao.github.io/2019/06/13/zsh_bind_keys/
 bindkey -s '^p' 'vif^M'
 
+function vao() {
+    fname=$(fzf --preview 'bat {} ') || return
+    nvim "$fname"
+}
+bindkey -s '^f' 'vao^M'
+
 # source:https://stackoverflow.com/a/65375231/2571881
 # ~/.dotfiles/zsh/autoload/vif
 function nif() {
@@ -95,49 +101,6 @@ ranger-cd() {
 alias rcd=ranger-cd
 bindkey -s '^o' 'rcd\n'
 
-# Use lf to switch directories and bind it to ctrl-o
-lfcd () {
-    tmp="$(mktemp)"
-    lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp" >/dev/null
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir" || exit
-    fi
-}
-# bindkey -s '^o' 'lfcd\n'
-
-# Top ten memory hogs
-# http://www.commandlinefu.com/commands/view/7139/top-ten-memory-hogs
-memtop() {
-  ps -eorss,args | gsort -nr | gpr -TW$COLUMNS | ghead
-}
-zle -N memtop
-
-change_background() {
-    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
-}
-
-# mate_change_background() {
-#     dconf write /org/mate/desktop/background/picture-filename "'$HOME/dotfiles/backgrounds/$(ls ~/Pictures/wallpapers | fzf)'"
-# }
-
-myip () {
-  curl ifconfig.me
-}
-
-# strg+x,s adds sudo to the line
-run_with_sudo() {
-  LBUFFER="sudo $LBUFFER"
-}
-zle -N run-with-sudo
-bindkey '^Xs' run-with-sudo
-
-die () {
-    echo >&2 "$@"
-    exit 1
-}
-
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then
         export PATH=$PATH:$1
@@ -181,6 +144,10 @@ mkd() {
 
 change_background() {
     ls $HOME/Dropbox/Pictures/wallpapers | fzf --preview="feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}" | xargs -I {} feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}
+}
+
+change_background() {
+    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
 }
 
 #Enhanced rm
@@ -299,8 +266,9 @@ fzf-git-status() {
             fi
 }
 
-zle -N fzf-git-status
-# bindkey '^g' fzf-git-status
+# zle -N fzf-git-status
+# bindkey -s '^g' 'fzf-git-status^M'
+# bindkey -s '^p' 'vif^M'
 
 # Checkout to existing branch or else create new branch. gco <branch-name>.
 # Falls back to fuzzy branch selector list powered by fzf if no args.
@@ -326,7 +294,7 @@ fzf-checkout(){
 }
 
 # git commit browser show with fzf 
-git-commit-show() {
+function git-commit-show() {
 
   # param validation
   if [[ ! `git log -n 1 $@ | head -n 1` ]] ;then
@@ -366,8 +334,17 @@ git-commit-show() {
   $gitlog | $fzf
 }
 
-zle -N git-commit-show
-# bindkey '^g' fzf-git-status
+# zle -N git-commit-show
+bindkey -s '^g' 'git-commit-show^M'
+# 'fzf-git-status^M'
 
-
-
+# function nif() {
+#     local fname
+#     local current_dir=$PWD
+#     cd ~/nix || exit
+#     fname=$(fzf --preview 'bat {} ') || return
+#     nvim "$fname"
+#     cd $current_dir
+# }
+# # https://jdhao.github.io/2019/06/13/zsh_bind_keys/
+# bindkey -s '^n' 'nif^M'
