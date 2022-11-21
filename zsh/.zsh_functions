@@ -142,9 +142,9 @@ mkd() {
   fi
 }
 
-change_background() {
-    ls $HOME/Dropbox/Pictures/wallpapers | fzf --preview="feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}" | xargs -I {} feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}
-}
+# change_background() {
+#     ls $HOME/Dropbox/Pictures/wallpapers | fzf --preview="feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}" | xargs -I {} feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}
+# }
 
 change_background() {
     feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
@@ -177,9 +177,6 @@ fzf-aliases-functions() {
 
     eval $CMD
 }
-
-alias fzan=fzf-aliases-functions    
-bindkey -s '^h' 'fzan\n'
 
 ## File Finder (Open in $EDITOR)
 fzf-find-files() {
@@ -252,99 +249,3 @@ function fzf-kill-processes() {
   fi
 }
 
-# Enhanced Git Status (Open multiple files with tab + diff preview)
-fzf-git-status() {
-    git rev-parse --git-dir > /dev/null 2>&1 || { echo "You are not in a git repository" && return }
-    local selected
-    selected=$(git -c color.status=always status --short |
-        fzf --height 50% "$@" --border -m --ansi --nth 2..,.. \
-        --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
-        cut -c4- | sed 's/.* -> //')
-            if [[ $selected ]]; then
-                for prog in $(echo $selected);
-                do; $EDITOR $prog; done;
-            fi
-}
-
-# zle -N fzf-git-status
-# bindkey -s '^g' 'fzf-git-status^M'
-# bindkey -s '^p' 'vif^M'
-
-# Checkout to existing branch or else create new branch. gco <branch-name>.
-# Falls back to fuzzy branch selector list powered by fzf if no args.
-fzf-checkout(){
-    if git rev-parse --git-dir > /dev/null 2>&1; then
-        if [[ "$#" -eq 0 ]]; then
-            local branches branch
-            branches=$(git branch -a) &&
-            branch=$(echo "$branches" |
-            fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-            git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
-        elif [ `git rev-parse --verify --quiet $*` ] || \
-             [ `git branch --remotes | grep  --extended-regexp "^[[:space:]]+origin/${*}$"` ]; then
-            echo "Checking out to existing branch"
-            git checkout "$*"
-        else
-            echo "Creating new branch"
-            git checkout -b "$*"
-        fi
-    else
-        echo "Can't check out or create branch. Not in a git repo"
-    fi
-}
-
-# git commit browser show with fzf 
-function git-commit-show() {
-
-  # param validation
-  if [[ ! `git log -n 1 $@ | head -n 1` ]] ;then
-    return
-  fi
-
-  # filter by file string
-  local filter
-  # param existed, git log for file if existed
-  if [ -n $@ ] && [ -f $@ ]; then
-    filter="-- $@"
-  fi
-
-  # git command
-  local gitlog=(
-    git log
-    --graph --color=always
-    --abbrev=7
-    --format='%C(auto)%h %an %C(blue)%s %C(yellow)%cr'
-    $@
-  )
-
-  # fzf command
-  local fzf=(
-    fzf
-    --ansi --no-sort --reverse --tiebreak=index
-    --preview "f() { set -- \$(echo -- \$@ | grep -o '[a-f0-9]\{7\}'); [ \$# -eq 0 ] || git show --color=always \$1 $filter; }; f {}"
-    --bind "ctrl-q:abort,ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % $filter | less -R') << 'FZF-EOF'
-                {}
-                FZF-EOF"
-   --preview-window=right:60%
-  )
-
-  # piping them
-  $gitlog | $fzf
-}
-
-# zle -N git-commit-show
-bindkey -s '^g' 'git-commit-show^M'
-# 'fzf-git-status^M'
-
-# function nif() {
-#     local fname
-#     local current_dir=$PWD
-#     cd ~/nix || exit
-#     fname=$(fzf --preview 'bat {} ') || return
-#     nvim "$fname"
-#     cd $current_dir
-# }
-# # https://jdhao.github.io/2019/06/13/zsh_bind_keys/
-# bindkey -s '^n' 'nif^M'
