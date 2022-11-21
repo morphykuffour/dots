@@ -117,9 +117,8 @@
              (evil-mode 1)
              (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle))
 
-(use-package pdf-tools
-  :init
-  (pdf-tools-install))
+(pdf-tools-install)
+
 
 ;;; 666, the number of the beast
 (use-package evil-collection
