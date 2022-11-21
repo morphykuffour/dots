@@ -29,3 +29,13 @@ fi
 export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
 export PATH="$PATH:$GEM_HOME/bin"
 export PATH=$PATH:/usr/local/go/bin
+
+# React Native
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export NODE_OPTIONS=–openssl-legacy-provider
