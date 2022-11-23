@@ -410,15 +410,17 @@
 (require 'olivetti)
 (auto-image-file-mode 1)
 
-;; (require 'calendar)
-
-;; Transparency
-;; (set-frame-parameter (selected-frame) 'alpha '(100))
-;; (add-to-list 'default-frame-alist '(alpha . (100)))
+(use-package vterm
+  :commands vterm
+  :config
+  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))
 
 (use-package dired
   :ensure nil
-
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
   :config
   (defun hrs/dired-slideshow ()
     (interactive)
@@ -441,10 +443,17 @@
         dired-recursive-deletes 'top
         global-auto-revert-non-file-buffers t))
 
+(use-package dired-single
+  :commands (dired dired-jump))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
+
 (use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
   :config
-  (dired-hide-dotfiles-mode 1)
-  (evil-define-key 'normal dired-mode-map "." 'dired-hide-dotfiles-mode))
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "." 'dired-hide-dotfiles-mode))
 
 (use-package dired-open
   :config
