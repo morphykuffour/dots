@@ -145,7 +145,6 @@ alias d="deletemark"
 alias s="showmarks"
 
 # nix
-# Nix Install
 alias ni='nix-env -iA'
-# Nix Search
 alias ns='nix-env -qaP'
+alias nix-shell="nix-shell -p zsh --run zsh"
