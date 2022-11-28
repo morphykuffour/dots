@@ -209,12 +209,12 @@ Return a list of installed packages or nil for every skipped package."
   (minions-mode 1))
 
 ;; modeline
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 25)))
+;; (use-package doom-modeline
+;;   :init (doom-modeline-mode 1)
+;;   :custom ((doom-modeline-height 25)))
 
-(set-face-attribute 'mode-line nil :height 160)
-(set-face-attribute 'mode-line-inactive nil :height 160)
+(set-face-attribute 'mode-line nil :height 100)
+(set-face-attribute 'mode-line-inactive nil :height 100)
 
 ;; ripgrep for searching
 (use-package deadgrep
@@ -344,14 +344,14 @@ Return a list of installed packages or nil for every skipped package."
              (require 'org-roam-protocol))
 
 
-;; (add-to-list  'load-path "~/.emacs.d/personal/md-roam")
-;; (setq org-roam-file-extensions '("org" "md"))
-;; (require 'md-roam)
-;; ;; (md-roam-mode 1)
-;; (setq md-roam-file-extension "md")
-;; (setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-;; (org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-;;
+(add-to-list  'load-path "~/.emacs.d/personal/md-roam")
+(setq org-roam-file-extensions '("org" "md"))
+(require 'md-roam)
+;; (md-roam-mode 1)
+(setq md-roam-file-extension "md")
+(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
+
 ;; (add-to-list 'org-roam-capture-templates
 ;;     '("m" "Markdown" plain "" :target
 ;;         (file+head "%<%Y-%m-%dT%H%M%S>.md"
