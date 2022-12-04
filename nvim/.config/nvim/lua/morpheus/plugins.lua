@@ -62,7 +62,7 @@ return packer.startup(function(use)
 
 	-- writing
 	use("mzlogin/vim-markdown-toc")
-	use("SidOfc/mkdx")
+	-- use("SidOfc/mkdx")
 	use("vim-pandoc/vim-rmarkdown")
 	use("vim-pandoc/vim-pandoc")
 	use("vim-pandoc/vim-pandoc-syntax")
@@ -226,6 +226,7 @@ return packer.startup(function(use)
 	use({ "williamboman/mason-lspconfig.nvim" })
 	-- use 'gpanders/nvim-parinfer'
 	use("dhruvasagar/vim-table-mode")
+    use("preservim/tagbar")
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end
