@@ -70,7 +70,8 @@ return packer.startup(function(use)
 	use("lukas-reineke/headlines.nvim")
 
 	-- ui enchancements
-	use("kyazdani42/nvim-web-devicons")
+	-- use("kyazdani42/nvim-web-devicons")
+    use 'nvim-tree/nvim-web-devicons'
 	use("moll/vim-bbye")
 	use("antoinemadec/FixCursorHold.nvim")
 	use("kevinhwang91/nvim-bqf")
@@ -80,10 +81,11 @@ return packer.startup(function(use)
 	use("junegunn/goyo.vim")
 	use("projekt0n/github-nvim-theme")
 	use("folke/tokyonight.nvim")
-	use({
-		"nvim-lualine/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons", opt = true },
-	})
+	-- use({
+	-- 	"nvim-lualine/lualine.nvim",
+	-- 	requires = { "kyazdani42/nvim-web-devicons", opt = true },
+	-- })
+    use 'tjdevries/express_line.nvim'
 
 	-- tpope
 	use("tpope/vim-sensible")
@@ -182,7 +184,7 @@ return packer.startup(function(use)
 	use("ThePrimeagen/vim-be-good")
 	-- low level stuff
 	use("p00f/godbolt.nvim")
-	-- use("sakhnik/nvim-gdb") TODO configure dap for c and cpp
+	-- use("sakhnik/nvim-gdb") -- TODO configure dap for c and cpp
 	-- use("tjdevries/nlua.nvim")
 	use("nvim-lua/completion-nvim")
 	use("euclidianAce/BetterLua.vim")
@@ -224,7 +226,6 @@ return packer.startup(function(use)
 	use("kristijanhusak/vim-dadbod-completion")
 	use({ "ellisonleao/glow.nvim" })
 	use({ "williamboman/mason-lspconfig.nvim" })
-	-- use 'gpanders/nvim-parinfer'
 	use("dhruvasagar/vim-table-mode")
     use("preservim/tagbar")
 	if PACKER_BOOTSTRAP then
