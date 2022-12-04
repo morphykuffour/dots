@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+for i in `/bin/grep USB /proc/acpi/wakeup | /usr/bin/awk '{print $1}'`; 
+do 
+    echo $i > /proc/acpi/wakeup; 
+done
