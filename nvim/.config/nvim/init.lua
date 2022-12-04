@@ -111,8 +111,8 @@ set_cursorline("WinEnter", true)
 set_cursorline("FileType", false, "TelescopePrompt")
 
 -- Themes
-vim.cmd("colorscheme github_dark_default")
--- vim.cmd("colorscheme gruvbox")
+-- vim.cmd("colorscheme github_dark_default")
+vim.cmd("colorscheme gruvbox")
 
 -- Setup LSPs, DAPs, Linters
 require("mason").setup({
@@ -133,12 +133,25 @@ require("mason-lspconfig").setup({
 	-- Configured servers list: rust_analyzer, clojure_lsp, pyright, rnix, sumneko_lua
 })
 
-require("lualine").setup({
-	options = {
-		theme = "github_dark", -- or you can assign github_* themes individually.
-		-- ... your lualine config
-	},
-})
+-- require("lualine").setup({
+-- 	options = {
+-- 		theme = "github_dark", -- or you can assign github_* themes individually.
+-- 		-- ... your lualine config
+-- 	},
+--   tabline = {
+--     lualine_a = {
+--       {
+--         'buffers',
+--         show_filename_only = false,
+--         mode = 2,
+--         -- max_length = vim.o.columns * 1 / 2,
+--       }
+--     },
+--   }
+-- })
+
+vim.opt.statusline = " <b>[%N]  %< %{FugitiveHead()}  %F %m %r %w %= %y %{&fileencoding?&fileencoding:&encoding} [%{&fileformat}]  Ln %l, Col %c "
+
 vim.g.loaded_python_provider = 0 -- disable python2
 
 
