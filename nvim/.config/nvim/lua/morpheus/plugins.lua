@@ -185,7 +185,7 @@ return packer.startup(function(use)
 	-- low level stuff
 	use("p00f/godbolt.nvim")
 	-- use("sakhnik/nvim-gdb") -- TODO configure dap for c and cpp
-	-- use("tjdevries/nlua.nvim")
+	use("tjdevries/nlua.nvim")
 	use("nvim-lua/completion-nvim")
 	use("euclidianAce/BetterLua.vim")
 	use({ "wesleimp/stylua.nvim" })

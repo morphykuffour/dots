@@ -424,6 +424,17 @@ nvim_lsp.sumneko_lua.setup({
 	},
 })
 
+-- local lspconfig_util = require "lspconfig.util"
+-- require('nlua.lsp.nvim').setup(require('lspconfig'), {
+--     root_dir = function(fname)
+--       if string.find(vim.fn.fnamemodify(fname, ":p"), ".config/nvim/") then
+--         return vim.fn.expand "~/dotfiles/nvim/.config/nvim/"
+--       end
+--
+--       -- ~/git/config_manager/xdg_config/nvim/...
+--       return lspconfig_util.find_git_ancestor(fname) or lspconfig_util.path.dirname(fname)
+--     end,
+-- })
 -- debug
 local dap, dapui = require("dap"), require("dapui")
 vim.fn.sign_define("DapBreakpoint", { text = "ß", texthl = "", linehl = "", numhl = "" })
