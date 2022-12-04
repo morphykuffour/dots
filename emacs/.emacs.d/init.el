@@ -213,8 +213,8 @@ Return a list of installed packages or nil for every skipped package."
 ;;   :init (doom-modeline-mode 1)
 ;;   :custom ((doom-modeline-height 25)))
 
-(set-face-attribute 'mode-line nil :height 100)
-(set-face-attribute 'mode-line-inactive nil :height 100)
+(set-face-attribute 'mode-line nil :height 150)
+(set-face-attribute 'mode-line-inactive nil :height 150)
 
 ;; ripgrep for searching
 (use-package deadgrep
@@ -296,13 +296,13 @@ Return a list of installed packages or nil for every skipped package."
 (use-package git-timemachine)
 
 ;; teach emacs how to open links in your default windows browser
-(let ((cmd-exe "/mnt/c/windows/system32/cmd.exe")
-      (cmd-args '("/c" "start")))
-  (when (file-exists-p cmd-exe)
-    (setq browse-url-generic-program  cmd-exe
-          browse-url-generic-args     cmd-args
-          browse-url-browser-function 'browse-url-generic
-          search-web-default-browser 'browse-url-generic)))
+;; (let ((cmd-exe "/mnt/c/windows/system32/cmd.exe")
+;;       (cmd-args '("/c" "start")))
+;;   (when (file-exists-p cmd-exe)
+;;     (setq browse-url-generic-program  cmd-exe
+;;           browse-url-generic-args     cmd-args
+;;           browse-url-browser-function 'browse-url-generic
+;;           search-web-default-browser 'browse-url-generic)))
 
 ;; org
 (require 'org)
@@ -488,6 +488,12 @@ Return a list of installed packages or nil for every skipped package."
           ("xls" . "gnumeric")
           ("xlsx" . "gnumeric"))))
 
+;; ((auto-mode . emacs)
+;;  ("\\.mm\\'" . default)
+;;  ("\\.x?html?\\'" . "brave $s")
+;;  ("\\.pdf\\'" . "zathura $s"))
+
+
 ;; perform dired actions asynchronously
 (use-package async
   :config
@@ -564,16 +570,16 @@ Return a list of installed packages or nil for every skipped package."
 ;; sly
 (setq inferior-lisp-program "sbcl")
 
-(use-package apropospriate-theme :ensure :defer)
-(use-package nord-theme :ensure :defer)
+;; (use-package apropospriate-theme :ensure :defer)
+;; (use-package nord-theme :ensure :defer)
 
 (use-package circadian
   :ensure t
   :config
   (setq calendar-latitude 40.0)
   (setq calendar-longitude -70.0)
-  (setq circadian-themes '((:sunrise . dracula)
-                           (:sunset  . dracula)))
+  (setq circadian-themes '((:sunrise . gruvbox-light-hard)
+                           (:sunset  . gruvbox-dark-hard)))
   (circadian-setup))
 
 

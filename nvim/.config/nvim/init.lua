@@ -111,8 +111,8 @@ set_cursorline("WinEnter", true)
 set_cursorline("FileType", false, "TelescopePrompt")
 
 -- Themes
--- vim.cmd("colorscheme github_dark_default")
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme github_dark_default")
+-- vim.cmd("colorscheme gruvbox")
 
 -- Setup LSPs, DAPs, Linters
 require("mason").setup({
@@ -150,7 +150,43 @@ require("mason-lspconfig").setup({
 --   }
 -- })
 
-vim.opt.statusline = " <b>[%N]  %< %{FugitiveHead()}  %F %m %r %w %= %y %{&fileencoding?&fileencoding:&encoding} [%{&fileformat}]  Ln %l, Col %c "
+-- vim.opt.statusline = " <b>[%N]  %< %{FugitiveHead()}  %F %m %r %w %= %y %{&fileencoding?&fileencoding:&encoding} [%{&fileformat}]  Ln %l, Col %c "
+
+require("morpheus.statusline")
+
+-- local function generator()
+--     local el_segments = {}
+--
+--     local win_id = vim.api.nvim_get_current_win()
+--     local extensions = require('el.extensions')
+--     local helper = require("el.helper")
+--     -- local subscribe = require('el.subscribe')
+--     local mode = extensions.gen_mode { format_string = " %s " }
+--     table.insert(el_segments, mode)
+--
+--     table.insert(el_segments, helper.async_buf_setter(
+--       win_id,
+--       'el_git_stat',
+--       extensions.git_changes,
+--       5000
+--     ))
+--
+--     -- table.insert(el_segments, '%F')
+-- table.insert(el_segments, " <b>[%N]  %< %{FugitiveHead()}  %F %m %r %w %= %y %{&fileencoding?&fileencoding:&encoding} [%{&fileformat}]  Ln %l, Col %c")
+--     -- local builtin = require('el.builtin')
+--     -- table.insert(el_segments, builtin.file)
+--    -- table.insert(el_segments,
+--    --  subscribe.buf_autocmd(
+--    --    "el_file_icon",
+--    --    "BufRead",
+--    --    function(_, buffer)
+--    --      return extensions.file_icon(_, buffer)
+--    --    end
+--    --  ))
+--     return el_segments
+-- end
+-- require('el').setup { generator = generator }
+-- require('el').setup({ })
 
 vim.g.loaded_python_provider = 0 -- disable python2
 

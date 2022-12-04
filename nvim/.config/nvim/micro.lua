@@ -47,12 +47,12 @@ require("morpheus.todo")
 vim.cmd("colorscheme gruvbox")
 -- vim.cmd("colorscheme github_dark_default")
 -- require("morpheus.theme.lualine_github_dark")
-require("lualine").setup({
-	options = {
-		theme = "github_dark", -- or you can assign github_* themes individually.
-		-- ... your lualine config
-	},
-})
+-- require("lualine").setup({
+-- 	options = {
+-- 		theme = "github_dark", -- or you can assign github_* themes individually.
+-- 		-- ... your lualine config
+-- 	},
+-- })
 -- Setup LSPs, DAPs, Linters
 require("mason").setup({
 	ui = {
