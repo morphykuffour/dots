@@ -148,4 +148,4 @@ alias s="showmarks"
 # nix
 alias ni='nix-env -iA'
 alias ns='nix-env -qaP'
-alias nix-shell="nix-shell -p zsh --run zsh"
+# alias nix-shell="nix-shell -p zsh --run zsh"

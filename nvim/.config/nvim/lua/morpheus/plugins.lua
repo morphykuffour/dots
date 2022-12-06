@@ -63,7 +63,7 @@ return packer.startup(function(use)
 	-- writing
 	use("mzlogin/vim-markdown-toc")
 	-- use("SidOfc/mkdx")
-	use("vim-pandoc/vim-rmarkdown")
+	-- use("vim-pandoc/vim-rmarkdown")
 	use("vim-pandoc/vim-pandoc")
 	use("vim-pandoc/vim-pandoc-syntax")
 	use("nvim-orgmode/orgmode")
