@@ -396,7 +396,8 @@ nvim_lsp.rust_analyzer.setup({ on_attach = on_attach })
 nvim_lsp.clojure_lsp.setup({ on_attach = on_attach })
 nvim_lsp.pyright.setup({ on_attach = on_attach })
 nvim_lsp.rnix.setup({ on_attach = on_attach })
-nvim_lsp.ccls.setup({ on_attach = on_attach })
+-- http://neovimcraft.com/plugin/ranjithshegde/ccls.nvim/index.html
+nvim_lsp.ccls.setup({ on_attach = on_attach})
 -- nvim_lsp.gopls.setup({ on_attach = on_attach })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -528,64 +529,64 @@ require("diaglist").init({
 
 -- In init.lua or filetype.nvim's config file
 -- Do not source the default filetype.vim
-vim.g.did_load_filetypes = 1
-require("filetype").setup({
-	overrides = {
-		extensions = {
-			-- Set the filetype of *.pn files to potion
-			pn = "potion",
-			markdown = "markdown",
-		},
-		literal = {
-			-- Set the filetype of files named "MyBackupFile" to lua
-			MyBackupFile = "lua",
-			Vagrantfile = "ruby",
-		},
-		complex = {
-			-- Set the filetype of any full filename matching the regex to gitconfig
-			[".*git/config"] = "gitconfig", -- Included in the plugin
-			["/tmp/zsh*"] = "bash", -- Included in the plugin
-			[".*zsh*"] = "bash", -- include zsh files
-		},
-
-		-- The same as the ones above except the keys map to functions
-		function_extensions = {
-			["cpp"] = function()
-				vim.bo.filetype = "cpp"
-				-- Remove annoying indent jumping
-				vim.bo.cinoptions = vim.bo.cinoptions .. "L0"
-			end,
-			["pdf"] = function()
-				vim.bo.filetype = "pdf"
-				if vim.fn.has("wsl") then
-					-- Open in MS-Edge PDF viewer
-					vim.fn.jobstart("wslview " .. '"' .. vim.fn.expand("%") .. '"')
-				elseif vim.fn.has("mac") then
-					-- Open in PDF viewer (Skim.app)
-					vim.fn.jobstart("open -a skim " .. '"' .. vim.fn.expand("%") .. '"')
-					-- Open in zathura PDF viewer
-				elseif vim.fn.has("linux") then
-					vim.fn.jobstart("zathura " .. '"' .. vim.fn.expand("%") .. '"')
-				end
-			end,
-		},
-		function_literal = {
-			Brewfile = function()
-				vim.cmd("syntax off")
-			end,
-		},
-		function_complex = {
-			["*.math_notes/%w+"] = function()
-				vim.cmd("iabbrev $ $$")
-			end,
-		},
-
-		shebang = {
-			-- Set the filetype of files with a dash shebang to sh
-			dash = "sh",
-		},
-	},
-})
+-- vim.g.did_load_filetypes = 1
+-- require("filetype").setup({
+-- 	overrides = {
+-- 		extensions = {
+-- 			-- Set the filetype of *.pn files to potion
+-- 			pn = "potion",
+-- 			markdown = "markdown",
+-- 		},
+-- 		literal = {
+-- 			-- Set the filetype of files named "MyBackupFile" to lua
+-- 			MyBackupFile = "lua",
+-- 			Vagrantfile = "ruby",
+-- 		},
+-- 		complex = {
+-- 			-- Set the filetype of any full filename matching the regex to gitconfig
+-- 			[".*git/config"] = "gitconfig", -- Included in the plugin
+-- 			["/tmp/zsh*"] = "bash", -- Included in the plugin
+-- 			[".*zsh*"] = "bash", -- include zsh files
+-- 		},
+--
+-- 		-- The same as the ones above except the keys map to functions
+-- 		function_extensions = {
+-- 			["cpp"] = function()
+-- 				vim.bo.filetype = "cpp"
+-- 				-- Remove annoying indent jumping
+-- 				vim.bo.cinoptions = vim.bo.cinoptions .. "L0"
+-- 			end,
+-- 			["pdf"] = function()
+-- 				vim.bo.filetype = "pdf"
+-- 				if vim.fn.has("wsl") then
+-- 					-- Open in MS-Edge PDF viewer
+-- 					vim.fn.jobstart("wslview " .. '"' .. vim.fn.expand("%") .. '"')
+-- 				elseif vim.fn.has("mac") then
+-- 					-- Open in PDF viewer (Skim.app)
+-- 					vim.fn.jobstart("open -a skim " .. '"' .. vim.fn.expand("%") .. '"')
+-- 					-- Open in zathura PDF viewer
+-- 				elseif vim.fn.has("linux") then
+-- 					vim.fn.jobstart("zathura " .. '"' .. vim.fn.expand("%") .. '"')
+-- 				end
+-- 			end,
+-- 		},
+-- 		function_literal = {
+-- 			Brewfile = function()
+-- 				vim.cmd("syntax off")
+-- 			end,
+-- 		},
+-- 		function_complex = {
+-- 			["*.math_notes/%w+"] = function()
+-- 				vim.cmd("iabbrev $ $$")
+-- 			end,
+-- 		},
+--
+-- 		shebang = {
+-- 			-- Set the filetype of files with a dash shebang to sh
+-- 			dash = "sh",
+-- 		},
+-- 	},
+-- })
 
 -- nixos
 local nix_group = vim.api.nvim_create_augroup("nix", { clear = true })
