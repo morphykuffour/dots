@@ -170,14 +170,14 @@ return packer.startup(function(use)
 
 	-- TODO figure out why nvim-treesitter does not work on OSX
 	-- d3dd30f Use vim.loop.os_uname().sysname instead of jit.os
-	if vim.fn.has("mac") ~= 1 then --support for wsl see :h has
+	-- if vim.fn.has("mac") ~= 1 then --support for wsl see :h has
 		use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 		use("nvim-treesitter/playground")
 		use("bryall/contextprint.nvim")
         use("nvim-treesitter/nvim-treesitter-textobjects")
         use("nvim-treesitter/nvim-treesitter-refactor")
         -- use 'nvim-treesitter/nvim-treesitter-context'
-	end
+	-- end
 	use("LnL7/vim-nix")
 	-- TJ & ThePrimeagen
 	use("ThePrimeagen/harpoon")
