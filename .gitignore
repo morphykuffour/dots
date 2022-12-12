@@ -73,4 +73,5 @@ tmux/.tmux/plugins/tmux-open
 tmux/.tmux/plugins/tmux-resurrect
 zsh/.zsh/plugins/fast-syntax-highlighting
 zsh/.zsh/plugins/zsh-system-clipboard
-
+.DS_Store
+FIXME/.DS_Store
