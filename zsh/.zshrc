@@ -216,4 +216,4 @@ source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plug
 . $HOME/.zsh/fzf-gems/fzf_git_functions.sh
 . $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
 
-
+# eval "$(rbenv init - zsh)"
