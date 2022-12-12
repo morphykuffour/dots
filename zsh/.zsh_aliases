@@ -22,7 +22,7 @@ alias cls="clear"
 # alias bundle="bundle-2.7"
 alias za="$EDITOR ~/dotfiles/zsh/.zsh_aliases"
 alias cz="cat >"
-alias o="thunar"
+# alias o="thunar"
 
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
