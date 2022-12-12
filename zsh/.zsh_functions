@@ -100,7 +100,7 @@ ranger-cd() {
 }
 #
 alias rcd=ranger-cd
-bindkey -s '^o' 'rcd\n'
+bindkey -s '^o' "rcd\n"
 
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then
