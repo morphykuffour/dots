@@ -138,6 +138,8 @@ alias less='bat'
 alias batcat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
 alias less='batcat'
+alias m='make'
+
 
 # zshmarks
 alias gt="jump"
