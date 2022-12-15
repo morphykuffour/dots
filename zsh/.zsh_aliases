@@ -138,8 +138,12 @@ alias less='bat'
 alias batcat='bat --theme=ansi' && \
 alias cat='bat --pager=never' && \
 alias less='batcat'
+<<<<<<< Updated upstream
 alias m='make'
 
+=======
+alias news='newsboat'
+>>>>>>> Stashed changes
 
 # zshmarks
 alias gt="jump"
