@@ -184,7 +184,6 @@ return packer.startup(function(use)
 	use("nvim-lua/completion-nvim")
 	use("euclidianAce/BetterLua.vim")
 	use({ "wesleimp/stylua.nvim" })
-	use({ "google/vim-codefmt", requires = { "google/vim-maktaba" } })
 	-- use("~/Dropbox/projects/neovim-plugins/lookup.nvim")
 	-- use("~/Dropbox/projects/neovim-plugins/nvim-whid")
 	use("jbyuki/one-small-step-for-vimkind")
@@ -223,6 +222,8 @@ return packer.startup(function(use)
 	use({ "williamboman/mason-lspconfig.nvim" })
 	use("dhruvasagar/vim-table-mode")
 	use("preservim/tagbar")
+
+      use 'j-hui/fidget.nvim'
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end
