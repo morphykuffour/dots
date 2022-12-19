@@ -1,7 +1,6 @@
-if vim.fn.has("mac") ~= 1 then --support for wsl see :h has
 	require("nvim-treesitter.configs").setup({
 		-- Add languages to be installed here that you want installed for treesitter
-		ensure_installed = { "lua", "typescript", "rust", "go", "python" },
+		ensure_installed = { "c", "lua", "typescript", "rust", "go", "python" },
 		-- ensure_installed = { enable = "all", },
 
 		-- tree_docs = { enable = true },
@@ -98,4 +97,3 @@ if vim.fn.has("mac") ~= 1 then --support for wsl see :h has
 			},
 		},
 	})
-end
