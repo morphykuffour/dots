@@ -75,7 +75,6 @@ return packer.startup(function(use)
 	use("voldikss/vim-floaterm")
 	use("junegunn/goyo.vim")
 	use("projekt0n/github-nvim-theme")
-	use("folke/tokyonight.nvim")
 	-- use({
 	-- 	"nvim-lualine/lualine.nvim",
 	-- 	requires = { "kyazdani42/nvim-web-devicons", opt = true },
@@ -97,7 +96,7 @@ return packer.startup(function(use)
 	use("lewis6991/gitsigns.nvim")
 
 	-- Colorschemes
-	-- use("gruvbox-community/gruvbox")
+	-- use("folke/tokyonight.nvim")
 	use("ellisonleao/gruvbox.nvim")
 	use("lunarvim/darkplus.nvim")
 	use("marko-cerovac/material.nvim")
@@ -142,8 +141,9 @@ return packer.startup(function(use)
 	})
 
 	-- Telescope
-	use("nvim-telescope/telescope.nvim")
+	use({ "nvim-telescope/telescope.nvim", branch = "0.1.x", requires = { "nvim-lua/plenary.nvim" } })
 	use("nvim-telescope/telescope-fzy-native.nvim")
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make", cond = vim.fn.executable("make") == 1 })
 	-- use("nvim-telescope/telescope-cheat.nvim")
 	-- use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({ "dhruvmanila/telescope-bookmarks.nvim" })
@@ -158,14 +158,6 @@ return packer.startup(function(use)
 			require("neoclip").setup()
 		end,
 	})
-	use({
-		"nvim-telescope/telescope-fzf-native.nvim",
-		run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-	})
-
-	-- TODO figure out why nvim-treesitter does not work on OSX
-	-- d3dd30f Use vim.loop.os_uname().sysname instead of jit.os
-	-- if vim.fn.has("mac") ~= 1 then --support for wsl see :h has
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/playground")
 	use("bryall/contextprint.nvim")
@@ -200,30 +192,30 @@ return packer.startup(function(use)
 	use({ "folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim" })
 	use("nvim-treesitter/nvim-tree-docs")
 	use("nathom/filetype.nvim")
-	use("mfussenegger/nvim-treehopper")
-	use("phaazon/hop.nvim")
-	use("ziontee113/syntax-tree-surfer")
+	-- use("mfussenegger/nvim-treehopper")
+	-- use("phaazon/hop.nvim")
+	-- use("ziontee113/syntax-tree-surfer")
 	use("p00f/nvim-ts-rainbow")
 	use("tpope/vim-commentary")
 	use("junegunn/fzf")
 	use("junegunn/fzf.vim")
-	use("norcalli/nvim-colorizer.lua")
-	use("norcalli/nvim_utils")
-	use("anuvyklack/hydra.nvim")
-	use("bfredl/nvim-miniyank")
+	-- use("norcalli/nvim-colorizer.lua")
+	-- use("norcalli/nvim_utils")
+	-- use("anuvyklack/hydra.nvim")
+	-- use("bfredl/nvim-miniyank")
 	use("anuvyklack/keymap-layer.nvim")
-	use("kmonad/kmonad-vim")
+	-- use("kmonad/kmonad-vim")
 	use({ "williamboman/mason.nvim" })
 	use("nanotee/sqls.nvim")
 	use("tpope/vim-dadbod")
 	use("kristijanhusak/vim-dadbod-ui")
 	use("kristijanhusak/vim-dadbod-completion")
-	use({ "ellisonleao/glow.nvim" })
+	-- use({ "ellisonleao/glow.nvim" })
 	use({ "williamboman/mason-lspconfig.nvim" })
 	use("dhruvasagar/vim-table-mode")
 	use("preservim/tagbar")
+	use("j-hui/fidget.nvim")
 
-      use 'j-hui/fidget.nvim'
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end
