@@ -190,7 +190,6 @@ require("morpheus.statusline")
 
 vim.g.loaded_python_provider = 0 -- disable python2
 
-
 if os.getenv("NIX_PATH") ~= nil or os.getenv("NIX_PATH") ~= "" then
 	vim.g.python3_host_prog = "/home/morp/.nix-profile/bin/python3"
 end
@@ -341,7 +340,6 @@ cmp.setup({
 	},
 })
 
-
 local tabnine = require("cmp_tabnine.config")
 tabnine:setup({
 	max_lines = 1000,
@@ -397,7 +395,7 @@ nvim_lsp.clojure_lsp.setup({ on_attach = on_attach })
 nvim_lsp.pyright.setup({ on_attach = on_attach })
 nvim_lsp.rnix.setup({ on_attach = on_attach })
 -- http://neovimcraft.com/plugin/ranjithshegde/ccls.nvim/index.html
-nvim_lsp.ccls.setup({ on_attach = on_attach})
+nvim_lsp.ccls.setup({ on_attach = on_attach })
 -- nvim_lsp.gopls.setup({ on_attach = on_attach })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -1322,17 +1320,17 @@ telescope.load_extension("bookmarks")
 telescope.load_extension("file_browser")
 
 -- https://github.com/nvim-treesitter/nvim-treesitter/wiki/Windows-support#troubleshooting
-require 'nvim-treesitter.install'.compilers = { "gcc" }
+require("nvim-treesitter.install").compilers = { "gcc" }
 vim.opt.runtimepath:append("$HOME/.local/share/treesitter")
 
 require("nvim-treesitter.configs").setup({
-    -- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-    parser_install_dir = "$HOME/.local/share/treesitter",
+	-- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+	parser_install_dir = "$HOME/.local/share/treesitter",
 
-    -- List of parsers to ignore installing (for "all")
+	-- List of parsers to ignore installing (for "all")
 	ensure_installed = { enable = "all" },
 
-    -- ignore_install = { "javascript" },
+	-- ignore_install = { "javascript" },
 	tree_docs = { enable = true },
 	highlight = {
 		enable = true,
@@ -1344,8 +1342,8 @@ require("nvim-treesitter.configs").setup({
 		enable_autocmd = false,
 	},
 	indent = {
-	       enable = true,
-	   },
+		enable = true,
+	},
 	incremental_selection = {
 		enable = true,
 		keymaps = {
@@ -1425,4 +1423,3 @@ require("nvim-treesitter.configs").setup({
 		},
 	},
 })
-

@@ -24,11 +24,6 @@ autocmd BufWritePost plugins.lua source <afile> | PackerSync
 augroup end
 ]])
 
--- local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
--- vim.api.nvim_create_autocmd("BufWritePost", {
--- 	pattern = vim.fn.expand("$HOME") .. "/nix/nixpkgs/.config/nixpkgs/modules/nvim/init.nix.lua",
--- })
-
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, "packer")
 if not status_ok then
@@ -71,7 +66,7 @@ return packer.startup(function(use)
 
 	-- ui enchancements
 	-- use("kyazdani42/nvim-web-devicons")
-    use 'nvim-tree/nvim-web-devicons'
+	use("nvim-tree/nvim-web-devicons")
 	use("moll/vim-bbye")
 	use("antoinemadec/FixCursorHold.nvim")
 	use("kevinhwang91/nvim-bqf")
@@ -85,7 +80,7 @@ return packer.startup(function(use)
 	-- 	"nvim-lualine/lualine.nvim",
 	-- 	requires = { "kyazdani42/nvim-web-devicons", opt = true },
 	-- })
-    use 'tjdevries/express_line.nvim'
+	use("tjdevries/express_line.nvim")
 
 	-- tpope
 	use("tpope/vim-sensible")
@@ -150,7 +145,7 @@ return packer.startup(function(use)
 	use("nvim-telescope/telescope.nvim")
 	use("nvim-telescope/telescope-fzy-native.nvim")
 	-- use("nvim-telescope/telescope-cheat.nvim")
-	use({ "nvim-telescope/telescope-file-browser.nvim" })
+	-- use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({ "dhruvmanila/telescope-bookmarks.nvim" })
 	use("tyru/open-browser.vim")
 	use({
@@ -171,12 +166,12 @@ return packer.startup(function(use)
 	-- TODO figure out why nvim-treesitter does not work on OSX
 	-- d3dd30f Use vim.loop.os_uname().sysname instead of jit.os
 	-- if vim.fn.has("mac") ~= 1 then --support for wsl see :h has
-		use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
-		use("nvim-treesitter/playground")
-		use("bryall/contextprint.nvim")
-        use("nvim-treesitter/nvim-treesitter-textobjects")
-        use("nvim-treesitter/nvim-treesitter-refactor")
-        -- use 'nvim-treesitter/nvim-treesitter-context'
+	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+	use("nvim-treesitter/playground")
+	use("bryall/contextprint.nvim")
+	use("nvim-treesitter/nvim-treesitter-textobjects")
+	use("nvim-treesitter/nvim-treesitter-refactor")
+	-- use 'nvim-treesitter/nvim-treesitter-context'
 	-- end
 	use("LnL7/vim-nix")
 	-- TJ & ThePrimeagen
@@ -227,7 +222,7 @@ return packer.startup(function(use)
 	use({ "ellisonleao/glow.nvim" })
 	use({ "williamboman/mason-lspconfig.nvim" })
 	use("dhruvasagar/vim-table-mode")
-    use("preservim/tagbar")
+	use("preservim/tagbar")
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end
