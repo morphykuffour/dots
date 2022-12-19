@@ -13,12 +13,10 @@ Jcall(require, "morpheus/keymaps")
 require("morpheus.globals")
 require("morpheus.options")
 require("morpheus.lsp")
-require("morpheus.lsp.null-ls")
 require("morpheus.completion")
 require("morpheus.syntastic")
 require("morpheus.telescope")
 require("morpheus.treesitter")
--- require("morpheus.tsplayground")
 require("morpheus.diaglist")
 require("morpheus.neogit")
 require("morpheus.snippets")
@@ -59,13 +57,6 @@ require("mason").setup({
 	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
 })
 
-local servers = { "clangd", "rust_analyzer", "pyright", "tsserver", "sumneko_lua", "gopls" }
-require("mason-lspconfig").setup({
-	ensure_installed = servers,
-	-- automatic_installation = false,
-	-- Configured servers list: rust_analyzer, clojure_lsp, pyright, rnix, sumneko_lua
-})
-
 vim.g.loaded_python_provider = 0 -- disable python2
 vim.g.python3_host_prog = "/usr/bin/python3"
 
@@ -98,7 +89,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 -- })
 
 -- Do not source the default filetype.vim
-vim.g.did_load_filetypes = 1
+-- vim.g.did_load_filetypes = 1
 
 -- source vimfiles
 vim.cmd([[runtime! vimfiles/*.vim]])
