@@ -4,8 +4,8 @@ if not status_ok then
 end
 
 local actions = require("telescope.actions")
-local fb_actions = require("telescope").extensions.file_browser.actions
-local fb_utils = require("telescope._extensions.file_browser.utils")
+-- local fb_actions = require("telescope").extensions.file_browser.actions
+-- local fb_utils = require("telescope._extensions.file_browser.utils")
 local action_state = require("telescope.actions.state")
 local Job = require("plenary.job")
 
@@ -91,43 +91,43 @@ telescope.setup({
 			full_path = true,
 			firefox_profile_name = nil,
 		},
-		file_browser = {
-			theme = "ivy",
-			hijack_netrw = true,
-			mappings = {
-				["i"] = {
-					["<C-h>"] = fb_actions.goto_home_dir,
-
-					-- mass renameing with edir
-					["<C-r>"] = function(prompt_bufnr)
-						-- bulk rename with edir
-						-- https://github.com/bulletmark/edir
-						-- local quiet = action_state.get_current_picker(prompt_bufnr).finder.quiet
-						local selections = fb_utils.get_selected_files(prompt_bufnr, true)
-						Job:new({ "edir", selections }):start()
-					end,
-				},
-				["n"] = {
-					-- your custom normal mode mappings
-					["<C-h>"] = fb_actions.goto_home_dir,
-					["."] = fb_actions.toggle_hidden,
-					["dd"] = fb_actions.remove,
-					["re"] = fb_actions.rename,
-					["yy"] = fb_actions.copy,
-					["c"] = fb_actions.create,
-					["p"] = fb_actions.move,
-					["o"] = fb_actions.open,
-				},
-			},
-		},
+		-- file_browser = {
+		-- 	theme = "ivy",
+		-- 	hijack_netrw = true,
+		-- 	mappings = {
+		-- 		["i"] = {
+		-- 			["<C-h>"] = fb_actions.goto_home_dir,
+		--
+		-- 			-- mass renameing with edir
+		-- 			["<C-r>"] = function(prompt_bufnr)
+		-- 				-- bulk rename with edir
+		-- 				-- https://github.com/bulletmark/edir
+		-- 				-- local quiet = action_state.get_current_picker(prompt_bufnr).finder.quiet
+		-- 				local selections = fb_utils.get_selected_files(prompt_bufnr, true)
+		-- 				Job:new({ "edir", selections }):start()
+		-- 			end,
+		-- 		},
+		-- 		["n"] = {
+		-- 			-- your custom normal mode mappings
+		-- 			["<C-h>"] = fb_actions.goto_home_dir,
+		-- 			["."] = fb_actions.toggle_hidden,
+		-- 			["dd"] = fb_actions.remove,
+		-- 			["re"] = fb_actions.rename,
+		-- 			["yy"] = fb_actions.copy,
+		-- 			["c"] = fb_actions.create,
+		-- 			["p"] = fb_actions.move,
+		-- 			["o"] = fb_actions.open,
+		-- 		},
+		-- 	},
+		-- },
 	},
 })
 
--- require("telescope").load_extension("fzy_native")
+require("telescope").load_extension("fzy_native")
 -- telescope.load_extension("fzf")
 -- telescope.load_extension("neoclip")
--- telescope.load_extension("bookmarks")
-telescope.load_extension("file_browser")
+telescope.load_extension("bookmarks")
+-- telescope.load_extension("file_browser")
 
 local M = {}
 
