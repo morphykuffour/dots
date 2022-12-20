@@ -5,5 +5,5 @@ function Scratch()
     setlocal noswapfile
 endfunction
 
-command! -nargs=0 Ns call Newscratch()
-" command! Scratch call Scratch()
+" command! -nargs=0 Ns call Newscratch()
+command! Scratch call Scratch()
