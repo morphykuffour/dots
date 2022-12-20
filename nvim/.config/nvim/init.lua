@@ -45,17 +45,17 @@ require("morpheus.todo")
 vim.cmd("colorscheme github_dark_default")
 
 -- Setup LSPs, DAPs, Linters
-require("mason").setup({
-	ui = {
-		icons = {
-			package_installed = "✓",
-			package_pending = "➜",
-			package_uninstalled = "✗",
-		},
-	},
-	-- The directory in which to install packages.
-	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
-})
+-- require("mason").setup({
+-- 	ui = {
+-- 		icons = {
+-- 			package_installed = "✓",
+-- 			package_pending = "➜",
+-- 			package_uninstalled = "✗",
+-- 		},
+-- 	},
+-- 	-- The directory in which to install packages.
+-- 	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
+-- })
 
 vim.g.loaded_python_provider = 0 -- disable python2
 vim.g.python3_host_prog = "/usr/bin/python3"
@@ -77,16 +77,6 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = vim.fn.expand("$MYVIMRC"),
 })
 
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
--- local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
--- vim.api.nvim_create_autocmd("TextYankPost", {
--- 	callback = function()
--- 		vim.highlight.on_yank()
--- 	end,
--- 	group = highlight_group,
--- 	pattern = "*",
--- })
 
 -- Do not source the default filetype.vim
 -- vim.g.did_load_filetypes = 1
