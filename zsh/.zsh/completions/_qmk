@@ -1,0 +1,163 @@
+#compdef qmk
+
+_qmk_compile(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+        "-n[Don't actually build, just show the make command to be run.]::_qmk_compile" \
+        "--dry-run[Don't actually build, just show the make command to be run.]::_qmk_compile" \
+        '-km[The keymap to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_compile' \
+        '--keymap[The keymap to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_compile' \
+        '-kb[The keyboard to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_compile' \
+        '--keyboard[The keyboard to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_compile' \
+        '*::configuratorExport:{_values "json files" *.json}'
+}
+
+_qmk_flash(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+        "-n[Don't actually build, just show the make command to be run.]::_qmk_flash" \
+        "--dry-run[Don't actually build, just show the make command to be run.]::_qmk_flash" \
+        '-km[The keymap to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_flash' \
+        '--keymap[The keymap to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_flash' \
+        '-kb[The keyboard to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_flash' \
+        '--keyboard[The keyboard to build a firmware for. Ignored when a configurator export is supplied.]::_qmk_flash' \
+        "-bl[The flash command, corresponding to qmk's make options of bootloaders.]::_qmk_flash"\
+        "--bootloader[The flash command, corresponding to qmk's make options of bootloaders.]::_qmk_flash"\
+        '-b[List the available bootloaders.]::_qmk_flash' \
+        '--bootloaders[List the available bootloaders.]::_qmk_flash' \
+        '*::configuratorExport:{_values "json files" *.json}'
+}
+
+_qmk_config(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+        '-ro[Operate in read-only mode.]' \
+        '--read-only[Operate in read-only mode.]' \
+}
+
+_qmk_doctor(){
+    _arguments \
+        '-n[Answer no to all questions.]'\
+        '--no[Answer no to all questions.]'\
+        '--yes[Answer yes to all questions.]'\
+        '-y[Answer yes to all questions.]'\
+        '-h[Print help text.]'\
+        '--help[Print help text.]'
+}
+
+_qmk_json2c(){
+    _arguments \
+        '-q[Quiet mode, only output error messages]'\
+        '--quiet[Quiet mode, only output error messages]'\
+        '-o[File to write to]'\
+        '--output[File to write to]'\
+        '-h[Print help text.]'\
+        '--help[Print help text.]'\
+        '*::configuratorExport:{_values "json files" *.json}'
+}
+
+_qmk_list-keyboards(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+}
+
+_qmk_list-keymaps(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+}
+
+_qmk_new-keymap(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+        '-km[Specify the name for the new keymap directory]::_qmk_new-keymap' \
+        '--keymap[Specify the name for the new keymap directory]::_qmk_new-keymap'\
+        '-kb[Specify keyboard name. Example: 1upkeyboards/1up60hse]::_qmk_new-keymap'\
+        '--keyboard[Specify keyboard name. Example: 1upkeyboards/1up60hse]::_qmk_new-keymap'
+}
+
+_qmk_setup(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+        "-H[The location for QMK Firmware. Defaults to $HOME/qmk_firmware]"\
+        "--home[The location for QMK Firmware. Defaults to $HOME/qmk_firmware]"\
+        '-b[The branch to clone]'\
+        '--branch[The branch to clone]'\
+        '--baseurl[The URL all git operations start from]'\
+        '-n[Answer no to all questions.]'\
+        '--no[Answer no to all questions.]'\
+        '--yes[Answer yes to all questions.]'\
+        '-y[Answer yes to all questions.]'
+}
+
+_qmk_info(){
+    _arguments \
+        '-h[Print help text.]' \
+        '--help[Print help text.]' \
+        '--f[Format to display the data in (friendly, text, json)(Default: friendly).]'\
+        '--format[Format to display the data in (friendly, text, json)(Default: friendly).]'\
+        '--m[Render the layouts with matrix information.]'\
+        '--matrix[Render the layouts with matrix information.]'\
+        '--l[Render the layouts.]'\
+        '--layouts[Render the layouts.]'\
+        '--km[Show the layers for a JSON keymap too.]'\
+        '--keymap[Show the layers for a JSON keymap too.]'\
+        '--kb[Keyboard to show info for.]'\
+        '--keyboard[Keyboard to show info for.]'\
+}
+
+
+
+_qmk_command(){
+    local -a _qmk_cmds
+    _qmk_cmds=(
+        'clone: Clone a qmk_firmware fork.'\
+        'setup: Setup your computer for qmk_firmware.'\
+        'compile: Compile a QMK Firmware.'\
+        'config: Read and write configuration settings.'\
+        'doctor: Basic QMK environment checks'\
+        'flash: QMK Flash.'\
+        'json2c: Creates a keymap.c from a QMK Configurator export.'\
+        'list-keyboards: List the keyboards currently defined within QMK'\
+        'list-keymaps: List the keymaps for a specific keyboard'\
+        'new-keymap: Creates a new keymap for the keyboard of your choosing'\
+        'info: Keyboard information.' \
+    )
+
+    if ((CURRENT == 1)); then
+        _describe -t commands 'qmk commands' _qmk_cmds
+    else
+        local curcontext="$curcontext"
+        cmd="${${_qmk_cmds[(r)$words[1]:*]%%:*}}"
+        if (($#cmd)); then
+            if (( $+functions[_qmk_$cmd] )); then
+                _qmk_$cmd
+            else
+                _message "no options for $cmd"
+            fi
+        else
+            _message "no more options"
+        fi
+    fi
+}
+
+
+_arguments \    
+    '-h[Print help text.]' \
+    '--help[Print help text.]' \
+    '-V[Prints version information]' \
+    '--version[Prints version information]' \
+    '--datetime-fmt[Format string for datetimes]:DATETIME_FMT:()' \
+    '--log-fmt[Format string for printed log output]' \
+    '--log-file-fmt[Format string for log file.]' \
+    '--log-file[File to write log messages to]:filename:_files' \
+    '--color[Enable color in output]' \
+    '--no-color[Disable color in output]' \
+    '--config-file[The location for the configuration file]:filename:_files' \
+    '*::qmk commands:_qmk_command'

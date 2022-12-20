@@ -50,6 +50,7 @@ TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 autoload -Uz compinit
 compinit -d ~/.cache/zsh/zcompdump
 compdef _gnu_generic delta
+# compdef _qmk qmk
 _comp_options+=(globdots)		# Include hidden files.
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
