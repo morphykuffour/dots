@@ -53,8 +53,18 @@ local on_attach = function(_, bufnr)
 	end, { desc = "Format current buffer with LSP" })
 end
 
--- Setup mason so it can manage external tooling
-require("mason").setup()
+-- Setup LSPs, DAPs, Linters
+require("mason").setup({
+	ui = {
+		icons = {
+			package_installed = "✓",
+			package_pending = "➜",
+			package_uninstalled = "✗",
+		},
+	},
+	-- The directory in which to install packages.
+	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
+})
 
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
@@ -111,12 +121,12 @@ nvim_lsp.rnix.setup({
 	capabilities = capabilities,
 })
 
-nvim_lsp.pyright.setup ({
+nvim_lsp.pyright.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
 })
 
-nvim_lsp.clangd.setup ({
+nvim_lsp.clangd.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
 })

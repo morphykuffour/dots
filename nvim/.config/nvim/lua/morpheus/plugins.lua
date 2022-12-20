@@ -73,6 +73,7 @@ return packer.startup(function(use)
 	-- use("ptzz/lf.vim")
 	use("mhinz/vim-startify")
 	use("voldikss/vim-floaterm")
+use {"akinsho/toggleterm.nvim"}
 	use("junegunn/goyo.vim")
 	use("projekt0n/github-nvim-theme")
 	-- use({
