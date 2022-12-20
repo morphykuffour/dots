@@ -467,26 +467,26 @@ Return a list of installed packages or nil for every skipped package."
   (evil-collection-define-key 'normal 'dired-mode-map
     "." 'dired-hide-dotfiles-mode))
 
-(use-package dired-open
-  :config
-  (setq dired-open-extensions
-        '(("avi" . "mpv")
-          ("cbr" . "zathura")
-          ("doc" . "libreoffice")
-          ("docx". "libreoffice")
-          ("gif" . "ffplay")
-          ("gnumeric" . "gnumeric")
-          ("jpeg". "sxiv")
-          ("jpg" . "sxiv")
-          ("mkv" . "mpv")
-          ("mov" . "mpv")
-          ("mp3" . "mpv")
-          ("mp4" . "mpv")
-          ("pdf" . "zathura")
-          ("png" . "s")
-          ("webm" . "mpv")
-          ("xls" . "gnumeric")
-          ("xlsx" . "gnumeric"))))
+;; (use-package dired-open
+;;   :config
+;;   (setq dired-open-extensions
+;;         '(("avi" . "mpv")
+;;           ("cbr" . "zathura")
+;;           ("doc" . "libreoffice")
+;;           ("docx". "libreoffice")
+;;           ("gif" . "ffplay")
+;;           ("gnumeric" . "gnumeric")
+;;           ("jpeg". "sxiv")
+;;           ("jpg" . "sxiv")
+;;           ("mkv" . "mpv")
+;;           ("mov" . "mpv")
+;;           ("mp3" . "mpv")
+;;           ("mp4" . "mpv")
+;;           ("pdf" . "zathura")
+;;           ("png" . "s")
+;;           ("webm" . "mpv")
+;;           ("xls" . "gnumeric")
+;;           ("xlsx" . "gnumeric"))))
 
 ;; ((auto-mode . emacs)
 ;;  ("\\.mm\\'" . default)
