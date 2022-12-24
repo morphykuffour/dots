@@ -12,7 +12,7 @@ Jcall(require, "morpheus/plugins")
 Jcall(require, "morpheus/keymaps")
 require("morpheus.globals")
 require("morpheus.options")
-require("morpheus.lsp")
+-- require("morpheus.lsp")
 require("morpheus.completion")
 require("morpheus.syntastic")
 require("morpheus.telescope")
@@ -44,19 +44,6 @@ require("morpheus.todo")
 -- vim.cmd("colorscheme gruvbox")
 vim.cmd("colorscheme github_dark_default")
 
--- Setup LSPs, DAPs, Linters
--- require("mason").setup({
--- 	ui = {
--- 		icons = {
--- 			package_installed = "✓",
--- 			package_pending = "➜",
--- 			package_uninstalled = "✗",
--- 		},
--- 	},
--- 	-- The directory in which to install packages.
--- 	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
--- })
-
 vim.g.loaded_python_provider = 0 -- disable python2
 vim.g.python3_host_prog = "/usr/bin/python3"
 
@@ -77,7 +64,6 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = vim.fn.expand("$MYVIMRC"),
 })
 
-
 -- Do not source the default filetype.vim
 -- vim.g.did_load_filetypes = 1
 
@@ -91,5 +77,6 @@ elseif vim.fn.has("mac") then
 	vim.g.netrw_browsex_viewer = "open"
 elseif vim.fn.has("linux") then
 	-- vim.g.netrw_browsex_viewer = "/usr/bin/xdg-open"
-	vim.g.netrw_browsex_viewer = vim.env.BROWSER
+	vim.g.netrw_browsex_viewer = "/run/current-system/sw/bin/xdg-open"
+	-- vim.g.netrw_browsex_viewer = vim.env.BROWSER
 end
