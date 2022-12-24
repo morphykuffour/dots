@@ -73,7 +73,7 @@ return packer.startup(function(use)
 	-- use("ptzz/lf.vim")
 	use("mhinz/vim-startify")
 	use("voldikss/vim-floaterm")
-use {"akinsho/toggleterm.nvim"}
+	use({ "akinsho/toggleterm.nvim" })
 	use("junegunn/goyo.vim")
 	use("projekt0n/github-nvim-theme")
 	-- use({
@@ -103,26 +103,48 @@ use {"akinsho/toggleterm.nvim"}
 	use("marko-cerovac/material.nvim")
 
 	-- cmp plugins
-	use("hrsh7th/cmp-path")
+	-- use("hrsh7th/cmp-path")
 	use("hrsh7th/cmp-cmdline")
-	use("hrsh7th/cmp-nvim-lua")
-	use("saadparwaiz1/cmp_luasnip")
-	use("tjdevries/complextras.nvim")
+	-- use("hrsh7th/cmp-nvim-lua")
+	-- use("saadparwaiz1/cmp_luasnip")
+	-- use("tjdevries/complextras.nvim")
 
-	-- LSP
-	use({ "neovim/nvim-lspconfig" })
-	use("hrsh7th/cmp-nvim-lsp")
-	use("onsails/lspkind.nvim")
-	use("nvim-lua/lsp_extensions.nvim")
-	use("hrsh7th/cmp-buffer")
-	use("hrsh7th/nvim-cmp")
-	use({ "tzachar/cmp-tabnine", run = "./install.sh", requires = "hrsh7th/nvim-cmp" })
-	use("simrat39/symbols-outline.nvim")
+	-- -- LSP
+	-- use({ "neovim/nvim-lspconfig" })
+	-- use("hrsh7th/cmp-nvim-lsp")
+	-- use("onsails/lspkind.nvim")
+	-- use("nvim-lua/lsp_extensions.nvim")
+	-- use("hrsh7th/cmp-buffer")
+	-- use("hrsh7th/nvim-cmp")
+	-- use({ "tzachar/cmp-tabnine", run = "./install.sh", requires = "hrsh7th/nvim-cmp" })
+	-- use("simrat39/symbols-outline.nvim")
 	use({
 		"ericpubu/lsp_codelens_extensions.nvim",
 		config = function()
 			require("codelens_extensions").setup()
 		end,
+	})
+
+	use({
+		"VonHeikemen/lsp-zero.nvim",
+		requires = {
+			-- LSP Support
+			{ "neovim/nvim-lspconfig" },
+			{ "williamboman/mason.nvim" },
+			{ "williamboman/mason-lspconfig.nvim" },
+
+			-- Autocompletion
+			{ "hrsh7th/nvim-cmp" },
+			{ "hrsh7th/cmp-buffer" },
+			{ "hrsh7th/cmp-path" },
+			{ "saadparwaiz1/cmp_luasnip" },
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/cmp-nvim-lua" },
+
+			-- Snippets
+			{ "L3MON4D3/LuaSnip" },
+			{ "rafamadriz/friendly-snippets" },
+		},
 	})
 	-- use("jose-elias-alvarez/null-ls.nvim")
 	-- use("williamboman/nvim-lsp-installer") -- simple to use language server installer
