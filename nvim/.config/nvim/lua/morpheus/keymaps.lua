@@ -68,8 +68,8 @@ m.nmap("<leader>hv", [[:lua require("harpoon.ui").toggle_quick_menu()<cr>]])
 m.nmap("<leader>st", ":Startify<CR>")
 m.nmap("<leader>so", ":source %<CR>")
 
-m.nmap("<leader>pp", ":lua require('nabla').popup()<CR>")
-m.vmap("<leader>pp", ":lua require('nabla').popup()<CR>")
+-- m.nmap("<leader>pp", ":lua require('nabla').popup()<CR>")
+-- m.vmap("<leader>pp", ":lua require('nabla').popup()<CR>")
 
 m.nmap("K", "<Cmd>lua vim.lsp.buf.hover()<CR>")
 m.nmap("<leader>w", "<Cmd>w<CR>")
@@ -212,3 +212,222 @@ m.vmap("<leader>ds", "<ESC> <cmd> lua require('dap-python').debug_selection()<CR
 -- vim.keymap.set("n", "<leader>B", ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>")
 -- vim.keymap.set("n", "<leader>lp", ":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>")
 -- vim.keymap.set("n", "<leader>dr", ":lua require'dap'.repl.open()<CR>")
+--
+
+local keymap = vim.keymap.set
+local opts = { noremap = true, silent = true }
+local term_opts = { silent = true }
+
+-- Better terminal navigation
+-- move between vim panes
+keymap("n", "<C-h>", "<C-w>h", opts)
+keymap("n", "<C-j>", "<C-w>j", opts)
+keymap("n", "<C-k>", "<C-w>k", opts)
+keymap("n", "<C-l>", "<C-w>l", opts)
+keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
+keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
+keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
+keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
+-- pane switching
+keymap("n", "<c-j>", "<c-w>j")
+keymap("n", "<c-k>", "<c-w>k")
+keymap("n", "<c-h>", "<c-w>h")
+keymap("n", "<c-l>", "<c-w>l")
+keymap("c", "<c-j>", "<Down>")
+keymap("c", "<c-k>", "<Up>")
+
+-- "Edit configs
+keymap("n", "<leader>vc", "<cmd>e $MYVIMRC<cr>")
+keymap("n", "<leader>tc", ":edit $HOME/dotfiles/tmux/.tmux.conf<cr>")
+keymap("n", "<leader>zc", ":edit $HOME/dotfiles/zsh/.zshrc<cr>")
+
+-- Telescope keymaps
+local telescope = require("telescope")
+keymap("n", "<leader>/", function()
+	require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+		winblend = 10,
+		previewer = false,
+	}))
+end, { desc = "[/curr] Fuzzily search in current buffer]" })
+
+keymap("n", "<space>do", function()
+	require("telescope.builtin").find_files({
+		prompt_title = "< dotfiles >",
+		cwd = vim.env.DOTFILES,
+		hidden = true,
+	})
+end, { desc = "[/dot] search dotfiles]" })
+
+--[[
+_G.search_vimrc = function()
+end
+--]]
+
+--[[
+require("telescope.builtin").find_files({
+	prompt_title = "< vimrc >",
+	cwd = "~/.config/nvim/",
+	hidden = true,
+})
+--]]
+
+_G.installed_plugins = function()
+	require("telescope.builtin").find_files({
+		prompt_title = "< searching installed plugins >",
+		cwd = vim.fn.stdpath("data") .. "/site/pack/packer/start/",
+	})
+end
+
+-- keymap("<space>fp", installed_plugins)
+
+_G.search_all_files = function()
+	require("telescope.builtin").find_files({
+		prompt_title = "< searching all files >",
+		find_command = { "rg", "--no-ignore", "--files" },
+	})
+end
+
+keymap("n", "<A-x>", function()
+	require("telescope.builtin").keymaps(require("telescope.themes").get_ivy({
+		winblend = 5,
+		previewer = false,
+	}))
+end, { desc = "[/keys] execute keymaps or functions]" })
+
+keymap("n", "<leader>fs", function()
+	require("telescope.builtin").grep_string({ search = vim.fn.input("Grep For > ") })
+end, { desc = "[/gr] grep string from pwd]" })
+
+-- keymap("n", "<leader>fb", "<cmd> Telescope file_browser<CR>", { desc = "[/fb] file browser search]" })
+
+keymap("n", "<leader>bb", function()
+	require("telescope.builtin").buffers(require("telescope.themes").get_ivy({
+		winblend = 5,
+		previewer = false,
+	}))
+end, { desc = "[/buf] search current nvim buffers]" })
+
+keymap("n", "<leader>fo", function()
+	require("telescope.builtin").oldfiles(require("telescope.themes").get_ivy({
+		winblend = 5,
+		previewer = false,
+	}))
+end, { desc = "[/old] old files search]" })
+
+keymap("n", "<leader>ff", function()
+	require("telescope.builtin").find_files(require("telescope.themes").get_ivy({
+		winblend = 5,
+		previewer = false,
+	}))
+end, { desc = "[/ff] find files search]" })
+
+local previewers = require("telescope.previewers")
+local builtin = require("telescope.builtin")
+
+keymap("n", "<leader>fh", "<cmd> Telescope help_tags<CR>")
+keymap("n", "<leader>lg", "<cmd> Telescope live_grep<CR>")
+keymap("n", "<leader>lr", "<cmd> Telescope lsp_references<CR>")
+keymap("n", "<leader>ft", "<cmd> TodoTelescope<CR>")
+
+-- Extension mappings
+keymap("n", "<leader>fm", "<cmd>Telescope bookmarks<cr>")
+keymap("n", "<leader>fc", "<cmd>Telescope neoclip<cr>")
+keymap("n", "<c-f>", "<cmd>Telescope find_files hidden=true<CR>")
+
+-- Git
+local delta_bcommits = previewers.new_termopen_previewer({
+	get_command = function(entry)
+		return {
+			"git",
+			"-c",
+			"core.pager=delta",
+			"-c",
+			"delta.side-by-side=false",
+			"diff",
+			entry.value .. "^!",
+			"--",
+			entry.current_file,
+		}
+	end,
+})
+
+local delta = previewers.new_termopen_previewer({
+	get_command = function(entry)
+		return { "git", "-c", "core.pager=delta", "-c", "delta.side-by-side=false", "diff", entry.value .. "^!" }
+	end,
+})
+
+Delta_git_commits = function(opts)
+	opts = opts or {}
+	opts.previewer = {
+		delta,
+		previewers.git_commit_message.new(opts),
+		previewers.git_commit_diff_as_was.new(opts),
+	}
+	builtin.git_commits(opts)
+end
+
+Delta_git_bcommits = function(opts)
+	opts = opts or {}
+	opts.previewer = {
+		delta_bcommits,
+		previewers.git_commit_message.new(opts),
+		previewers.git_commit_diff_as_was.new(opts),
+	}
+	builtin.git_bcommits(opts)
+end
+keymap("n", "<leader>dgc", "<cmd>lua Delta_git_commits()<CR>", opts)
+keymap("n", "<leader>dgb", "<cmd>lua Delta_git_bcommits()<CR>", opts)
+
+-- Insert mode in NEOGIT_COMMIT_EDIT_EDITMSG
+local git_group = vim.api.nvim_create_augroup("git_group", { clear = true })
+local autocmd = vim.api.nvim_create_autocmd
+autocmd({ "BufRead", "BufWinEnter" }, {
+	group = git_group,
+	pattern = "NEOGIT_COMMIT_EDIT_EDITMSG",
+	command = "startinsert | 1",
+})
+
+autocmd({ "BufRead", "BufWinEnter" }, {
+	group = git_group,
+	pattern = "COMMIT_EDITMSG",
+	command = "startinsert | 1",
+})
+
+autocmd("FileType", {
+	group = git_group,
+	pattern = { "gitcommit", "gitrebase" },
+	command = "startinsert | 1",
+})
+
+require("git-conflict").setup({
+	default_mappings = true,
+	disable_diagnostics = false,
+	highlights = {
+		incoming = "DiffText",
+		current = "DiffAdd",
+	},
+})
+
+require("neogit").setup({
+	disable_commit_confirmation = true,
+	disable_insert_on_commit = false,
+	integrations = {
+		diffview = true,
+	},
+})
+keymap("n", "<leader>gg", "<cmd>lua require('neogit').open({ kind = 'split' })<cr>")
+keymap("n", "<leader>gd", "<cmd> DiffviewOpen<CR>")
+keymap("n", "<leader>cls", "<cmd>SymbolsOutline<cr>")
+
+keymap("n", "<leader>sv", "<cmd>lua ReloadConfig()<cr>")
+vim.api.nvim_create_user_command("CopyBufferName", function()
+	vim.cmd("echo expand('%:p')")
+	vim.cmd("let @+ = expand('%:p')")
+	vim.cmd('echo "Full path of " . expand(\'%:t\') . " was copied to system clipboard"')
+end, {})
+keymap("n", "<leader>bn", "<cmd> CopyBufferName()<cr>")
+keymap("n", "<leader>sa", "<cmd>Scratch<cr>")
+
+keymap("n", "gx", "<Plug>(openbrowser-smart-search)<cr>")
+keymap("v", "gx", "<Plug>(openbrowser-smart-search)<cr>")
