@@ -10,34 +10,6 @@ vim.g.snippets = "luasnip"
 require("morpheus.utils")
 Jcall(require, "morpheus/plugins")
 Jcall(require, "morpheus/keymaps")
--- require("morpheus.globals")
--- require("morpheus.options")
--- require("morpheus.lsp")
--- require("morpheus.completion")
--- require("morpheus.syntastic")
--- require("morpheus.telescope")
--- require("morpheus.treesitter")
--- require("morpheus.diaglist")
--- require("morpheus.neogit")
--- require("morpheus.snippets")
--- require("morpheus.luasnip")
--- require("morpheus.headlines")
--- require("morpheus.gitsigns")
--- require("morpheus.format")
--- require("morpheus.godbolt")
--- require("morpheus.hop")
--- require("morpheus.debug")
--- require("morpheus.statusline")
--- require("morpheus.filetype")
--- require("morpheus.todo")
--- require("morpheus.delimters")
--- require("morpheus.wilder") -- TODO move wilder.vim to wilder.lua
-
--- require("nrepl").config({})
--- require("lsp_signature").setup({})
--- require("nvim-treesitter.configs").setup({
--- 	-- tree_docs = { enable = true },
--- })
 
 -- Themes
 -- vim.cmd("colorscheme darkplus")
