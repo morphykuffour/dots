@@ -208,11 +208,11 @@ zsh_add_file() {
 }
 
 # source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
+# ~/.dots/zsh/autoload/vif
 function vif() {
     local fname
     local current_dir=$PWD
-    cd ~/dotfiles || exit
+    cd ~/dots || exit
     fname=$(fzf --preview 'bat {} ') || return
     nvim "$fname"
     cd $current_dir
@@ -227,7 +227,7 @@ function vao() {
 bindkey -s '^f' 'vao^M'
 
 # source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
+# ~/.dots/zsh/autoload/vif
 function nif() {
     local fname
     local current_dir=$PWD
@@ -326,7 +326,7 @@ shebang() {
 }
 
 commitDotFiles() {
-    cd "$HOME"/dotfiles || exit
+    cd "$HOME"/dots || exit
     git add .
     git commit 
     # git push 
