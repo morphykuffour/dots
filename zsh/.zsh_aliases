@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Easier navigation: .., ..., ~ and -
-alias dots="cd ~/dotfiles"
+alias dots="cd ~/dots"
 alias cdn="cd ~/nix"
 # alias open="xdg-open"
 # alias o="open"
@@ -20,7 +20,7 @@ alias ~="cd ~"
 alias d="dirs -v"
 alias cls="clear"
 # alias bundle="bundle-2.7"
-alias za="$EDITOR ~/dotfiles/zsh/.zsh_aliases"
+alias za="$EDITOR ~/dots/zsh/.zsh_aliases"
 alias cz="cat >"
 # alias o="thunar"
 
@@ -48,7 +48,7 @@ alias pscpu='ps auxf | sort -nr -k 3 | head -5'
 alias list_systemctl="systemctl list-unit-files --state=enabled"
 
 # Set personal aliases
-alias dotfiles="cd $HOME/dotfiles"
+alias dots="cd $HOME/dots"
 alias explorer='/mnt/c/Windows/explorer.exe'
 alias rd="rmdir"
 alias ip='ip -color=auto'
@@ -74,7 +74,7 @@ alias :q='exit'
 alias sau="sudo apt update"
 alias icat="kitty +kitten icat"
 alias zet="cd $HOME/Dropbox/Zettelkasten/"
-alias erc="emacsclient -c -a 'emacs' &  $HOME/dotfiles/emacs/.emacs.d/init.el"
+alias erc="emacsclient -c -a 'emacs' &  $HOME/dots/emacs/.emacs.d/init.el"
 # alias nyxt="xterm -e 'xhost +127.0.0.1; docker run -it -p 4006:4006 -v /Users/morp:/root/ --rm bigdeddu/nyxt:2.2.1'"
 alias rars="java -jar ~/bin/rars_533d3c0.jar"
 alias vim='nvim'
@@ -84,12 +84,12 @@ alias t="tmux -2"
 alias v="nvim"
 
 # Edit config files
-# alias zrc="$EDITOR $HOME/dotfiles/zsh/.zshrc"
-# alias zrca="$EDITOR $HOME/dotfiles/zsh/.zsh_aliases"
+# alias zrc="$EDITOR $HOME/dots/zsh/.zshrc"
+# alias zrca="$EDITOR $HOME/dots/zsh/.zsh_aliases"
 # alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
-alias zrc="nvim $HOME/dotfiles/zsh/.zshrc"
-alias zra="nvim $HOME/dotfiles/zsh/.zsh_aliases"
-alias zrf="nvim $HOME/dotfiles/zsh/.zsh_functions"
+alias zrc="nvim $HOME/dots/zsh/.zshrc"
+alias zra="nvim $HOME/dots/zsh/.zsh_aliases"
+alias zrf="nvim $HOME/dots/zsh/.zsh_functions"
 alias vrc="nvim $HOME/.config/nvim/init.lua"
 alias nrc="nvim $HOME/nix/flake.nix"
 
