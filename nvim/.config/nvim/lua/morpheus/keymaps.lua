@@ -85,6 +85,10 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 m.nmap("<leader>bf", ":bfirst<CR>")
 m.nmap("<leader>bl", ":blast<CR>")
 
+-- paste with <S-Insert>
+keymap("n", "<S-Insert>", "p", opts)
+keymap("i", "<S-Insert>", "<ESC>p", opts)
+
 -- pane switching
 m.nmap("<c-j>", "<c-w>j")
 m.nmap("<c-k>", "<c-w>k")

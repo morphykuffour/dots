@@ -12,6 +12,10 @@ local date = function()
 	return { os.date("%Y-%m-%d") }
 end
 
+local localhostIP = function()
+	return { "127.0.0.1" }
+end
+
 ls.add_snippets(nil, {
 	all = {
 		snip({
@@ -20,6 +24,14 @@ ls.add_snippets(nil, {
 			dscr = "Date in the form of YYYY-MM-DD",
 		}, {
 			func(date, {}),
+		}),
+
+		snip({
+			trig = "localhost",
+			namr = "localhost",
+			dscr = "localhost address",
+		}, {
+			func(localhostIP, {}),
 		}),
 	},
 })
