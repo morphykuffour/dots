@@ -238,6 +238,7 @@ return packer.startup(function(use)
 	use("dhruvasagar/vim-table-mode")
 	use("preservim/tagbar")
 	use("j-hui/fidget.nvim")
+  use 'norcalli/nvim-colorizer.lua'
 
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
