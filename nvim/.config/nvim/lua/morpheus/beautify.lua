@@ -8,3 +8,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = highlight_group,
 	pattern = "*",
 })
+
+require 'colorizer'.setup {
+  'css';
+  'javascript';
+  html = {
+    mode = 'foreground';
+  }
+}
