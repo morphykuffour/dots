@@ -1,41 +1,12 @@
-;; emacs os config for writing and organization
+;; emacs os config for writing and productivity
 
 ;;; use-package
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
-(defun ensure-package-installed (&rest packages)
-  "Assure every package is installed, ask for installation if it’s not.
-
-Return a list of installed packages or nil for every skipped package."
-  (mapcar
-   (lambda (package)
-     ;; (package-installed-p 'evil)
-     (if (package-installed-p package)
-         nil
-       (if (y-or-n-p (format "Package %s is missing. Install it? " package))
-           (package-install package)
-         package)))
-   packages))
-
-;; make sure to have downloaded archive description.
-;; Or use package-archive-contents as suggested by Nicolas Dudebout
-(or (file-exists-p package-user-dir)
-    (package-refresh-contents))
-
-(ensure-package-installed
-    'iedit
-    'magit
-    'olivetti
-)
-
-;; activate installed packages
 (package-initialize)
-
-;; (package-initialize)
 
 ;; ensure use-package is installed.
 (when (not (package-installed-p 'use-package))
@@ -58,50 +29,6 @@ Return a list of installed packages or nil for every skipped package."
 (load-user-file "utils.el")
 ;; (load-user-file "my-org.el")
 (load-user-file "org-mode.el")
-
-;; (use-package mu4e
-;;   :straight nil
-;;   :defer 20 ; Wait until 20 seconds after startup
-;;   :config
-
-;;   (setq mu4e-change-filenames-when-moving t ; avoid sync conflicts
-;;       mu4e-update-interval (* 10 60) ; check mail 10 minutes
-;;       mu4e-compose-format-flowed t ; re-flow mail so it's not hard wrapped
-;;       mu4e-get-mail-command "mbsync -a"
-;;       mu4e-maildir "~/mail/proton")
-
-;;   (setq mu4e-drafts-folder "/proton/Drafts"
-;;       mu4e-sent-folder   "/proton/Sent"
-;;       mu4e-refile-folder "/proton/All Mail"
-;;       mu4e-trash-folder  "/proton/Trash")
-
-;;   (setq mu4e-maildir-shortcuts
-;;       '(("/proton/inbox"     . ?i)
-;; 	("/proton/Sent"      . ?s)
-;; 	("/proton/Trash"     . ?t)
-;; 	("/proton/Drafts"    . ?d)
-;; 	("/proton/All Mail"  . ?a)))
-
-;;   (setq message-send-mail-function 'smtpmail-send-it
-;;       auth-sources '("~/.authinfo") ;need to use gpg version but only local smtp stored for now
-;;       smtpmail-smtp-server "127.0.0.1"
-;;       smtpmail-smtp-service 1025
-;;       smtpmail-stream-type  'ssl))
-
-;; (use-package org-msg
-;;   :straight t
-;;   :after mu4e
-;;   :config
-;;   (setq mail-user-agent 'mu4e-user-agent)
-;;   (require 'org-msg)
-;;   (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-;;       org-msg-startup "hidestars indent inlineimages"
-;;       org-msg-default-alternatives '((new		. (text html))
-;; 				     (reply-to-html	. (text html))
-;; 				     (reply-to-text	. (text)))
-;;       org-msg-convert-citation t)
-;;   (org-msg-mode))
-
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -224,57 +151,6 @@ Return a list of installed packages or nil for every skipped package."
   (advice-add 'deadgrep--arguments
               :filter-return #'deadgrep--include-args))
 
-;; treesitter for syntax highlighting
-(require 'tree-sitter)
-;; (require 'tree-sitter-langspglobal-tree-sitter-mode)
-;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-
-;; ;; company for completion
-;; (use-package company
-;;   :hook (prog-mode . company-mode)
-;;   :bind (:map company-active-map
-;;               ("<tab>" . company-complete-selection))
-
-;;   :custom
-;;   (company-backends '((company-capf company-dabbrev-code)))
-;;   (company-idle-delay 0)
-;;   (company-minimum-prefix-length 3)
-;;   (company-tooltip-align-annotations t)
-;;   (company-tooltip-limit 20)
-
-;;   :config
-;;   (setq lsp-completion-provider :capf))
-
-(use-package all-the-icons
-  :ensure t
-    :if (display-graphic-p))
-
-;; (use-package company-box
-;;   :after company
-;;   :hook (company-mode . company-box-mode)
-
-;;   :config
-;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; projectile
-(use-package projectile
-  :bind
-  ("C-c v" . deadgrep)
-
-  :config
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
-  (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
-  (evil-define-key 'motion deadgrep-mode-map (kbd "C-p") 'projectile-find-file)
-  (evil-define-key 'motion rspec-mode-map (kbd "C-p") 'projectile-find-file)
-  (evil-define-key 'motion rspec-compilation-mode-map (kbd "C-p") 'projectile-find-file)
-
-  (setq projectile-completion-system 'ivy
-        projectile-switch-project-action 'projectile-dired
-        projectile-require-project-root nil)
-
-  (projectile-global-mode))
-
 ;; git
 (use-package magit
   :hook (with-editor-mode . evil-insert-state)
@@ -294,15 +170,6 @@ Return a list of installed packages or nil for every skipped package."
 
 ;; page through history of a file
 (use-package git-timemachine)
-
-;; teach emacs how to open links in your default windows browser
-;; (let ((cmd-exe "/mnt/c/windows/system32/cmd.exe")
-;;       (cmd-args '("/c" "start")))
-;;   (when (file-exists-p cmd-exe)
-;;     (setq browse-url-generic-program  cmd-exe
-;;           browse-url-generic-args     cmd-args
-;;           browse-url-browser-function 'browse-url-generic
-;;           search-web-default-browser 'browse-url-generic)))
 
 ;; org
 (require 'org)
@@ -344,19 +211,6 @@ Return a list of installed packages or nil for every skipped package."
              (require 'org-roam-protocol))
 
 
-(add-to-list  'load-path "~/.emacs.d/personal/md-roam")
-(setq org-roam-file-extensions '("org" "md"))
-(require 'md-roam)
-;; (md-roam-mode 1)
-(setq md-roam-file-extension "md")
-(setq org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-(org-roam-db-autosync-mode 1) ; autosync-mode triggers db-sync. md-roam-mode must be already active
-
-;; (add-to-list 'org-roam-capture-templates
-;;     '("m" "Markdown" plain "" :target
-;;         (file+head "%<%Y-%m-%dT%H%M%S>.md"
-;; "---\ntitle: ${title}\nid: %<%Y-%m-%dT%H%M%S>\ncategory: \n---\n")
-;;     :unnarrowed t))
 
 (use-package org-roam-ui
              :after org-roam
@@ -582,7 +436,6 @@ Return a list of installed packages or nil for every skipped package."
                            (:sunset  . gruvbox-dark-hard)))
   (circadian-setup))
 
-
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
@@ -593,67 +446,6 @@ Return a list of installed packages or nil for every skipped package."
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
-
-;; programming specific
-;;TODO  add LSP
-;;TODO  add DAP
-
-(defun efs/lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
-
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :hook (lsp-mode . efs/lsp-mode-setup)
-  :init
-  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-  :config
-  (lsp-enable-which-key-integration t))
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-(use-package lsp-treemacs
-  :after lsp)
-
-(use-package lsp-ivy
-  :after lsp)
-
-(use-package dap-mode
-  ;; Uncomment the config below if you want all UI panes to be hidden by default!
-  ;; :custom
-  ;; (lsp-enable-dap-auto-configure nil)
-  ;; :config
-  ;; (dap-ui-mode 1)
-  :commands dap-debug
-  :config
-  ;; Set up Node debugging
-  (require 'dap-node)
-  (dap-node-setup) ;; Automatically installs Node debug adapter if needed
-
-  ;; Bind `C-c l d` to `dap-hydra` for easy access
-  (general-define-key
-    :keymaps 'lsp-mode-map
-    :prefix lsp-keymap-prefix
-    "d" '(dap-hydra t :wk "debugger")))
-
-(use-package python-mode
-  :ensure t
-  :hook (python-mode . lsp-deferred)
-  :custom
-  ;; NOTE: Set these if Python 3 is called "python3" on your system!
-  (python-shell-interpreter "python3")
-  (dap-python-executable "python3")
-  (dap-python-debugger 'debugpy)
-  :config
-  (require 'dap-python))
-
-(use-package pyvenv
-  :after python-mode
-  :config
-  (pyvenv-mode 1))
 
 ;; colemak dh
 ;; (use-package evil-colemak-basics
