@@ -22,3 +22,6 @@
 ;; (global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
 ;; (global-set-key (kbd "C-x |") 'toggle-window-split);TODO fixme
 ;; (global-set-key (kbd "<space><space>") 'previous-buffer);TODO fixme
+
+;; org
+;; (define-key org-mode-map (kbd "C-c C-x C-f") 'org-remove-file)

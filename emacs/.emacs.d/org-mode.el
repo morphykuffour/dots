@@ -1919,3 +1919,6 @@
 ;; 'org-babel-load-languages
 ;;  '((shell . t)
 ;;   (python . t)))
+
+;; org-agenda setup
+(setq calendar-week-start-day 1)

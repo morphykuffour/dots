@@ -27,8 +27,7 @@
 (load-user-file "font-resize.el")
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
-;; (load-user-file "my-org.el")
-(load-user-file "org-mode.el")
+;; (load-user-file "org-mode.el")
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -39,9 +38,6 @@
 
 ;; dwim-shell-command
 (require 'dwim-shell-command)
-
-(use-package command-log-mode
-             :commands command-log-mode)
 
 (use-package ivy
              :diminish
@@ -56,9 +52,7 @@
              :config
              (ivy-mode 1))
 
-;;; kung fu
 (use-package undo-fu)
-
 (use-package evil
              :demand t
              :bind (("<escape>" . keyboard-escape-quit))
@@ -72,9 +66,6 @@
              (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle))
 
 ;; (pdf-tools-install)
-
-
-;;; 666, the number of the beast
 (use-package evil-collection
              :ensure t
              :after evil
@@ -90,34 +81,26 @@
 		      which-key))
              (evil-collection-init))
 
-;; tpope surround
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
 
-;; completion
 (use-package vertico
              :config
              (vertico-mode))
 
-(use-package evil-org
-  :after org
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
-(evil-commentary-mode)
 
 ;; ui tweaks
 (tooltip-mode -1)
 (tool-bar-mode nil)
 (column-number-mode)
 (scroll-bar-mode -1)
+(evil-commentary-mode)
 (setq visible-bell nil)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (set-fringe-mode 10)
 (setq confirm-kill-emacs nil)
-
 ;; (pixel-scroll-precision-mode)
 (setq inhibit-startup-message t)
 (global-prettify-symbols-mode t)
@@ -134,11 +117,6 @@
   (setq minions-mode-line-lighter "?"
         minions-mode-line-delimiters (cons "" ""))
   (minions-mode 1))
-
-;; modeline
-;; (use-package doom-modeline
-;;   :init (doom-modeline-mode 1)
-;;   :custom ((doom-modeline-height 25)))
 
 (set-face-attribute 'mode-line nil :height 150)
 (set-face-attribute 'mode-line-inactive nil :height 150)
@@ -171,54 +149,9 @@
 ;; page through history of a file
 (use-package git-timemachine)
 
-;; org
-(require 'org)
+(use-package eshell-git-prompt
+  :after eshell)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-    (R . t)
-    (C . t)
-    (shell . t)
-    (python . t)
-    (js . t)
-    (emacs-lisp . t)))
-
-;; (add-to-list  'load-path "~/.emacs.d/personal/alert")
-;; (require 'alert)
-;; (require 'org-gcal)
-
-(require 'org-roam)
-(use-package org-roam
-             :after org
-             :ensure t
-             :init
-             (setq org-roam-v2-ack t)
-	 	:custom
-		(org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-             :bind (("C-c n l" . org-roam-buffer-toggle)
-                    ("C-c n f" . org-roam-node-find)
-                    ("C-c n g" . org-roam-ui-open)
-                    ("C-c n i" . org-roam-node-insert)
-                    ("C-c n c" . org-roam-capture)
-                    ("C-c n a" . org-roam-alias-add)
-                    :map org-mode-map
-                    ("C-M-i" . completion-at-point)
-                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-             :config
-             (org-roam-setup)
-             (org-roam-db-autosync-mode)
-             (require 'org-roam-protocol))
-
-
-
-(use-package org-roam-ui
-             :after org-roam
-             :config
-             (setq org-roam-ui-sync-theme t
-                   org-roam-ui-follow t
-                   org-roam-ui-update-on-save t
-                   org-roam-ui-open-on-start t))
 (getenv "SHELL")
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
@@ -269,10 +202,6 @@
         ("GOTCHA" . "#FF4500")
         ("STUB"   . "#1E90FF")))
 
-
-(use-package all-the-icons
-             :if (display-graphic-p))
-
 (require 'olivetti)
 (auto-image-file-mode 1)
 
@@ -312,6 +241,9 @@
 (use-package dired-single
   :commands (dired dired-jump))
 
+(use-package all-the-icons
+             :if (display-graphic-p))
+
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
 
@@ -342,12 +274,6 @@
 ;;           ("xls" . "gnumeric")
 ;;           ("xlsx" . "gnumeric"))))
 
-;; ((auto-mode . emacs)
-;;  ("\\.mm\\'" . default)
-;;  ("\\.x?html?\\'" . "brave $s")
-;;  ("\\.pdf\\'" . "zathura $s"))
-
-
 ;; perform dired actions asynchronously
 (use-package async
   :config
@@ -359,8 +285,6 @@
 
   :config
   (engine-mode t))
-
-;; (setq engine/browser-function 'eww-browse-url)
 
 (defengine github
   "https://github.com/search?ref=simplesearch&q=%s"
@@ -408,8 +332,6 @@
         eshell-hist-ignoredups t
         eshell-scroll-to-bottom-on-input t))
 
-(use-package eshell-git-prompt
-  :after eshell)
 
 (use-package eshell
   :hook (eshell-first-time-mode . efs/configure-eshell)
@@ -464,3 +386,54 @@
   (dashboard-setup-startup-hook))
 
 ;; (setq tramp-default-method "ssh")
+
+;; org config
+(require 'org)
+
+(use-package evil-org
+  :after org
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+    (R . t)
+    (C . t)
+    (shell . t)
+    (python . t)
+    (js . t)
+    (emacs-lisp . t)))
+
+(require 'org-roam)
+(use-package org-roam
+             :after org
+             :ensure t
+             :init
+             (setq org-roam-v2-ack t)
+	 	:custom
+		(org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+             :bind (("C-c n l" . org-roam-buffer-toggle)
+                    ("C-c n f" . org-roam-node-find)
+                    ("C-c n g" . org-roam-ui-open)
+                    ("C-c n i" . org-roam-node-insert)
+                    ("C-c n c" . org-roam-capture)
+                    ("C-c n a" . org-roam-alias-add)
+                    :map org-mode-map
+                    ("C-M-i" . completion-at-point)
+                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
+             :config
+             (org-roam-setup)
+             (org-roam-db-autosync-mode)
+             (require 'org-roam-protocol))
+
+
+
+(use-package org-roam-ui
+             :after org-roam
+             :config
+             (setq org-roam-ui-sync-theme t
+                   org-roam-ui-follow t
+                   org-roam-ui-update-on-save t
+                   org-roam-ui-open-on-start t))
