@@ -1,10 +1,11 @@
+;; source: https://doc.norang.ca/org-mode.org
 ;; The following setting is different from the document so that you
 ;; can override the document path by setting your path in the variable
 ;; org-mode-user-lisp-path
 ;;
-(if (boundp 'org-mode-user-lisp-path)
-    (add-to-list 'load-path org-mode-user-lisp-path)
-  (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp")))
+;; (if (boundp 'org-mode-user-lisp-path)
+;;     (add-to-list 'load-path org-mode-user-lisp-path)
+;;   (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp")))
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 (require 'org)
@@ -20,9 +21,7 @@
 ;;
 (if (boundp 'org-user-agenda-files)
     (setq org-agenda-files org-user-agenda-files)
-  (setq org-agenda-files (quote ("~/git/org"
-                               "~/git/org/client1"
-                               "~/git/client2"))))
+  (setq org-agenda-files (quote ("~/Dropbox/Zettelkasten/agenda/"))))
 
 ;; Custom Key Bindings
 (global-set-key (kbd "<f12>") 'org-agenda)
@@ -819,10 +818,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
          (ruby . t)
          (gnuplot . t)
          (clojure . t)
-         (sh . t)
-         (ledger . t)
+         ;; (sh . t)
+         ;; (ledger . t)
          (org . t)
-         (plantuml . t)
+         ;; (plantuml . t)
          (latex . t))))
 
 ; Do not prompt to confirm evaluation
@@ -1101,13 +1100,13 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (defvar bh/plantuml-if-count 0)
 
-(defun bh/plantuml-if () 
+(defun bh/plantuml-if ()
   (incf bh/plantuml-if-count)
   (number-to-string bh/plantuml-if-count))
 
 (defvar bh/plantuml-loop-count 0)
 
-(defun bh/plantuml-loop () 
+(defun bh/plantuml-loop ()
   (incf bh/plantuml-loop-count)
   (number-to-string bh/plantuml-loop-count))
 
@@ -1120,7 +1119,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (define-skeleton skel-org-block-plantuml-activity-if
   "Insert a org plantuml block activity if statement"
-  "" 
+  ""
   "if \"\" then\n"
   "  -> [condition] ==IF" (setq ifn (bh/plantuml-if)) "==\n"
   "  --> ==IF" ifn "M1==\n"
@@ -1133,7 +1132,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (define-skeleton skel-org-block-plantuml-activity-for
   "Insert a org plantuml block activity for statement"
-  "Loop for each: " 
+  "Loop for each: "
   "--> ==LOOP" (setq loopn (bh/plantuml-loop)) "==\n"
   "note left: Loop" loopn ": For each " str "\n"
   "--> ==ENDLOOP" loopn "==\n"
@@ -1538,7 +1537,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (add-to-list 'load-path org-mode-user-contrib-lisp-path)
   (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp")))
 
-(require 'org-checklist)
+;; (require 'org-checklist)
 
 (setq org-enforce-todo-dependencies t)
 
@@ -1751,7 +1750,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (setq org-link-mailto-program (quote (compose-mail "%a" "%s")))
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (require 'smex)
 (smex-initialize)
 
@@ -1828,7 +1827,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
 ;; Disable keys in org-mode
-;;    C-c [ 
+;;    C-c [
 ;;    C-c ]
 ;;    C-c ;
 ;;    C-c C-x C-q  cancelling the clock (we never want this)
