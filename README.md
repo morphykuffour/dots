@@ -4,6 +4,7 @@ This main repo is for my arch linux dotfiles.
 ## Installing
 
 You will need `git` and GNU `stow`
+
 Clone into your `$HOME` directory or `~`
 
 ```bash
