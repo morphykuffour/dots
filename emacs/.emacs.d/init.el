@@ -27,7 +27,6 @@
 (load-user-file "font-resize.el")
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
-;; (load-user-file "org-mode.el")
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -387,8 +386,6 @@
 
 ;; (setq tramp-default-method "ssh")
 
-;; org config
-(require 'org)
 
 (use-package evil-org
   :after org
@@ -407,6 +404,7 @@
     (emacs-lisp . t)))
 
 (require 'org-roam)
+
 (use-package org-roam
              :after org
              :ensure t
@@ -437,3 +435,46 @@
                    org-roam-ui-follow t
                    org-roam-ui-update-on-save t
                    org-roam-ui-open-on-start t))
+
+
+(use-package org
+  :config
+  (require 'org-tempo)
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (setq mailcap-mime-data '())
+              (mailcap-parse-mailcap "~/.mailcap")
+              (setq org-file-apps
+                    '((auto-mode . emacs)
+                      ("mobi" . "fbreader %s")
+                      ("\\.x?html?\\'" . mailcap)
+                      ("pdf" . mailcap)
+                      (system . mailcap)
+                      (t . mailcap))))))
+
+;; scratch buffer is in org-mode
+(setq initial-major-mode 'org-mode)
+
+;; org-mode ui
+(use-package org-superstar
+  :config
+  (setq org-superstar-special-todo-items t)
+  (setq org-hide-leading-stars t)
+  (add-hook 'org-mode-hook (lambda ()
+                             (org-superstar-mode 1))))
+
+(setq org-hide-emphasis-markers t)
+
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+
+;; (org-babel-do-load-languages
+;; 'org-babel-load-languages
+;;  '((shell . t)
+;;   (python . t)))
+
+;; org-agenda setup
+(setq calendar-week-start-day 1)
+
+(load-user-file "org-mode.el")
