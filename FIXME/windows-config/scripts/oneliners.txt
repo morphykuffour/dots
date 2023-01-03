@@ -1,0 +1,2 @@
+Get-WmiObject -Class Win32_Product | Select-Object -Property Name > C:\Users\NAmoa\Desktop\InstalledSoftwareList.txt
+

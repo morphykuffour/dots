@@ -204,12 +204,12 @@
 (require 'olivetti)
 (auto-image-file-mode 1)
 
-(use-package vterm
-  :commands vterm
-  :config
-  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-  (setq vterm-max-scrollback 10000))
+; (use-package vterm
+;   :commands vterm
+;   :config
+;   ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+;   (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+;   (setq vterm-max-scrollback 10000))
 
 (use-package dired
   :ensure nil
@@ -314,33 +314,33 @@
   (setq explicit-shell-file-name "powershell.exe")
   (setq explicit-powershell.exe-args '()))
 
-(defun efs/configure-eshell ()
-  ;; Save command history when commands are entered
-  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+; (defun efs/configure-eshell ()
+;   ;; Save command history when commands are entered
+;   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
-  ;; Truncate buffer for performance
-  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+;   ;; Truncate buffer for performance
+;   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-  ;; Bind some useful keys for evil-mode
-  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-  (evil-normalize-keymaps)
+;   ;; Bind some useful keys for evil-mode
+;   (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+;   (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+;   (evil-normalize-keymaps)
 
-  (setq eshell-history-size         10000
-        eshell-buffer-maximum-lines 10000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t))
+;   (setq eshell-history-size         10000
+;         eshell-buffer-maximum-lines 10000
+;         eshell-hist-ignoredups t
+;         eshell-scroll-to-bottom-on-input t))
 
 
-(use-package eshell
-  :hook (eshell-first-time-mode . efs/configure-eshell)
-  :config
+; (use-package eshell
+;   :hook (eshell-first-time-mode . efs/configure-eshell)
+;   :config
 
-  (with-eval-after-load 'esh-opt
-    (setq eshell-destroy-buffer-when-process-dies t)
-    (setq eshell-visual-commands '("htop" "zsh" "vim")))
+;   (with-eval-after-load 'esh-opt
+;     (setq eshell-destroy-buffer-when-process-dies t)
+;     (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
-  (eshell-git-prompt-use-theme 'powerline))
+;   (eshell-git-prompt-use-theme 'powerline))
 
 ;; sly
 (setq inferior-lisp-program "sbcl")
@@ -477,4 +477,4 @@
 ;; org-agenda setup
 (setq calendar-week-start-day 1)
 
-(load-user-file "org-mode.el")
+; (load-user-file "org-mode.el")
