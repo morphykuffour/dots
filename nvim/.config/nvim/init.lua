@@ -13,8 +13,8 @@ Jcall(require, "morpheus/keymaps")
 
 -- Themes
 -- vim.cmd("colorscheme darkplus")
--- vim.cmd("colorscheme gruvbox")
-vim.cmd("colorscheme github_dark_default")
+vim.cmd("colorscheme gruvbox")
+-- vim.cmd("colorscheme github_dark_default")
 
 vim.g.loaded_python_provider = 0 -- disable python2
 vim.g.python3_host_prog = "/usr/bin/python3"

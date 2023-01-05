@@ -56,11 +56,11 @@ return packer.startup(function(use)
 	use({ "gelguy/wilder.nvim" })
 
 	-- writing
-	use("mzlogin/vim-markdown-toc")
+	-- use("mzlogin/vim-markdown-toc")
 	-- use("SidOfc/mkdx")
 	-- use("vim-pandoc/vim-rmarkdown")
-	use("vim-pandoc/vim-pandoc")
-	use("vim-pandoc/vim-pandoc-syntax")
+	-- use("vim-pandoc/vim-pandoc")
+	-- use("vim-pandoc/vim-pandoc-syntax")
 	use("nvim-orgmode/orgmode")
 	use("lukas-reineke/headlines.nvim")
 
