@@ -427,7 +427,7 @@ nvim_lsp.sumneko_lua.setup({
 -- require('nlua.lsp.nvim').setup(require('lspconfig'), {
 --     root_dir = function(fname)
 --       if string.find(vim.fn.fnamemodify(fname, ":p"), ".config/nvim/") then
---         return vim.fn.expand "~/dotfiles/nvim/.config/nvim/"
+--         return vim.fn.expand "~/dots/nvim/.config/nvim/"
 --       end
 --
 --       -- ~/git/config_manager/xdg_config/nvim/...
@@ -848,8 +848,8 @@ keymap("n", "Q", "<nop>", opts)
 
 -- "Edit configs
 keymap("n", "<leader>vc", "<cmd>e $MYVIMRC<cr>")
-keymap("n", "<leader>tc", ":edit $HOME/dotfiles/tmux/.tmux.conf<cr>")
-keymap("n", "<leader>zc", ":edit $HOME/dotfiles/zsh/.zshrc<cr>")
+keymap("n", "<leader>tc", ":edit $HOME/dots/tmux/.tmux.conf<cr>")
+keymap("n", "<leader>zc", ":edit $HOME/dots/zsh/.zshrc<cr>")
 
 -- Stay in indent mode
 keymap("v", "<", "<gv", opts)
@@ -938,11 +938,11 @@ end, { desc = "[/curr] Fuzzily search in current buffer]" })
 
 keymap("n", "<space>do", function()
 	require("telescope.builtin").find_files({
-		prompt_title = "< dotfiles >",
+		prompt_title = "< dots >",
 		cwd = vim.env.DOTFILES,
 		hidden = true,
 	})
-end, { desc = "[/dot] search dotfiles]" })
+end, { desc = "[/dot] search dots]" })
 
 --[[
 _G.search_vimrc = function()
