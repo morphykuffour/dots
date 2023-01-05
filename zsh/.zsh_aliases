@@ -98,7 +98,7 @@ alias hibernate="systemctl suspend"
 alias pacman="yay"
 
 # system keybindings
-alias keysoup="sudo systemctl restart keyd && sudo systemctl enable keyd && sudo systemctl start keyd && setxkbmap -option compose:menu"
+alias ks="sudo systemctl restart keyd && sudo systemctl enable keyd && sudo systemctl start keyd && setxkbmap -option compose:menu && keyd-application-mapper -d"
 
 # utility commands
 alias q="exit"

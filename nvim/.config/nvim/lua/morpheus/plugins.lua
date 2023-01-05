@@ -167,12 +167,11 @@ return packer.startup(function(use)
 	use({ "nvim-telescope/telescope.nvim", branch = "0.1.x", requires = { "nvim-lua/plenary.nvim" } })
 	use("nvim-telescope/telescope-fzy-native.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make", cond = vim.fn.executable("make") == 1 })
+  use 'nvim-telescope/telescope-media-files.nvim'
 	-- use("nvim-telescope/telescope-cheat.nvim")
 	-- use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({ "dhruvmanila/telescope-bookmarks.nvim" })
 	use("tyru/open-browser.vim")
-
-  use 'nvim-telescope/telescope-media-files.nvim'
 	-- use({
 	-- 	"AckslD/nvim-neoclip.lua",
 	-- 	requires = {
