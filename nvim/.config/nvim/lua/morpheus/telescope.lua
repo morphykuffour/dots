@@ -76,6 +76,41 @@ telescope.setup({
 		-- Now the picker_config_key will be applied every time you call this
 		-- builtin picker
 	},
+	-- preview = {
+	-- 	mime_hook = function(filepath, bufnr, opts)
+	-- 		local is_image = function(filepath)
+	-- 			local image_extensions = { "png", "jpg", "jpeg", "gif" } -- Supported image formats
+	-- 			local split_path = vim.split(filepath:lower(), ".", { plain = true })
+	-- 			local extension = split_path[#split_path]
+	-- 			return vim.tbl_contains(image_extensions, extension)
+	-- 		end
+	-- 		if is_image(filepath) then
+	-- 			local term = vim.api.nvim_open_term(bufnr, {})
+	-- 			local function send_output(_, data, _)
+	-- 				for _, d in ipairs(data) do
+	-- 					vim.api.nvim_chan_send(term, d .. "\r\n")
+	-- 				end
+	-- 			end
+	-- 			vim.fn.jobstart({
+	-- 				"viu",
+	-- 				"-w",
+	-- 				"40",
+	-- 				"-b",
+	-- 				filepath,
+	-- 			}, {
+	-- 				on_stdout = send_output,
+	-- 				stdout_buffered = true,
+	-- 			})
+	-- 		else
+	-- 			require("telescope.previewers.utils").set_preview_message(
+	-- 				bufnr,
+	-- 				opts.winid,
+	-- 				"Binary cannot be previewed"
+	-- 			)
+	-- 		end
+	-- 	end,
+	-- },
+
 	extensions = {
 		fzf = {
 			fuzzy = true, -- false will only do exact matching
@@ -120,13 +155,21 @@ telescope.setup({
 		-- 		},
 		-- 	},
 		-- },
+		media_files = {
+			-- filetypes whitelist
+			-- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+			filetypes = { "png", "webp", "jpg", "jpeg" },
+			find_cmd = "rg", -- find command (defaults to `fd`)
+		},
 	},
 })
 
 require("telescope").load_extension("fzy_native")
+require("telescope").load_extension("bookmarks")
+require("telescope").load_extension("media_files")
+
 -- telescope.load_extension("fzf")
 -- telescope.load_extension("neoclip")
-telescope.load_extension("bookmarks")
 -- telescope.load_extension("file_browser")
 
 local M = {}
@@ -161,50 +204,44 @@ function M.search_all_files()
 	})
 end
 
--- local function set_background(content)
---     vim.fn.system(
---         "dconf write /org/mate/desktop/background/picture-filename \"'"
---             .. content
---             .. "'\""
---     )
--- end
---
--- local function select_background(prompt_bufnr, map)
---     local function set_the_background(close)
---         local content = require("telescope.actions.state").get_selected_entry(
---             prompt_bufnr
---         )
---         set_background(content.cwd .. "/" .. content.value)
---         if close then
---             require("telescope.actions").close(prompt_bufnr)
---         end
---     end
---
---     map("i", "<C-p>", function()
---         set_the_background()
---     end)
---
---     map("i", "<CR>", function()
---         set_the_background(true)
---     end)
--- end
---
--- local function image_selector(prompt, cwd)
---     return function()
---         require("telescope.builtin").find_files({
---             prompt_title = prompt,
---             cwd = cwd,
---
---             attach_mappings = function(prompt_bufnr, map)
---                 select_background(prompt_bufnr, map)
---
---                 -- Please continue mapping (attaching additional key maps):
---                 -- Ctrl+n/p to move up and down the list.
---                 return true
---             end,
---         })
---     end
--- end
--- M.anime_selector = image_selector("< Wallpapers > ", "~/Pictures/wallpapers/")
+local function set_background(content)
+	vim.fn.system("dconf write /org/mate/desktop/background/picture-filename \"'" .. content .. "'\"")
+end
+
+local function select_background(prompt_bufnr, map)
+	local function set_the_background(close)
+		local content = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
+		set_background(content.cwd .. "/" .. content.value)
+		if close then
+			require("telescope.actions").close(prompt_bufnr)
+		end
+	end
+
+	map("i", "<C-p>", function()
+		set_the_background()
+	end)
+
+	map("i", "<CR>", function()
+		set_the_background(true)
+	end)
+end
+
+local function image_selector(prompt, cwd)
+	return function()
+		require("telescope.builtin").find_files({
+			prompt_title = prompt,
+			cwd = cwd,
+
+			attach_mappings = function(prompt_bufnr, map)
+				select_background(prompt_bufnr, map)
+
+				-- Please continue mapping (attaching additional key maps):
+				-- Ctrl+n/p to move up and down the list.
+				return true
+			end,
+		})
+	end
+end
+M.anime_selector = image_selector("< Wallpapers > ", "~/Pictures/wallpapers/")
 
 return M
