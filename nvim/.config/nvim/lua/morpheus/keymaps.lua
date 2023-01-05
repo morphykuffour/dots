@@ -160,6 +160,7 @@ m.nmap("<leader>lr", "<cmd> Telescope lsp_references<CR>")
 map_tele("<space>fp", "installed_plugins")
 map_tele("<space>do", "search_dotfiles")
 map_tele("<space>vr", "search_vimrc")
+map_tele("<space>bs", "anime_selector")
 m.nmap("<leader>ft", "<cmd> TodoTelescope<CR>")
 
 -- Extension mappings

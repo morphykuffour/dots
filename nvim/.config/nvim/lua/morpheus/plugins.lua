@@ -171,16 +171,18 @@ return packer.startup(function(use)
 	-- use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({ "dhruvmanila/telescope-bookmarks.nvim" })
 	use("tyru/open-browser.vim")
-	use({
-		"AckslD/nvim-neoclip.lua",
-		requires = {
-			{ "tami5/sqlite.lua", module = "sqlite" },
-			{ "nvim-telescope/telescope.nvim" },
-		},
-		config = function()
-			require("neoclip").setup()
-		end,
-	})
+
+  use 'nvim-telescope/telescope-media-files.nvim'
+	-- use({
+	-- 	"AckslD/nvim-neoclip.lua",
+	-- 	requires = {
+	-- 		{ "tami5/sqlite.lua", module = "sqlite" },
+	-- 		{ "nvim-telescope/telescope.nvim" },
+	-- 	},
+	-- 	config = function()
+	-- 		require("neoclip").setup()
+	-- 	end,
+	-- })
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/playground")
 	use("bryall/contextprint.nvim")
