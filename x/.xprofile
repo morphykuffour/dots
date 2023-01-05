@@ -10,7 +10,7 @@
 nm-applet --indicator &
 
 # polybar
-polybar &
+# polybar &
 
 # Don't Randomly Turn off
 xset s off
