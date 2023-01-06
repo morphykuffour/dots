@@ -26,8 +26,8 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
-export PATH="$PATH:$GEM_HOME/bin"
+#export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+#export PATH="$PATH:$GEM_HOME/bin"
 export PATH=$PATH:/usr/local/go/bin
 
 # React Native
