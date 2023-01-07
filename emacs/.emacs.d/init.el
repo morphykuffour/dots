@@ -411,7 +411,8 @@
              :init
              (setq org-roam-v2-ack t)
 	 	:custom
-		(org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+		; (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
+		(org-roam-directory (file-truename "/mnt/c/Users/win10-xps17/Dropbox/Zettelkasten"))
              :bind (("C-c n l" . org-roam-buffer-toggle)
                     ("C-c n f" . org-roam-node-find)
                     ("C-c n g" . org-roam-ui-open)
@@ -456,18 +457,18 @@
 ;; scratch buffer is in org-mode
 (setq initial-major-mode 'org-mode)
 
-;; org-mode ui
-(use-package org-superstar
-  :config
-  (setq org-superstar-special-todo-items t)
-  (setq org-hide-leading-stars t)
-  (add-hook 'org-mode-hook (lambda ()
-                             (org-superstar-mode 1))))
+; ;; org-mode ui
+; (use-package org-superstar
+;   :config
+;   (setq org-superstar-special-todo-items t)
+;   (setq org-hide-leading-stars t)
+;   (add-hook 'org-mode-hook (lambda ()
+;                              (org-superstar-mode 1))))
 
-(setq org-hide-emphasis-markers t)
+; (setq org-hide-emphasis-markers t)
 
-(use-package org-appear
-  :hook (org-mode . org-appear-mode))
+; (use-package org-appear
+;   :hook (org-mode . org-appear-mode))
 
 ;; (org-babel-do-load-languages
 ;; 'org-babel-load-languages
