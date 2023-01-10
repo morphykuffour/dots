@@ -6,7 +6,19 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
-(package-initialize)
+
+(cond
+ ((>= 24 emacs-major-version)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives
+           '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+  (package-refresh-contents)
+ )
+)
+
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; ensure use-package is installed.
 (when (not (package-installed-p 'use-package))
@@ -175,9 +187,9 @@
              :config
              (setq ivy-initial-inputs-alist nil))
 
-(use-package ivy-rich
-             :init
-             (ivy-rich-mode 1))
+; (use-package ivy-rich
+;              :init
+;              (ivy-rich-mode 1))
 
 (use-package helpful
              :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -442,17 +454,18 @@
   :config
   (require 'org-tempo)
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq mailcap-mime-data '())
-              (mailcap-parse-mailcap "~/.mailcap")
-              (setq org-file-apps
-                    '((auto-mode . emacs)
-                      ("mobi" . "fbreader %s")
-                      ("\\.x?html?\\'" . mailcap)
-                      ("pdf" . mailcap)
-                      (system . mailcap)
-                      (t . mailcap))))))
+  ; (add-hook 'org-mode-hook
+  ;           (lambda ()
+  ;             (setq mailcap-mime-data '())
+  ;             (mailcap-parse-mailcap "~/.mailcap")
+  ;             (setq org-file-apps
+  ;                   '((auto-mode . emacs)
+  ;                     ("mobi" . "fbreader %s")
+  ;                     ("\\.x?html?\\'" . mailcap)
+  ;                     ("pdf" . mailcap)
+  ;                     (system . mailcap)
+  ;                     (t . mailcap)))))
+  )
 
 ;; scratch buffer is in org-mode
 (setq initial-major-mode 'org-mode)
