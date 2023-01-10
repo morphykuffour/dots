@@ -1,16 +1,16 @@
 
 ;; ----- smex-history -----
 (
+ counsel-load-theme
  cd
  5x5
  arp
  dbx
  dig
  erc
- ert
 )
 
 ;; ----- smex-data -----
 (
- 
+ (counsel-load-theme . 5)
 )
