@@ -208,11 +208,11 @@ zsh_add_file() {
 }
 
 # source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
+# ~/.dots/zsh/autoload/vif
 function vif() {
     local fname
     local current_dir=$PWD
-    cd ~/dotfiles || exit
+    cd ~/dots || exit
     fname=$(fzf --preview 'bat {} ') || return
     nvim "$fname"
     cd $current_dir
@@ -227,7 +227,7 @@ function vao() {
 bindkey -s '^f' 'vao^M'
 
 # source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
+# ~/.dots/zsh/autoload/vif
 function nif() {
     local fname
     local current_dir=$PWD
@@ -326,7 +326,7 @@ shebang() {
 }
 
 commitDotFiles() {
-    cd "$HOME"/dotfiles || exit
+    cd "$HOME"/dots || exit
     git add .
     git commit 
     # git push 
@@ -453,12 +453,6 @@ function conda-shell {
     nix-shell ~/.conda-shell.nix
 }
 
-# ------------------------------- ZSH APPS ------------------------------------
-export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
-bindkey '^r' _atuin_search_widget
-bindkey '^[[A' _atuin_search_widget
-bindkey '^[OA' _atuin_search_widget
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 eval "$(starship init zsh)"
@@ -470,3 +464,12 @@ source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plug
 . $HOME/.zsh/fzf-gems/fzf_git_functions.sh
 . $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
 
+
+# ------------------------------- ZSH APPS ------------------------------------
+eval "$(mcfly init zsh)"
+export MCFLY_KEY_SCHEME=vim
+# export ATUIN_NOBIND="true"
+# eval "$(atuin init zsh)"
+# bindkey '^r' _atuin_search_widget
+# bindkey '^[[A' _atuin_search_widget
+# bindkey '^[OA' _atuin_search_widget
