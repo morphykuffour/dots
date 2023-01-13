@@ -45,12 +45,12 @@ vim.cmd([[runtime! vimfiles/*.vim]])
 -- gx => open url in browser
 if vim.fn.has("wsl") then
 	vim.g.netrw_browsex_viewer = "/usr/bin/wslview"
-    vim.g.clipboard = {
-        name = 'wsl clipboard',
-        copy =  { ["+"] = { "clip.exe" },   ["*"] = { "clip.exe" } },
-        paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
-        cache_enabled = true
-    }
+	vim.g.clipboard = {
+		name = "wsl clipboard",
+		copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
+		paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
+		cache_enabled = true,
+	}
 elseif vim.fn.has("mac") then
 	vim.g.netrw_browsex_viewer = "open"
 elseif vim.fn.has("linux") then
