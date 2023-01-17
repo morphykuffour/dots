@@ -1,18 +1,16 @@
 
 ;; ----- smex-history -----
 (
- server-start
- linum-mode
  counsel-load-theme
  cd
  5x5
  arp
  dbx
+ dig
+ erc
 )
 
 ;; ----- smex-data -----
 (
- (counsel-load-theme . 7)
- (linum-mode . 2)
- (server-start . 1)
+ (counsel-load-theme . 5)
 )
