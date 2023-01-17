@@ -1,34 +1,30 @@
 ;; emacs os config for writing and productivity
+;; cd ~\AppData\Roaming\.emacs.d\
 
-;;; use-package
+;; use-package
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(package-initialize)
+(setq package-check-signature nil)
 
-(cond
- ((>= 24 emacs-major-version)
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives
-           '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-  (package-refresh-contents)
- )
-)
+(defun package--save-selected-packages (&rest opt) nil)
 
-(unless package-archive-contents
-  (package-refresh-contents))
-
-;; ensure use-package is installed.
+;; Ensure that use-package is installed.
+;;
+;; If use-package isn't already installed, it's extremely likely that this is a
+;; fresh installation! So we'll want to update the package repository and
+;; install use-package before loading the literate configuration.
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
 
+
 (defconst user-init-dir
-          (cond ((boundp 'user-emacs-directory) user-emacs-directory)
-                ((boundp 'user-init-directory) user-init-directory)
-                (t "~/.emacs.d/")))
+  (cond ((boundp 'user-emacs-directory) user-emacs-directory)
+        ((boundp 'user-init-directory) user-init-directory)
+        (t "~/.emacs.d/")))
 
 ;; copy pasta
 (defun load-user-file (file)
@@ -39,6 +35,11 @@
 (load-user-file "font-resize.el")
 (load-user-file "keymaps.el")
 (load-user-file "utils.el")
+;; (load-user-file "org-mode.el")
+
+;; place custom-set-variables into its own file
+(setq custom-file (concat user-emacs-directory "/custom.el"))
+(load-file custom-file)
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -47,69 +48,74 @@
 (sensible-defaults/use-all-keybindings)
 (sensible-defaults/backup-to-temp-directory)
 
-;; dwim-shell-command
-(require 'dwim-shell-command)
+(use-package yasnippet
+  :demand t
+  :config
+  (setq yas-indent-line 'auto)
+  (yas-global-mode 1))
 
-(use-package ivy
-             :diminish
-             :bind (("C-s" . swiper)
-                    :map ivy-minibuffer-map
-                    ("TAB" . ivy-alt-done)
-                    :map ivy-switch-buffer-map
-                    ("C-d" . ivy-switch-buffer-kill)
-                    :map ivy-reverse-i-search-map
-                    ("C-k" . ivy-previous-line)
-                    ("C-d" . ivy-reverse-i-search-kill))
-             :config
-             (ivy-mode 1))
 
 (use-package undo-fu)
+
 (use-package evil
-             :demand t
-             :bind (("<escape>" . keyboard-escape-quit))
-	     :init
-             (setq evil-search-module 'evil-search)
-             (setq evil-want-keybinding nil)
-             ;; no vim insert bindings
-             (setq evil-undo-system 'undo-fu)
-             :config
-             (evil-mode 1)
-             (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle))
+  :demand t
+
+  :init
+  (setq evil-want-abbrev-expand-on-insert-exit nil
+	evil-want-keybinding nil)
+
+  :config
+  (evil-mode 1)
+
+  (evil-define-key '(normal insert) 'global (kbd "C-p") 'project-find-file)
+
+  (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
+  (evil-define-key 'insert org-mode-map (kbd "S-<right>") 'org-shiftright)
+  (evil-define-key 'insert org-mode-map (kbd "S-<left>") 'org-shiftleft)
+
+  (fset 'evil-visual-update-x-selection 'ignore))
 
 ;; (pdf-tools-install)
-(use-package evil-collection
-             :ensure t
-             :after evil
-             :config
-             (setq evil-want-integration t)
-	      (setq evil-collection-mode-list
-		    '(deadgrep
-		      dired
-		      elfeed
-		      ibuffer
-		      magit
-		      mu4e
-		      which-key))
-             (evil-collection-init))
 
-(use-package evil-surround
+(use-package evil-collection
+  :after evil
+  :demand t
+
   :config
-  (global-evil-surround-mode 1))
+  (setq evil-collection-mode-list
+        '(deadgrep
+          dired
+          elfeed
+          eww
+          ibuffer
+          info
+          magit
+          mu4e
+          package-menu
+          pdf-view
+          proced
+          replace
+          vterm
+          which-key))
+
+  (evil-collection-init))
+
+(use-package evil-org
+  :after org
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 (use-package vertico
-             :config
-             (vertico-mode))
-
+  :config
+  (vertico-mode))
 
 ;; ui tweaks
 (tooltip-mode -1)
-(tool-bar-mode nil)
 (column-number-mode)
-(scroll-bar-mode -1)
 (evil-commentary-mode)
 (setq visible-bell nil)
 (tool-bar-mode -1)
-(menu-bar-mode -1)
 (set-fringe-mode 10)
 (setq confirm-kill-emacs nil)
 ;; (pixel-scroll-precision-mode)
@@ -121,22 +127,54 @@
 (global-hl-line-mode)
 (set-window-scroll-bars (minibuffer-window) nil nil)
 (setq frame-title-format '((:eval (projectile-project-name))))
+(setq-default indent-tabs-mode nil)
+(setq save-place-forget-unreadable-files nil)
+(save-place-mode 1)
+;; (set-face-attribute 'mode-line nil :height 150)
+;; (set-face-attribute 'mode-line-inactive nil :height 150)
 
 ;; hide minor modes
+(use-package moody
+  :demand t
+
+  :custom
+  (x-underline-at-descent-line t)
+  :config
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
+(use-package battery
+  :if (not (display-graphic-p))
+  :config
+  (when (and battery-status-function
+             (not (string-match-p "unknown"
+                                  (battery-format "%B" (funcall battery-status-function)))))
+    (display-battery-mode 1)))
+
 (use-package minions
   :config
   (setq minions-mode-line-lighter "?"
         minions-mode-line-delimiters (cons "" ""))
   (minions-mode 1))
 
-(set-face-attribute 'mode-line nil :height 150)
-(set-face-attribute 'mode-line-inactive nil :height 150)
 
 ;; ripgrep for searching
+;; (use-package deadgrep
+;;   :config
+;;   (defun deadgrep--include-args (rg-args)
+;;     (push "--hidden" rg-args))
+;;   (advice-add 'deadgrep--arguments
+;;               :filter-return #'deadgrep--include-args))
+
 (use-package deadgrep
+  :commands (deadgrep)
+
   :config
+  (evil-define-key 'motion deadgrep-mode-map (kbd "C-p") 'project-find-file)
+
   (defun deadgrep--include-args (rg-args)
-    (push "--hidden" rg-args))
+    (push "--hidden" rg-args)
+    (push "--glob=!.git/" rg-args))
   (advice-add 'deadgrep--arguments
               :filter-return #'deadgrep--include-args))
 
@@ -160,8 +198,9 @@
 ;; page through history of a file
 (use-package git-timemachine)
 
-(use-package eshell-git-prompt
-  :after eshell)
+(use-package magit-delta
+  ;; :ensure-system-package (delta . "cargo install git-delta")
+  :hook (magit-mode . magit-delta-mode))
 
 (getenv "SHELL")
 (when (memq window-system '(mac ns x))
@@ -170,42 +209,57 @@
 
 (require 'rainbow-delimiters)
 (use-package rainbow-delimiters
-             :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package which-key
-             :init (which-key-mode)
-             :diminish which-key-mode
-             :config
-             (setq which-key-idle-delay 0.3))
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
+
+(use-package ivy
+  :diminish
+  :bind (("C-f" . swiper)
+         :map ivy-minibuffer-map
+         ("ESC" . ivy-alt-done)
+         :map ivy-switch-buffer-map
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+;; (use-package all-the-icons-ivy-rich
+;;   :init
+;;   (all-the-icons-ivy-rich-mode 1))
+
+;; (use-package all-the-icons)
+
+(use-package smex)
 
 (use-package counsel
-             :bind (("M-x" . counsel-M-x)
-                    ("C-x b" . counsel-ibuffer)
-                    ("C-x C-f" . counsel-find-file)
-                    :map minibuffer-local-map
-                    ("C-r" . 'counsel-minibuffer-history))
-             :config
-             (setq ivy-initial-inputs-alist nil))
+  :bind
+  ;; ("M-x" . 'counsel-M-x)
+  ("C-x b" . 'counsel-switch-buffer)
+  ("C-x C-f" . 'counsel-find-file)
+  ("C-s" . 'swiper)
 
-; (use-package ivy-rich
-;              :init
-;              (ivy-rich-mode 1))
+  :config
+  (use-package flx)
 
-(use-package helpful
-             :commands (helpful-callable helpful-variable helpful-command helpful-key)
-             :custom
-             (counsel-describe-function-function #'helpful-callable)
-             (counsel-describe-variable-function #'helpful-variable)
-             :bind
-             ([remap describe-function] . counsel-describe-function)
-             ([remap describe-command] . helpful-command)
-             ([remap describe-variable] . counsel-describe-variable)
-             ([remap describe-key] . helpful-key))
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-re-builders-alist
+        '((swiper . ivy--regex-plus)
+          (t . ivy--regex-fuzzy))))
 
-
-
-
-(global-hl-todo-mode)
 (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
         ("FIXME"  . "#FF0000")
@@ -215,13 +269,6 @@
 
 (require 'olivetti)
 (auto-image-file-mode 1)
-
-; (use-package vterm
-;   :commands vterm
-;   :config
-;   ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-;   (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-;   (setq vterm-max-scrollback 10000))
 
 (use-package dired
   :ensure nil
@@ -251,12 +298,6 @@
 
 (use-package dired-single
   :commands (dired dired-jump))
-
-(use-package all-the-icons
-             :if (display-graphic-p))
-
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -290,95 +331,21 @@
   :config
   (dired-async-mode 1))
 
-;; engine mode
-(use-package engine-mode
-  :ensure t
-
-  :config
-  (engine-mode t))
-
-(defengine github
-  "https://github.com/search?ref=simplesearch&q=%s"
-  :keybinding "c")
-
-(defengine duckduckgo
-  "https://duckduckgo.com/?q=%s"
-  :keybinding "d")
-
-(defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-  :keybinding "g")
-
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "brave")
-(setq browse-url-browser-function 'browse-url-default-windows-browser)
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
-
-
-(use-package vterm
-  :commands vterm
-  :config
-  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-  (setq vterm-max-scrollback 10000))
-
 (when (eq system-type 'windows-nt)
   (setq explicit-shell-file-name "powershell.exe")
   (setq explicit-powershell.exe-args '()))
 
-; (defun efs/configure-eshell ()
-;   ;; Save command history when commands are entered
-;   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-
-;   ;; Truncate buffer for performance
-;   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-
-;   ;; Bind some useful keys for evil-mode
-;   (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-;   (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-;   (evil-normalize-keymaps)
-
-;   (setq eshell-history-size         10000
-;         eshell-buffer-maximum-lines 10000
-;         eshell-hist-ignoredups t
-;         eshell-scroll-to-bottom-on-input t))
-
-
-; (use-package eshell
-;   :hook (eshell-first-time-mode . efs/configure-eshell)
-;   :config
-
-;   (with-eval-after-load 'esh-opt
-;     (setq eshell-destroy-buffer-when-process-dies t)
-;     (setq eshell-visual-commands '("htop" "zsh" "vim")))
-
-;   (eshell-git-prompt-use-theme 'powerline))
-
 ;; sly
 (setq inferior-lisp-program "sbcl")
 
-;; (use-package apropospriate-theme :ensure :defer)
-;; (use-package nord-theme :ensure :defer)
-
-(use-package circadian
-  :ensure t
-  :config
-  (setq calendar-latitude 40.0)
-  (setq calendar-longitude -70.0)
-  (setq circadian-themes '((:sunrise . gruvbox-light-hard)
-                           (:sunset  . gruvbox-dark-hard)))
-  (circadian-setup))
-
-(use-package helpful
-  :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+;; (use-package circadian
+;;   :ensure t
+;;   :config
+;;   (setq calendar-latitude 40.0)
+;;   (setq calendar-longitude -70.0)
+;;   (setq circadian-themes '((:sunrise . gruvbox-light-hard)
+;;                            (:sunset  . gruvbox-dark-hard)))
+;;   (circadian-setup))
 
 ;; colemak dh
 ;; (use-package evil-colemak-basics
@@ -387,108 +354,211 @@
 ;;   :config
 ;;   (global-evil-colemak-basics-mode))
 
-;; place custom-set-variables into its own file
-(setq custom-file (concat user-emacs-directory "/custom.el"))
-(load-file custom-file)
+;; (use-package helpful
+;;   :commands (helpful-callable helpful-variable helpful-command helpful-key)
+;;   :custom
+;;   (counsel-describe-function-function #'helpful-callable)
+;;   (counsel-describe-variable-function #'helpful-variable)
+;;   :bind
+;;   ([remap describe-function] . counsel-describe-function)
+;;   ([remap describe-command] . helpful-command)
+;;   ([remap describe-variable] . counsel-describe-variable)
+;;   ([remap describe-key] . helpful-key))
 
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook))
-
-;; (setq tramp-default-method "ssh")
 
 
-(use-package evil-org
-  :after org
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
-    (R . t)
-    (C . t)
-    (shell . t)
-    (python . t)
-    (js . t)
-    (emacs-lisp . t)))
+   (R . t)
+   (C . t)
+   (shell . t)
+   (python . t)
+   (js . t)
+   (emacs-lisp . t)))
 
-(require 'org-roam)
-
+;; https://github.com/org-roam/org-roam/issues/397#issuecomment-611751481
 (use-package org-roam
-             :after org
-             :ensure t
-             :init
-             (setq org-roam-v2-ack t)
-	 	:custom
-		; (org-roam-directory (file-truename "~/Dropbox/Zettelkasten"))
-		(org-roam-directory (file-truename "/mnt/c/Users/win10-xps17/Dropbox/Zettelkasten"))
-             :bind (("C-c n l" . org-roam-buffer-toggle)
-                    ("C-c n f" . org-roam-node-find)
-                    ("C-c n g" . org-roam-ui-open)
-                    ("C-c n i" . org-roam-node-insert)
-                    ("C-c n c" . org-roam-capture)
-                    ("C-c n a" . org-roam-alias-add)
-                    :map org-mode-map
-                    ("C-M-i" . completion-at-point)
-                    ("C-c n j" . org-roam-dailies-capture-today)) ; Dailies
-             :config
-             (org-roam-setup)
-             (org-roam-db-autosync-mode)
-             (require 'org-roam-protocol))
-
-
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "C:/Users/win10-xps17/Org/zettelkasten"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n a" . org-roam-alias-add)
+         ("C-c n f" . org-roam-node-find)
+	 ("C-c n g" . org-roam-ui-open)
+         ("C-c n j" . org-roam-jump-to-index)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ("C-c n d" . org-roam-dailies-capture-today))
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
 
 (use-package org-roam-ui
-             :after org-roam
-             :config
-             (setq org-roam-ui-sync-theme t
-                   org-roam-ui-follow t
-                   org-roam-ui-update-on-save t
-                   org-roam-ui-open-on-start t))
-
-
-(use-package org
+  :ensure t
+  :after org-roam
   :config
-  (require 'org-tempo)
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
 
-  ; (add-hook 'org-mode-hook
-  ;           (lambda ()
-  ;             (setq mailcap-mime-data '())
-  ;             (mailcap-parse-mailcap "~/.mailcap")
-  ;             (setq org-file-apps
-  ;                   '((auto-mode . emacs)
-  ;                     ("mobi" . "fbreader %s")
-  ;                     ("\\.x?html?\\'" . mailcap)
-  ;                     ("pdf" . mailcap)
-  ;                     (system . mailcap)
-  ;                     (t . mailcap)))))
-  )
+(setq org-default-notes-file "c:/Users/win10-xps17/Org/agenda/tasks.org")
+;; (load-user-file "agenda.el")
 
-;; scratch buffer is in org-mode
+(require 'org-agenda)
+
+(setq org-default-notes-file "c:/Users/win10-xps17/Org/agenda/tasks.org")
+
+;; define the custum capture templates
+(setq org-capture-templates
+      '(("t" "todo" entry (file org-default-notes-file)
+	 "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+	("m" "Meeting" entry (file org-default-notes-file)
+	 "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+	("d" "Diary" entry (file+datetree "c:/Users/win10-xps17/Org/org/diary.org")
+	 "* %?\n%U\n" :clock-in t :clock-resume t)
+	("i" "Idea" entry (file org-default-notes-file)
+	 "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
+	("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
+	 "** NEXT %? \nDEADLINE: %t") ))
+
+;; agenda files
+(setq org-agenda-files
+      '("c:/Users/win10-xps17/Org/agenda/tasks.org"
+	"c:/Users/win10-xps17/Org/agenda/school.org"
+	"c:/Users/win10-xps17/Org/agenda/birthdays.org"
+	"c:/Users/win10-xps17/Org/agenda/habits.org"))
+
 (setq initial-major-mode 'org-mode)
-
-; ;; org-mode ui
-; (use-package org-superstar
-;   :config
-;   (setq org-superstar-special-todo-items t)
-;   (setq org-hide-leading-stars t)
-;   (add-hook 'org-mode-hook (lambda ()
-;                              (org-superstar-mode 1))))
-
-; (setq org-hide-emphasis-markers t)
-
-; (use-package org-appear
-;   :hook (org-mode . org-appear-mode))
-
-;; (org-babel-do-load-languages
-;; 'org-babel-load-languages
-;;  '((shell . t)
-;;   (python . t)))
-
 ;; org-agenda setup
 (setq calendar-week-start-day 1)
 
-; (load-user-file "org-mode.el")
+;; time grid
+(setq org-agenda-time-leading-zero t)
+(setq org-agenda-timegrid-use-ampm nil)
+(setq org-agenda-use-time-grid t)
+(setq org-agenda-show-current-time-in-grid t)
+(setq org-agenda-current-time-string
+      (concat "Now " (make-string 70 ?-)))
+(setq org-agenda-time-grid
+      '((daily today require-timed)
+	(0600 0700 0800 0900 1000 1100
+	      1200 1300 1400 1500 1600
+	      1700 1800 1900 2000 2100)
+	" ....." "-----------------"))
+
+(setq org-agenda-custom-commands
+      `(("A" "Daily agenda and top priority tasks"
+         ((tags-todo "*"
+                     ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
+                      (org-agenda-skip-function
+                       `(org-agenda-skip-entry-if
+                         'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
+                      (org-agenda-block-separator ?=)
+                      (org-agenda-overriding-header "Important tasks without a date\n")))
+          (agenda "" ((org-agenda-span 1)
+                      (org-deadline-warning-days 0)
+                      (org-agenda-block-separator ?=)
+                      (org-scheduled-past-days 0)
+                      ;; We don't need the `org-agenda-date-today'
+                      ;; highlight because that only has a practical
+                      ;; utility in multi-day views.
+                      (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
+                      (org-agenda-format-date "%A %-e %B %Y")
+                      (org-agenda-overriding-header "\nToday's agenda\n")))
+          (agenda "" ((org-agenda-start-on-weekday nil)
+                      (org-agenda-start-day "+1d")
+                      (org-agenda-span 3)
+                      (org-deadline-warning-days 0)
+                      (org-agenda-block-separator ?=)
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                      (org-agenda-overriding-header "\nNext three days\n")))
+          (agenda "" ((org-agenda-time-grid nil)
+                      (org-agenda-start-on-weekday nil)
+                      ;; We don't want to replicate the previous section's
+                      ;; three days, so we start counting from the day after.
+                      (org-agenda-start-day "+4d")
+                      (org-agenda-span 14)
+                      (org-agenda-show-all-dates nil)
+                      (org-deadline-warning-days 0)
+                      (org-agenda-block-separator ?=)
+                      (org-agenda-entry-types '(:deadline))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                      (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")))))
+        ("P" "Plain text daily agenda and top priorities"
+         ((tags-todo "*"
+                     ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
+                      (org-agenda-skip-function
+                       `(org-agenda-skip-entry-if
+                         'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
+                      (org-agenda-block-separator ?=)
+                      (org-agenda-overriding-header "Important tasks without a date\n")))
+          (agenda "" ((org-agenda-span 1)
+                      (org-deadline-warning-days 0)
+                      (org-agenda-block-separator ?=)
+                      (org-scheduled-past-days 0)
+                      ;; We don't need the `org-agenda-date-today'
+                      ;; highlight because that only has a practical
+                      ;; utility in multi-day views.
+                      (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
+                      (org-agenda-format-date "%A %-e %B %Y")
+                      (org-agenda-overriding-header "\nToday's agenda\n")))
+          (agenda "" ((org-agenda-start-on-weekday nil)
+                      (org-agenda-start-day "+1d")
+                      (org-agenda-span 3)
+                      (org-deadline-warning-days 0)
+                      (org-agenda-block-separator ?=)
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                      (org-agenda-overriding-header "\nNext three days\n")))
+          (agenda "" ((org-agenda-time-grid nil)
+                      (org-agenda-start-on-weekday nil)
+                      ;; We don't want to replicate the previous section's
+                      ;; three days, so we start counting from the day after.
+                      (org-agenda-start-day "+4d")
+                      (org-agenda-span 14)
+                      (org-agenda-show-all-dates nil)
+                      (org-deadline-warning-days 0)
+                      (org-agenda-block-separator ?=)
+                      (org-agenda-entry-types '(:deadline))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                      (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n"))))
+         ((org-agenda-with-colors nil)
+          (org-agenda-prefix-format "%t %s")
+          (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
+          (org-agenda-fontify-priorities nil)
+          (org-agenda-remove-tags t))
+         ("agenda.txt"))))
+
+;; org keymaps
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c d") 'insert-date)
+(global-set-key (kbd "C-c c") 'org-capture)
+
+;; org utility functions
+(defun insert-date (prefix)
+  "Insert the current date. With prefix-argument, use ISO format. With
+   two prefix arguments, write out the day and month name."
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "<%Y-%m-%d %a>")
+                 ((equal prefix '(4)) "%Y-%m-%d")
+                 ((equal prefix '(16)) "%A, %d. %B %Y")))
+        (system-time-locale "de_DE"))
+    (insert (format-time-string format))))
+
+(defun reset-org-config ()
+  "Reset all org-mode global variables to their default state."
+  (interactive)
+  (org-reset-all-org-global-variables))
+
+(setq org-gcal-client-id "YOUR_GOOGLE_CLIENT_ID_HERE"
+      org-gcal-client-secret "YOUR_GOOGLE_CLIENT_SECRET_HERE"
+      org-gcal-fetch-file-alist '(("your-email@example.com" . "c:/Users/win10-xps17/Org/agenda/schedule.org")))
+
+(require 'org-gcal)
+(setq plstore-cache-passphrase-for-symmetric-encryption t)
