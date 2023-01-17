@@ -16,3 +16,7 @@
 ;; (global-set-key (kbd "C-c d i") 'insdate-insert-current-date) ;TODO fixme
 ;; (global-set-key (kbd "C-x |") 'toggle-window-split);TODO fixme
 ;; (global-set-key (kbd "<space><space>") 'previous-buffer);TODO fixme
+
+(global-set-key (kbd "C-x C-p") 'git-timemachine-show-previous-revision)
+(global-set-key (kbd "C-x C-.") 'git-timemachine-show-current-revision)
+(global-set-key (kbd "C-x C-n") 'git-timemachine-show-next-revision)

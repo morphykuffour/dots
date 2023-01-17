@@ -191,8 +191,8 @@ case "$(uname -s)" in
     source $HOME/.zsh/completions/autojump.zsh
     # source $HOME/.zsh/completions/home-manager.zsh
     source $HOME/.zsh/completions/gh.zsh
-    open () { xdg-open "$*" &}
-    alias o="thunar"
+    # open () { xdg-open "$*" &}
+    # alias o="thunar"
     ;;
   CYGWIN*|MINGW32*|MSYS*|MINGW*)
     ;;
