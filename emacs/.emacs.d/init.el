@@ -1,5 +1,4 @@
 ;; emacs os config for writing and productivity
-;; cd ~\AppData\Roaming\.emacs.d\
 
 ;; use-package
 (require 'package)
@@ -39,7 +38,7 @@
 
 ;; place custom-set-variables into its own file
 (setq custom-file (concat user-emacs-directory "/custom.el"))
-(load-file custom-file)
+; (load-file custom-file)
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -157,14 +156,6 @@
         minions-mode-line-delimiters (cons "" ""))
   (minions-mode 1))
 
-
-;; ripgrep for searching
-;; (use-package deadgrep
-;;   :config
-;;   (defun deadgrep--include-args (rg-args)
-;;     (push "--hidden" rg-args))
-;;   (advice-add 'deadgrep--arguments
-;;               :filter-return #'deadgrep--include-args))
 
 (use-package deadgrep
   :commands (deadgrep)
@@ -338,14 +329,14 @@
 ;; sly
 (setq inferior-lisp-program "sbcl")
 
-;; (use-package circadian
-;;   :ensure t
-;;   :config
-;;   (setq calendar-latitude 40.0)
-;;   (setq calendar-longitude -70.0)
-;;   (setq circadian-themes '((:sunrise . gruvbox-light-hard)
-;;                            (:sunset  . gruvbox-dark-hard)))
-;;   (circadian-setup))
+(use-package circadian
+  :ensure t
+  :config
+  (setq calendar-latitude 40.0)
+  (setq calendar-longitude -70.0)
+  (setq circadian-themes '((:sunrise . modus-operandi)
+                           (:sunset  . modus-vivendi)))
+  (circadian-setup))
 
 ;; colemak dh
 ;; (use-package evil-colemak-basics
