@@ -31,7 +31,7 @@
 ;; (load-user-file "org-mode.el")
 
 ;; place custom-set-variables into its own file
-(setq custom-file (concat user-emacs-directory "/custom.el"))
+;; (setq custom-file (concat user-emacs-directory "/custom.el"))
 ; (load-file custom-file)
 
 ;; sensible settings from hrs
@@ -267,9 +267,7 @@
   (evil-define-key 'normal dired-mode-map (kbd "v") 'hrs/dired-slideshow)
 
   (setq-default dired-listing-switches
-                (combine-and-quote-strings '("-l"
-                                             "-v"
-                                             "-g"
+                (combine-and-quote-strings '("-l" "-v" "-g"
                                              "--no-group"
                                              "--human-readable"
                                              "--time-style=+%Y-%m-%d"
@@ -283,11 +281,11 @@
 (use-package dired-single
   :commands (dired dired-jump))
 
-(use-package dired-hide-dotfiles
-  :hook (dired-mode . dired-hide-dotfiles-mode)
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "." 'dired-hide-dotfiles-mode))
+;; (use-package dired-hide-dotfiles
+;;   :hook (dired-mode . dired-hide-dotfiles-mode)
+;;   :config
+;;   (evil-collection-define-key 'normal 'dired-mode-map
+;;     "." 'dired-hide-dotfiles-mode))
 
 ;; (use-package dired-open
 ;;   :config
@@ -522,6 +520,7 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c d") 'insert-date)
 (global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c f") 'org-agenda-file-to-front)
 
 ;; org utility functions
 (defun insert-date (prefix)
@@ -546,3 +545,28 @@
 
 (require 'org-gcal)
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :defer 5
+  :config
+  (setq yas-snippet-dirs (list (expand-file-name "~/.emacs.d/snippets" )))
+  (yas-global-mode 1)) ;; or M-x yas-reload-all if you've started YASnippet already.
+
+;; Silences the warning when running a snippet with backticks (runs a command in the snippet)
+(require 'warnings)
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("~/iCloud/Org/Todo.org" "/home/morp/Org/agenda/tasks.org" "/home/morp/Org/agenda/school.org" "/home/morp/Org/agenda/birthdays.org" "/home/morp/Org/agenda/habits.org")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(italic ((t (:slant italic)))))
