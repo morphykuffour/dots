@@ -10,15 +10,9 @@
 
 (defun package--save-selected-packages (&rest opt) nil)
 
-;; Ensure that use-package is installed.
-;;
-;; If use-package isn't already installed, it's extremely likely that this is a
-;; fresh installation! So we'll want to update the package repository and
-;; install use-package before loading the literate configuration.
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
-
 
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory) user-emacs-directory)
@@ -52,7 +46,6 @@
   :config
   (setq yas-indent-line 'auto)
   (yas-global-mode 1))
-
 
 (use-package undo-fu)
 
