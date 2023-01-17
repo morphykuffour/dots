@@ -382,7 +382,7 @@
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory (file-truename "C:/Users/win10-xps17/Org/zettelkasten"))
+  (org-roam-directory (file-truename "~/Org/zettelkasten"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
 	 ("C-c n a" . org-roam-alias-add)
          ("C-c n f" . org-roam-node-find)
@@ -407,12 +407,12 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-(setq org-default-notes-file "c:/Users/win10-xps17/Org/agenda/tasks.org")
+(setq org-default-notes-file "~/Org/agenda/tasks.org")
 ;; (load-user-file "agenda.el")
 
 (require 'org-agenda)
 
-(setq org-default-notes-file "c:/Users/win10-xps17/Org/agenda/tasks.org")
+(setq org-default-notes-file "~/Org/agenda/tasks.org")
 
 ;; define the custum capture templates
 (setq org-capture-templates
@@ -420,7 +420,7 @@
 	 "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
 	("m" "Meeting" entry (file org-default-notes-file)
 	 "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
-	("d" "Diary" entry (file+datetree "c:/Users/win10-xps17/Org/org/diary.org")
+	("d" "Diary" entry (file+datetree "~/Org/org/diary.org")
 	 "* %?\n%U\n" :clock-in t :clock-resume t)
 	("i" "Idea" entry (file org-default-notes-file)
 	 "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
@@ -429,10 +429,10 @@
 
 ;; agenda files
 (setq org-agenda-files
-      '("c:/Users/win10-xps17/Org/agenda/tasks.org"
-	"c:/Users/win10-xps17/Org/agenda/school.org"
-	"c:/Users/win10-xps17/Org/agenda/birthdays.org"
-	"c:/Users/win10-xps17/Org/agenda/habits.org"))
+      '("~/Org/agenda/tasks.org"
+	"~/Org/agenda/school.org"
+	"~/Org/agenda/birthdays.org"
+	"~/Org/agenda/habits.org"))
 
 (setq initial-major-mode 'org-mode)
 ;; org-agenda setup
@@ -558,7 +558,7 @@
 
 (setq org-gcal-client-id "YOUR_GOOGLE_CLIENT_ID_HERE"
       org-gcal-client-secret "YOUR_GOOGLE_CLIENT_SECRET_HERE"
-      org-gcal-fetch-file-alist '(("your-email@example.com" . "c:/Users/win10-xps17/Org/agenda/schedule.org")))
+      org-gcal-fetch-file-alist '(("your-email@example.com" . "~/Org/agenda/schedule.org")))
 
 (require 'org-gcal)
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
