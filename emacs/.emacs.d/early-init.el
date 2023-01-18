@@ -1,5 +1,5 @@
 
-
+(setq straight-use-package-by-default t)
 (menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -19,7 +19,8 @@
       inhibit-startup-buffer-menu t)
 
 ;; Initialise installed packages
-(setq package-enable-at-startup t)
+; (setq package-enable-at-startup t)
+(setq package-enable-at-startup nil)
 
 (defvar package-quickstart)
 
