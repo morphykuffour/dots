@@ -1,2 +1,0 @@
-#+caption: $0
-[[..`(completing-read "Image file: " (-filter '+image-path-p (project-files (project-current))))`]]
