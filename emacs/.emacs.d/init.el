@@ -28,6 +28,11 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+;; (straight-use-package 'org)
+(use-package org :straight (:type built-in))
+
 
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory) user-emacs-directory)
@@ -47,7 +52,7 @@
 
 ;; place custom-set-variables into its own file
 ;; (setq custom-file (concat user-emacs-directory "/custom.el"))
-; (load-file custom-file)
+                                        ; (load-file custom-file)
 
 ;; sensible settings from hrs
 (add-to-list  'load-path "~/.emacs.d/personal/sensible-defaults.el")
@@ -269,7 +274,9 @@
 (require 'olivetti)
 (auto-image-file-mode 1)
 
+
 (use-package dired
+  :straight nil
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
@@ -554,15 +561,24 @@
   (interactive)
   (org-reset-all-org-global-variables))
 
-(use-package org-gcal
-  :straight (:host github :repo "kidd/org-gcal.el" :branch "master"))
+; (setq org-gcal-client-id "471213602680-5lf23nskblnpd040gs17tcopg512vigc.apps.googleusercontent.com"
+;       org-gcal-client-secret "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"
+;       org-gcal-fetch-file-alist '(("morpkuff@gmail.com" . "~/Org/agenda/schedule.org")))
 
-(setq org-gcal-client-id "471213602680-5lf23nskblnpd040gs17tcopg512vigc.apps.googleusercontent.com"
-      org-gcal-client-secret "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"
-      org-gcal-fetch-file-alist '(("morpkuff@gmail.com" . "~/Org/agenda/schedule.org")))
+; (require 'oauth2-auto)
+; (require 'plstore)
+; (setq plstore-encrypt-to "morpkuff@gmail.com")
+; (setq oauth2-auto-google-client-id "471213602680-5lf23nskblnpd040gs17tcopg512vigc.apps.googleusercontent.com"
+;       oauth2-auto-google-client-secret "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")
 
-(require 'org-gcal)
-(setq plstore-cache-passphrase-for-symmetric-encryption t)
+; (defun org-gcal--get-access-token ()
+;   (oauth2-auto-access-token-sync "morpkuff@gmail.com" 'google '(calendar email)))
+
+; (use-package org-gcal
+;   :straight (:host github :repo "kidd/org-gcal.el" :branch "master"))
+
+; (require 'org-gcal)
+; (setq plstore-cache-passphrase-for-symmetric-encryption t)
 
 (use-package yasnippet
   :diminish yas-minor-mode
