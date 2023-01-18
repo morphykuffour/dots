@@ -1,5 +1,4 @@
 
-(setq straight-use-package-by-default t)
 (menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
