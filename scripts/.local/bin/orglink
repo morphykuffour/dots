@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+fp=`realpath $1`
+echo "[[$fp][$1]]"
