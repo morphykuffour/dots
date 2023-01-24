@@ -591,6 +591,26 @@
 (require 'warnings)
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
+;; latex
+;; Add this to .emacs.d/init.el:
+(with-eval-after-load "tex"
+  ;; enable synctex support for latex-mode
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  ;; add a new view program
+  (add-to-list 'TeX-view-program-list
+        '(;; arbitrary name for this view program
+          "Zathura"
+          (;; zathura command (may need an absolute path)
+           ;; "zathura"
+           "/etc/profiles/per-user/morp/bin/zathura"
+           ;; %o expands to the name of the output file
+           " %o"
+           ;; insert page number if TeX-source-correlate-mode
+           ;; is enabled
+           (mode-io-correlate " --synctex-forward %n:0:%b"))))
+  ;; use the view command named "Zathura" for pdf output
+  (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
