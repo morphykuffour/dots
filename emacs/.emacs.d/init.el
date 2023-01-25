@@ -418,6 +418,18 @@
 
 (setq org-default-notes-file "~/Org/agenda/tasks.org")
 
+(setq org-return-follows-link t
+      org-agenda-tags-column 75
+      org-deadline-warning-days 30
+      org-use-speed-commands t)
+
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+
+(setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+
+
 ;; define the custum capture templates
 (setq org-capture-templates
       '(("t" "todo" entry (file org-default-notes-file)
@@ -538,10 +550,29 @@
           (org-agenda-remove-tags t))
          ("agenda.txt"))))
 
+
+;; icloud syncing
+(setq auto-save-default t
+      auto-revert-use-notify nil
+      auto-revert-verbose nil)
+
+(global-auto-revert-mode 1)
+
+(defmacro func-ignore (fnc)
+  "Return function that ignores its arguments and invokes FNC."
+  `(lambda (&rest _rest)
+     (funcall ,fnc)))
+
+;; save all org-buffers when todo state changes
+(advice-add 'org-deadline       :after (func-ignore #'org-save-all-org-buffers))
+(advice-add 'org-schedule       :after (func-ignore #'org-save-all-org-buffers))
+(advice-add 'org-store-log-note :after (func-ignore #'org-save-all-org-buffers))
+(advice-add 'org-todo           :after (func-ignore #'org-save-all-org-buffers))
+
 ;; org keymaps
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c d") 'insert-date)
 (global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c d") 'insert-date)
 (global-set-key (kbd "C-c f") 'org-agenda-file-to-front)
 
 ;; org utility functions
