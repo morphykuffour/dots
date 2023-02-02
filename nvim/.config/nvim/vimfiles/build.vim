@@ -8,7 +8,9 @@ autocmd BufNewFile,BufRead *.hy set filetype=hy
 autocmd filetype hy     nnoremap <F5> :w <bar> !hy % <CR>
 autocmd filetype perl   nnoremap <F5> :w <bar> !perl % <CR>
 autocmd filetype rmd    nnoremap <F5> :w <bar> !Rscript -e "rmarkdown::render('%')"<CR>
+autocmd filetype rmd    nnoremap <F6> :w <bar> !zathura '%<'.pdf&;disown<cr>:redraw!<cr>
 autocmd filetype md     nnoremap <F5> :w <bar> !pandoc %  -o %.pdf<CR>
+autocmd filetype md     nnoremap <F6> :w <bar> !zathura '%<'.pdf&;disown<cr>:redraw!<cr>
 
 " Run file in Floaterm
 autocmd filetype c      nnoremap <F6> :FloatermNew --autoclose=0 ./%< <CR>
