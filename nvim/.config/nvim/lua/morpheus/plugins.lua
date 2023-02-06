@@ -61,8 +61,8 @@ return packer.startup(function(use)
 	-- use("vim-pandoc/vim-rmarkdown")
 	-- use("vim-pandoc/vim-pandoc")
 	-- use("vim-pandoc/vim-pandoc-syntax")
-	use("nvim-orgmode/orgmode")
-	use("lukas-reineke/headlines.nvim")
+	-- use("nvim-orgmode/orgmode")
+	-- use("lukas-reineke/headlines.nvim")
 
 	-- ui enchancements
 	-- use("kyazdani42/nvim-web-devicons")
@@ -74,8 +74,8 @@ return packer.startup(function(use)
 	use("mhinz/vim-startify")
 	use("voldikss/vim-floaterm")
 	use({ "akinsho/toggleterm.nvim" })
-	use("junegunn/goyo.vim")
-	use("projekt0n/github-nvim-theme")
+	-- use("junegunn/goyo.vim")
+	-- use("projekt0n/github-nvim-theme")
 	-- use({
 	-- 	"nvim-lualine/lualine.nvim",
 	-- 	requires = { "kyazdani42/nvim-web-devicons", opt = true },
@@ -118,12 +118,12 @@ return packer.startup(function(use)
 	-- use("hrsh7th/nvim-cmp")
 	-- use({ "tzachar/cmp-tabnine", run = "./install.sh", requires = "hrsh7th/nvim-cmp" })
 	-- use("simrat39/symbols-outline.nvim")
-	use({
-		"ericpubu/lsp_codelens_extensions.nvim",
-		config = function()
-			require("codelens_extensions").setup()
-		end,
-	})
+	-- use({
+	-- 	"ericpubu/lsp_codelens_extensions.nvim",
+	-- 	config = function()
+	-- 		require("codelens_extensions").setup()
+	-- 	end,
+	-- })
 
 	use({
 		"VonHeikemen/lsp-zero.nvim",
@@ -221,8 +221,8 @@ return packer.startup(function(use)
 	-- use("ziontee113/syntax-tree-surfer")
 	use("p00f/nvim-ts-rainbow")
 	use("tpope/vim-commentary")
-	use("junegunn/fzf")
-	use("junegunn/fzf.vim")
+	-- use("junegunn/fzf")
+	-- use("junegunn/fzf.vim")
 	-- use("norcalli/nvim-colorizer.lua")
 	-- use("norcalli/nvim_utils")
 	-- use("anuvyklack/hydra.nvim")
