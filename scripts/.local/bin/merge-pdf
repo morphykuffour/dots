@@ -1,0 +1,8 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -p pdftk 
+
+# pdftk $@ cat output lectures.pdf
+
+for arg in "$@"; do
+  echo "Argument: $arg"
+done
