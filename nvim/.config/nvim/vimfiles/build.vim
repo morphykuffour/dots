@@ -8,7 +8,16 @@ autocmd BufNewFile,BufRead *.hy set filetype=hy
 autocmd filetype hy     nnoremap <F5> :w <bar> !hy % <CR>
 autocmd filetype perl   nnoremap <F5> :w <bar> !perl % <CR>
 autocmd filetype rmd    nnoremap <F5> :w <bar> !Rscript -e "rmarkdown::render('%')"<CR>
-autocmd filetype rmd    nnoremap <F6> :w <bar> !zathura '%<'.pdf&;disown<cr>:redraw!<cr>
+
+if !exists("g:os")
+    if has("macunix") || has("Darwin")
+        autocmd filetype rmd    nnoremap <F6> :w <bar> !open '%<'.pdf&;disown<cr>:redraw!<cr>
+    else
+        autocmd filetype rmd    nnoremap <F6> :w <bar> !zathura '%<'.pdf&;disown<cr>:redraw!<cr>
+    endif
+endif
+
+
 autocmd filetype md     nnoremap <F5> :w <bar> !pandoc %  -o %.pdf<CR>
 autocmd filetype md     nnoremap <F6> :w <bar> !zathura '%<'.pdf&;disown<cr>:redraw!<cr>
 
