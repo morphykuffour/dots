@@ -167,7 +167,7 @@ return packer.startup(function(use)
 	use({ "nvim-telescope/telescope.nvim", branch = "0.1.x", requires = { "nvim-lua/plenary.nvim" } })
 	use("nvim-telescope/telescope-fzy-native.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make", cond = vim.fn.executable("make") == 1 })
-  use 'nvim-telescope/telescope-media-files.nvim'
+	use("nvim-telescope/telescope-media-files.nvim")
 	-- use("nvim-telescope/telescope-cheat.nvim")
 	-- use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({ "dhruvmanila/telescope-bookmarks.nvim" })
@@ -239,8 +239,17 @@ return packer.startup(function(use)
 	use("dhruvasagar/vim-table-mode")
 	use("preservim/tagbar")
 	use("j-hui/fidget.nvim")
-  use 'norcalli/nvim-colorizer.lua'
-
+	use("norcalli/nvim-colorizer.lua")
+    use({
+        "andrewferrier/wrapping.nvim",
+        config = function()
+            require("wrapping").setup()
+        end,
+    })
+use({
+  'terror/chatgpt.nvim',
+  run = 'pip3 install -r requirements.txt'
+})
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end

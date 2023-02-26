@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
 nix-shell -p pdftk --run 'pdftk *.pdf cat output output.pdf'
+
+# pdftk `l | xargs ` cat output output.pdf
