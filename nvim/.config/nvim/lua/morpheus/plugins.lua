@@ -250,6 +250,31 @@ use({
   'terror/chatgpt.nvim',
   run = 'pip3 install -r requirements.txt'
 })
+
+    use {
+      "klen/nvim-test",
+      config = function()
+        require("nvim-test").setup {
+          commands_create = true, -- create commands (TestFile, TestLast, ...)
+          silent = false, -- less notifications
+          run = true, -- run test commands
+          term = "terminal", -- a terminal to run (terminal|toggleterm)
+          termOpts = {
+            direction = "vertical", -- terminal's direction (horizontal|vertical|float)
+            width = 86, -- terminal's width (for vertical|float)
+            height = 24, -- terminal's height (for horizontal|float)
+            go_back = false, -- return focus to original window after executing
+            stopinsert = false, -- exit from insert mode
+          },
+          runners = { -- setup test runners, only using for JS. Currently, doesn't add value to Rust workflow 17-Feb-2022
+            javascript = "nvim-test.runners.jest",
+            lua = "nvim-test.runners.busted",
+            -- rust = "nvim-test.runners.cargo-test",
+          },
+        }
+      end,
+    }
+
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end
