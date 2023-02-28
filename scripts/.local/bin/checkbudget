@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+ledger --empty -S -T -f ~/iCloud/Finances/ledger/ledger.dat bal ^assets:Budget
