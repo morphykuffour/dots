@@ -436,3 +436,6 @@ keymap("n", "<leader>sa", "<cmd>Scratch<cr>")
 
 keymap("n", "gx", "<Plug>(openbrowser-smart-search)<cr>")
 keymap("v", "gx", "<Plug>(openbrowser-smart-search)<cr>")
+
+-- Remove all trailing whitespace by pressing F5
+keymap("n", "<F12>", ":let _s=@/<Bar>:%s/s+$//e<Bar>:let @/=_s<Bar><CR>")
