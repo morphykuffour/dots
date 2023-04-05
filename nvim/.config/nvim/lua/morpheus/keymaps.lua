@@ -157,15 +157,13 @@ m.nmap("<leader>fs", "<cmd> lua require('telescope.builtin').grep_string({ searc
 m.nmap("<leader>fh", "<cmd> Telescope help_tags<CR>")
 m.nmap("<leader>fg", "<cmd> Telescope live_grep<CR>")
 m.nmap("<leader>lr", "<cmd> Telescope lsp_references<CR>")
+m.nmap("<leader>ft", "<cmd> TodoTelescope<CR>")
+m.nmap("<leader>fm", "<cmd>Telescope bookmarks<cr>")
+m.nmap("<leader>fc", "<cmd>Telescope neoclip<cr>")
 map_tele("<space>fp", "installed_plugins")
 map_tele("<space>do", "search_dotfiles")
 map_tele("<space>vr", "search_vimrc")
 map_tele("<space>bs", "anime_selector")
-m.nmap("<leader>ft", "<cmd> TodoTelescope<CR>")
-
--- Extension mappings
-m.nmap("<leader>fm", "<cmd>Telescope bookmarks<cr>")
-m.nmap("<leader>fc", "<cmd>Telescope neoclip<cr>")
 -- m.nmap("<c-f>", "<cmd>Telescope find_files hidden=true<CR>")
 
 -- Git
