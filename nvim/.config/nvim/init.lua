@@ -10,6 +10,7 @@ vim.g.snippets = "luasnip"
 require("morpheus.utils")
 Jcall(require, "morpheus/plugins")
 Jcall(require, "morpheus/keymaps")
+-- Jcall(require, "morpheus/telescope")
 
 -- Themes
 -- vim.cmd("colorscheme darkplus")
