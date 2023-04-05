@@ -1,7 +1,10 @@
 local options = {
 	-- shell = "/usr/bin/zsh",
-  shell = "/run/current-system/sw/bin/zsh",
-  wrap  = true,
+	shell = "/run/current-system/sw/bin/zsh",
+	wrap = true,
+	breakindent = true,
+	showbreak = string.rep(" ", 3), -- Make it so that long lines wrap smartly
+	linebreak = true,
 	backup = false, -- creates a backup file
 	clipboard = "unnamedplus", -- allows neovim to access the system clipboard
 	cmdheight = 1, -- more space in the neovim command line for displaying messages
