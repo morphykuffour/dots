@@ -7,7 +7,17 @@ autocmd filetype python nnoremap <F5> :w <bar> !python3 % <CR>
 autocmd BufNewFile,BufRead *.hy set filetype=hy
 autocmd filetype hy     nnoremap <F5> :w <bar> !hy % <CR>
 autocmd filetype perl   nnoremap <F5> :w <bar> !perl % <CR>
+
+" writing with rmarkdown
+" https://github.com/img-paste-devs/img-paste.vim
 autocmd filetype rmd    nnoremap <F5> :w <bar> !Rscript -e "rmarkdown::render('%')"<CR>
+autocmd FileType markdown let g:PasteImageFunction = 'g:MarkdownPasteImage'
+autocmd FileType tex let g:PasteImageFunction = 'g:LatexPasteImage'
+
+autocmd FileType rmd nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
+" there are some defaults for image directory and image name, you can change them
+let g:mdip_imgdir = 'imgs'
+" let g:mdip_imgname = 'image'
 
 if !exists("g:os")
     if has("macunix") || has("Darwin")
