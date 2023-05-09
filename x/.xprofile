@@ -7,15 +7,15 @@
 # xrandr --auto --output DVI-D-0 --mode 2560x1440 --left-of HDMI-0
 
 # Network Manager Applet
-nm-applet --indicator &
+# nm-applet --indicator &
 
 # polybar
 # polybar &
 
 # Don't Randomly Turn off
-xset s off
-xset -dpms
-xset s noblank
+# xset s off
+# xset -dpms
+# xset s noblank
 
 # Speedy keys
 # xset r rate 210 40

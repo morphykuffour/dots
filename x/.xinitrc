@@ -1,3 +1,3 @@
 # i3
-exec mate-session
-
+# exec mate-session
+exec Hyperland
