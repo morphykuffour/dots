@@ -10,11 +10,13 @@ vim.g.snippets = "luasnip"
 require("morpheus.utils")
 Jcall(require, "morpheus/plugins")
 Jcall(require, "morpheus/keymaps")
--- Jcall(require, "morpheus/telescope")
+-- Jcall(require, "morpheus/hop")
+require("morpheus.lsp")
+Jcall(require, "morpheus/telescope")
 
 -- Themes
--- vim.cmd("colorscheme darkplus")
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme darkplus")
+-- vim.cmd("colorscheme gruvbox")
 -- vim.cmd("colorscheme github_dark_default")
 
 vim.g.loaded_python_provider = 0 -- disable python2
@@ -42,20 +44,3 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 
 -- source vimfiles
 vim.cmd([[runtime! vimfiles/*.vim]])
-
--- gx => open url in browser
--- if vim.fn.has("wsl") then
--- 	vim.g.netrw_browsex_viewer = "/usr/bin/wslview"
--- 	vim.g.clipboard = {
--- 		name = "wsl clipboard",
--- 		copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
--- 		paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
--- 		cache_enabled = true,
--- 	}
--- elseif vim.fn.has("mac") then
--- 	vim.g.netrw_browsex_viewer = "open"
--- elseif vim.fn.has("linux") then
--- 	-- vim.g.netrw_browsex_viewer = "/usr/bin/xdg-open"
--- 	vim.g.netrw_browsex_viewer = "/run/current-system/sw/bin/xdg-open"
--- 	-- vim.g.netrw_browsex_viewer = vim.env.BROWSER
--- end
