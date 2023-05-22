@@ -54,27 +54,27 @@ local on_attach = function(_, bufnr)
 end
 
 -- Setup LSPs, DAPs, Linters
-require("mason").setup({
-	ui = {
-		check_outdated_packages_on_open = false,
-		icons = {
-			package_installed = "✓",
-			package_pending = "➜",
-			package_uninstalled = "✗",
-		},
-	},
-	-- The directory in which to install packages.
-	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
-})
+-- require("mason").setup({
+-- 	ui = {
+-- 		check_outdated_packages_on_open = false,
+-- 		icons = {
+-- 			package_installed = "✓",
+-- 			package_pending = "➜",
+-- 			package_uninstalled = "✗",
+-- 		},
+-- 	},
+-- 	-- The directory in which to install packages.
+-- 	-- install_root_dir = path.concat { vim.fn.stdpath "data", "mason" },
+-- })
 
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
-local servers = { "clangd", "rust_analyzer", "pyright", "tsserver", "sumneko_lua", "gopls" }
+local servers = { "clangd", "rust_analyzer", "pyright", "tsserver", "lua_ls", "gopls" }
 
 -- Ensure the servers above are installed
-require("mason-lspconfig").setup({
-	ensure_installed = servers,
-})
+-- require("mason-lspconfig").setup({
+-- 	ensure_installed = servers,
+-- })
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -96,7 +96,7 @@ local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
-require("lspconfig").sumneko_lua.setup({
+require("lspconfig").lua_ls.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
 	settings = {
