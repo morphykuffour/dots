@@ -15,8 +15,8 @@ require("morpheus.lsp")
 Jcall(require, "morpheus/telescope")
 
 -- Themes
-vim.cmd("colorscheme darkplus")
--- vim.cmd("colorscheme gruvbox")
+-- vim.cmd("colorscheme darkplus")
+vim.cmd("colorscheme gruvbox")
 -- vim.cmd("colorscheme github_dark_default")
 
 vim.g.loaded_python_provider = 0 -- disable python2
