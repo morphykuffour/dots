@@ -111,8 +111,10 @@ set_cursorline("WinEnter", true)
 set_cursorline("FileType", false, "TelescopePrompt")
 
 -- Themes
-vim.cmd("colorscheme github_dark_default")
+-- vim.cmd("colorscheme github_dark_default")
 -- vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme darkplus")
+
 
 -- Setup LSPs, DAPs, Linters
 require("mason").setup({
