@@ -1,3 +1,41 @@
+" TODO convert to lua
+" The function Nr2Bin() returns the binary string representation of a number.
+func Nr2Bin(nr)
+  let n = a:nr
+  let r = ""
+  while n
+    let r = '01'[n % 2] . r
+    let n = n / 2
+  endwhile
+  return r
+endfunc
+
+command! Nr2Bin call Nr2Bin()
+
+" Diff lines next to eachother
+function! DiffLineWithNext()
+    let f1=tempname()
+    let f2=tempname()
+
+    exec ".write " . f1
+    exec ".+1write " . f2
+
+    exec "tabedit " . f1
+    exec "vert diffsplit " . f2
+endfunction
+
+nnoremap <F10> :call DiffLineWithNext()
+
+function Scratch()
+    execute 'tabnew '
+    setlocal buftype=nofile
+    setlocal bufhidden=hide
+    setlocal noswapfile
+endfunction
+
+" command! -nargs=0 Ns call Newscratch()
+command! Scratch call Scratch()
+
 " send output of command to a new tab
 function! TabCommandOutput(cmd)
     redir => message
