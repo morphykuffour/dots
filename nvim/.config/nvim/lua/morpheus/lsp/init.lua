@@ -88,7 +88,7 @@ for _, lsp in ipairs(servers) do
 end
 
 -- Turn on lsp status information
-require("fidget").setup()
+-- require("fidget").setup()
 
 local nvim_lsp = require("lspconfig")
 -- Make runtime files discoverable to the server

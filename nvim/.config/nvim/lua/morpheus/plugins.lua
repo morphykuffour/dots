@@ -97,7 +97,7 @@ return packer.startup(function(use)
 			{ "williamboman/mason.nvim", config = true },
 			"williamboman/mason-lspconfig.nvim",
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			{ "j-hui/fidget.nvim", opts = {} },
+			-- { "j-hui/fidget.nvim", opts = {} },
 			"folke/neodev.nvim",
 		},
 	})
@@ -127,7 +127,7 @@ use {
 
 	-- Useful status updates for LSP
 	-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-	use({ "j-hui/fidget.nvim", opts = {} })
+	-- use({ "j-hui/fidget.nvim", opts = {} })
 	-- Autocompletion and Snippets
 	use({
 		"hrsh7th/nvim-cmp",
