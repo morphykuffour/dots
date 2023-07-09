@@ -11,7 +11,7 @@ require("morpheus.utils")
 Jcall(require, "morpheus/plugins")
 Jcall(require, "morpheus/keymaps")
 -- Jcall(require, "morpheus/hop")
-require("morpheus.lsp")
+-- require("morpheus.lsp")
 Jcall(require, "morpheus/telescope")
 
 -- Themes
