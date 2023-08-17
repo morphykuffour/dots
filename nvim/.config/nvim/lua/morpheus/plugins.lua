@@ -49,7 +49,7 @@ return packer.startup(function(use)
 	use("nvim-lua/plenary.nvim")
 	use("christoomey/vim-tmux-navigator")
 	use("AndrewRadev/bufferize.vim")
-	use("francoiscabrol/ranger.vim")
+	-- use("francoiscabrol/ranger.vim")
 	use("szw/vim-maximizer")
 	use("windwp/nvim-autopairs")
 
