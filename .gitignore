@@ -75,3 +75,5 @@ zsh/.zsh/plugins/fast-syntax-highlighting
 zsh/.zsh/plugins/zsh-system-clipboard
 .DS_Store
 FIXME/.DS_Store
+
+misc/.newsboat/cache.db
