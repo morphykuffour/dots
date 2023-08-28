@@ -1115,11 +1115,11 @@ keymap("v", "gx", "<Plug>(openbrowser-smart-search)<cr>")
 
 -- writing
 keymap("n", "<leader>wd", function()
-	vim.cmd(string.format(":85vnew ~/Dropbox/notes/note-%s.md", os.date("%y_%m_%d")))
+	vim.cmd(string.format(":85vnew ~/iCloud/notes/note-%s.md", os.date("%y_%m_%d")))
 end, { desc = "[/de] notes]", noremap = true })
 
 keymap("n", "<leader>wt", function()
-	local bufnr = vim.fn.bufnr(vim.fn.expand("~/Dropbox/todo/todo.md"), true)
+	local bufnr = vim.fn.bufnr(vim.fn.expand("~/iCloud/todo/todo.md"), true)
 
 	for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
 		local open_bufnr = vim.api.nvim_win_get_buf(win_id)
