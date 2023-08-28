@@ -69,7 +69,7 @@ end
 -- end
 
 -- function _G.Diary_entry()
---    vim.cmd(string.format(':85vnew ~/Dropbox/notes/note-%s.md', os.date "%y_%m_%d"))
+--    vim.cmd(string.format(':85vnew ~/iCloud/notes/note-%s.md', os.date "%y_%m_%d"))
 -- end
 
 function get_visual_selection()
