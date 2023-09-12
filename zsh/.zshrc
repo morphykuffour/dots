@@ -266,6 +266,7 @@ extract () {
              *.Z)         uncompress $1  ;;
              *.7z)        7z x    $1     ;;
              *.zst)       unzstd  $1     ;;
+             *.xz)        unxz    $1     ;;
              *)           echo "'$1' cannot be extracted via extract()" ;;
          esac
      else
