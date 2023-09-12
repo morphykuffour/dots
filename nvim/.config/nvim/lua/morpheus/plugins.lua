@@ -85,49 +85,13 @@ return packer.startup(function(use)
 	use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 	use({ "akinsho/git-conflict.nvim" })
 	use("lewis6991/gitsigns.nvim")
+
 	-- Colorschemes
 	use("folke/tokyonight.nvim")
 	use("ellisonleao/gruvbox.nvim")
 	use("lunarvim/darkplus.nvim")
 	use("marko-cerovac/material.nvim")
-	-- LSP Configuration
-	use({
-		"neovim/nvim-lspconfig",
-		dependencies = {
-			{ "williamboman/mason.nvim", config = true },
-			"williamboman/mason-lspconfig.nvim",
-			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			-- { "j-hui/fidget.nvim", opts = {} },
-			"folke/neodev.nvim",
-		},
-	})
-	-- use({ "williamboman/mason.nvim", config = true })
-	-- use("williamboman/mason-lspconfig.nvim")
 
-	use({
-		"VonHeikemen/lsp-zero.nvim",
-		branch = "v2.x",
-		requires = {
-			-- LSP Support
-			{ "neovim/nvim-lspconfig" }, -- Required
-			{ -- Optional
-				"williamboman/mason.nvim",
-				run = function()
-					pcall(vim.cmd, "MasonUpdate")
-				end,
-			},
-			{ "williamboman/mason-lspconfig.nvim" }, -- Optional
-
-			-- Autocompletion
-			{ "hrsh7th/nvim-cmp" }, -- Required
-			{ "hrsh7th/cmp-nvim-lsp" }, -- Required
-			{ "L3MON4D3/LuaSnip" }, -- Required
-		},
-	})
-
-	-- Useful status updates for LSP
-	-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-	-- use({ "j-hui/fidget.nvim", opts = {} })
 	-- Autocompletion and Snippets
 	use({
 		"hrsh7th/nvim-cmp",
@@ -138,34 +102,7 @@ return packer.startup(function(use)
 			"rafamadriz/friendly-snippets",
 		},
 	})
-	-- cmp plugins
-	-- use("hrsh7th/cmp-path")
-	-- use("hrsh7th/cmp-cmdline")
-	-- use("hrsh7th/cmp-nvim-lua")
-	-- use("saadparwaiz1/cmp_luasnip")
-	-- use("tjdevries/complextras.nvim")
-	-- LSP
-	-- use("hrsh7th/cmp-nvim-lsp")
-	-- use("onsails/lspkind.nvim")
-	-- use("nvim-lua/lsp_extensions.nvim")
-	-- use("hrsh7th/cmp-buffer")
-	-- use("hrsh7th/nvim-cmp")
-	-- use({ "tzachar/cmp-tabnine", run = "./install.sh", requires = "hrsh7th/nvim-cmp" })
-	-- use("simrat39/symbols-outline.nvim")
-	-- use({
-	-- 	"ericpubu/lsp_codelens_extensions.nvim",
-	-- 	config = function()
-	-- 		require("codelens_extensions").setup()
-	-- 	end,
-	-- })
-	-- code formatting and documentation
-	use("milisims/nvim-luaref")
-	use({
-		"numToStr/Comment.nvim",
-		config = function()
-			require("Comment").setup()
-		end,
-	})
+
 	-- Telescope
 	use({ "nvim-telescope/telescope.nvim", branch = "0.1.x", requires = { "nvim-lua/plenary.nvim" } })
 	use("nvim-telescope/telescope-fzy-native.nvim")
@@ -174,6 +111,7 @@ return packer.startup(function(use)
 	-- use("nvim-telescope/telescope-cheat.nvim")
 	-- use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({ "dhruvmanila/telescope-bookmarks.nvim" })
+
 	-- Treesitter
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/playground")
@@ -185,7 +123,6 @@ return packer.startup(function(use)
 	-- MISC
 	use("LnL7/vim-nix")
 	use("tyru/open-browser.vim")
-	use("ThePrimeagen/harpoon")
 	-- use("ThePrimeagen/vim-be-good")
 	-- low level stuff
 	-- use("p00f/godbolt.nvim")
@@ -202,60 +139,15 @@ return packer.startup(function(use)
 	use("rcarriga/nvim-dap-ui")
 	use("theHamsta/nvim-dap-virtual-text")
 	use("bfredl/nvim-luadev")
-	use({ "ray-x/lsp_signature.nvim" })
 	use("onsails/diaglist.nvim")
 	use("ii14/nrepl.nvim")
-	use("lewis6991/impatient.nvim")
 	use({ "folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim" })
 	use("nathom/filetype.nvim")
-	-- use("mfussenegger/nvim-treehopper")
-	-- use("phaazon/hop.nvim")
-	use({
-		"phaazon/hop.nvim",
-		branch = "v2", -- optional but strongly recommended
-	})
-
 	-- sql dev
 	use("nanotee/sqls.nvim")
 	use("tpope/vim-dadbod")
 	use("kristijanhusak/vim-dadbod-ui")
 	use("kristijanhusak/vim-dadbod-completion")
-
-	-- use("dhruvasagar/vim-table-mode")
-	-- use("preservim/tagbar")
-	-- use("norcalli/nvim-colorizer.lua")
-	-- use({
-	-- 	"andrewferrier/wrapping.nvim",
-	-- 	config = function()
-	-- 		require("wrapping").setup()
-	-- 	end,
-	-- })
-	-- use("img-paste-devs/img-paste.vim")
-
-	-- use({
-	-- 	"klen/nvim-test",
-	-- 	config = function()
-	-- 		require("nvim-test").setup({
-	-- 			commands_create = true, -- create commands (TestFile, TestLast, ...)
-	-- 			silent = false, -- less notifications
-	-- 			run = true, -- run test commands
-	-- 			term = "terminal", -- a terminal to run (terminal|toggleterm)
-	-- 			termOpts = {
-	-- 				direction = "vertical", -- terminal's direction (horizontal|vertical|float)
-	-- 				width = 86, -- terminal's width (for vertical|float)
-	-- 				height = 24, -- terminal's height (for horizontal|float)
-	-- 				go_back = false, -- return focus to original window after executing
-	-- 				stopinsert = false, -- exit from insert mode
-	-- 			},
-	-- 			runners = { -- setup test runners, only using for JS. Currently, doesn't add value to Rust workflow 17-Feb-2022
-	-- 				javascript = "nvim-test.runners.jest",
-	-- 				lua = "nvim-test.runners.busted",
-	-- 				-- rust = "nvim-test.runners.cargo-test",
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- })
-
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
 	end

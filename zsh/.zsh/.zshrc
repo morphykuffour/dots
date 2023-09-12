@@ -342,12 +342,8 @@ mkd() {
   fi
 }
 
-# change_background() {
-#     ls $HOME/Dropbox/Pictures/wallpapers | fzf --preview="feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}" | xargs -I {} feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}
-# }
-
 change_background() {
-    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
+    feh --randomize --bg-scale --no-xinerama $HOME/iCloud/Pictures/wallpapers/$(ls $HOME/iCloud/Pictures/wallpapers | fzf --preview 'sxiv {}')
 }
 
 #Enhanced rm
