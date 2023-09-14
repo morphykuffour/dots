@@ -4,18 +4,17 @@
 
 -- Personal settings
 vim.g.mapleader = " "
-vim.g.maplocalleader = " " vim.g.snippets = "luasnip"
+vim.g.maplocalleader = " "
+vim.g.snippets = "luasnip"
 require("morpheus.utils")
 Jcall(require, "morpheus/plugins")
 Jcall(require, "morpheus/keymaps")
--- Jcall(require, "morpheus/hop")
 -- require("morpheus.lsp")
 Jcall(require, "morpheus/telescope")
 
 -- Themes
-vim.cmd("colorscheme darkplus")
--- vim.cmd("colorscheme gruvbox")
--- vim.cmd("colorscheme github_dark_default")
+-- vim.cmd("colorscheme darkplus")
+vim.cmd("colorscheme gruvbox")
 
 vim.g.loaded_python_provider = 0 -- disable python2
 vim.g.python3_host_prog = "/usr/bin/python3"
