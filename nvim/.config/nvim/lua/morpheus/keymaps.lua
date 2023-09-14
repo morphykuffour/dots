@@ -167,8 +167,8 @@ map_tele("<space>bs", "anime_selector")
 -- m.nmap("<c-f>", "<cmd>Telescope find_files hidden=true<CR>")
 
 -- Git
-m.nmap("<leader>gg", ":Neogit <CR>")
-m.nmap("<leader>gd", ":DiffviewOpen<CR>")
+-- m.nmap("<leader>gg", ":Neogit <CR>")
+-- m.nmap("<leader>gd", ":DiffviewOpen<CR>")
 
 m.nmap("<leader>cls", "<cmd>SymbolsOutline<cr>")
 
@@ -403,23 +403,23 @@ autocmd("FileType", {
 	command = "startinsert | 1",
 })
 
-require("git-conflict").setup({
-	default_mappings = true,
-	disable_diagnostics = false,
-	highlights = {
-		incoming = "DiffText",
-		current = "DiffAdd",
-	},
-})
+-- require("git-conflict").setup({
+-- 	default_mappings = true,
+-- 	disable_diagnostics = false,
+-- 	highlights = {
+-- 		incoming = "DiffText",
+-- 		current = "DiffAdd",
+-- 	},
+-- })
 
-require("neogit").setup({
-	disable_commit_confirmation = true,
-	disable_insert_on_commit = false,
-	integrations = {
-		diffview = true,
-	},
-})
-keymap("n", "<leader>gg", "<cmd>lua require('neogit').open({ kind = 'split' })<cr>")
+-- require("neogit").setup({
+-- 	disable_commit_confirmation = true,
+-- 	disable_insert_on_commit = false,
+-- 	integrations = {
+-- 		diffview = true,
+-- 	},
+-- })
+-- keymap("n", "<leader>gg", "<cmd>lua require('neogit').open({ kind = 'split' })<cr>")
 keymap("n", "<leader>gd", "<cmd> DiffviewOpen<CR>")
 keymap("n", "<leader>cls", "<cmd>SymbolsOutline<cr>")
 
