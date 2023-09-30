@@ -62,16 +62,6 @@ function _G.ReloadConfig()
 	end
 end
 
--- function _G.CopyBufferName()
--- 	vim.cmd("echo expand('%:p')")
--- 	vim.cmd("let @+ = expand('%:p')")
--- 	vim.cmd('echo "Full path of " . expand(\'%:t\') . " was copied to system clipboard"')
--- end
-
--- function _G.Diary_entry()
---    vim.cmd(string.format(':85vnew ~/iCloud/notes/note-%s.md', os.date "%y_%m_%d"))
--- end
-
 function get_visual_selection()
 	-- this will exit visual mode
 	-- use 'gv' to reselect the text
