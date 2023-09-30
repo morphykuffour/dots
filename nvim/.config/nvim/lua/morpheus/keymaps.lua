@@ -419,7 +419,7 @@ autocmd("FileType", {
 -- 		diffview = true,
 -- 	},
 -- })
--- keymap("n", "<leader>gg", "<cmd>lua require('neogit').open({ kind = 'split' })<cr>")
+keymap("n", "<leader>gg", "<cmd>lua require('neogit').open({ kind = 'split' })<cr>")
 keymap("n", "<leader>gd", "<cmd> DiffviewOpen<CR>")
 keymap("n", "<leader>cls", "<cmd>SymbolsOutline<cr>")
 
@@ -437,3 +437,8 @@ keymap("v", "gx", "<Plug>(openbrowser-smart-search)<cr>")
 
 -- Remove all trailing whitespace by pressing F5
 keymap("n", "<F12>", ":let _s=@/<Bar>:%s/s+$//e<Bar>:let @/=_s<Bar><CR>")
+
+-- writing
+keymap("n", "<leader>wd", function()
+	vim.cmd(string.format(":85vnew ~/iCloud/zettelkasten/notes/note-%s.md", os.date("%y-%m-%d")))
+end, { desc = "[/de] notes]", noremap = true })
