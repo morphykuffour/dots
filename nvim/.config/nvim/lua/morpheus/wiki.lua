@@ -1,7 +1,7 @@
 local wiki = {}
 
 wiki.make_diary_entry = function()
-	vim.cmd(string.format(":85vnew ~/iCloud/notes/note-%s.md", os.date("%y_%m_%d")))
+	vim.cmd(string.format(":85vnew ~/iCloud/zettelkasten/notes/note-%s.md", os.date("%y_%m_%d")))
 end
 
 wiki.make_todo = function()
