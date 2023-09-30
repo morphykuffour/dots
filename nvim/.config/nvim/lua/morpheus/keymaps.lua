@@ -440,5 +440,5 @@ keymap("n", "<F12>", ":let _s=@/<Bar>:%s/s+$//e<Bar>:let @/=_s<Bar><CR>")
 
 -- writing
 keymap("n", "<leader>wd", function()
-	vim.cmd(string.format(":85vnew ~/iCloud/zettelkasten/notes/note-%s.md", os.date("%y-%m-%d")))
+	vim.cmd(string.format(":85vnew ~/iCloud/zettelkasten/notes/note-%s.md", os.date("%Y-%m-%d")))
 end, { desc = "[/de] notes]", noremap = true })
