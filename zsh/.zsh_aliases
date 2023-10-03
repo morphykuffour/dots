@@ -2,7 +2,8 @@
 
 # Easier navigation: .., ..., ~ and -
 alias dots="cd ~/dots"
-alias cdn="cd ~/nix"
+alias jorg="cd ~/Org"
+alias jnix="cd ~/nix"
 # alias open="xdg-open"
 # alias o="open"
 alias ls="exa"
