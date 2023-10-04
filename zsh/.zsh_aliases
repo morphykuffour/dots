@@ -6,7 +6,7 @@ alias jorg="cd ~/Org"
 alias jnix="cd ~/nix"
 # alias open="xdg-open"
 # alias o="open"
-alias ls="exa"
+# alias ls="exa"
 alias cd..="cd .."
 alias ..="cd .."
 alias ...="cd ../.."
@@ -122,7 +122,6 @@ alias cp='cp -v'
 alias mv='mv -iv'
 alias xclip='xclip -selection c'
 command -v vim > /dev/null && alias vi='vim'
-alias ls='exa'
 alias cat='bat'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
