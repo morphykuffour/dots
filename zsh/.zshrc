@@ -155,7 +155,7 @@ bindkey ' ' magic-space
 
 # ls after cd
 chpwd() {
-    ls
+    exa
 }
 
 # alias xcd=ii'cd "$(xplr --print-pwd-as-result)"'
