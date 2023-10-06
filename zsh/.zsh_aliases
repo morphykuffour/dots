@@ -5,8 +5,8 @@ alias dots="cd ~/dots"
 alias jorg="cd ~/Org"
 alias jnix="cd ~/nix"
 # alias open="xdg-open"
-# alias o="open"
-# alias ls="exa"
+alias o="open"
+alias ls="exa"
 alias cd..="cd .."
 alias ..="cd .."
 alias ...="cd ../.."
@@ -39,14 +39,14 @@ alias rm='rm -i'
 alias df='df -h'                          # human-readable sizes
 alias free='free -m'                      # show sizes in MB
 
-# get top process eating memory
-alias psmem='ps auxf | sort -nr -k 4 | head -5'
-
-# get top process eating cpu ##
-alias pscpu='ps auxf | sort -nr -k 3 | head -5'
-
-# systemd
-alias list_systemctl="systemctl list-unit-files --state=enabled"
+# # get top process eating memory
+# alias psmem='ps auxf | sort -nr -k 4 | head -5'
+#
+# # get top process eating cpu ##
+# alias pscpu='ps auxf | sort -nr -k 3 | head -5'
+#
+# # systemd
+# alias list_systemctl="systemctl list-unit-files --state=enabled"
 
 # Set personal aliases
 alias dots="cd $HOME/dots"
