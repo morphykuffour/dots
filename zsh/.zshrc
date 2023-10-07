@@ -474,3 +474,6 @@ export MCFLY_KEY_SCHEME=vim
 # bindkey '^r' _atuin_search_widget
 # bindkey '^[[A' _atuin_search_widget
 # bindkey '^[OA' _atuin_search_widget
+
+# opam configuration
+[[ ! -r /Users/user/.opam/opam-init/init.zsh ]] || source /Users/user/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
