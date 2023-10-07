@@ -51,13 +51,43 @@ end
 
 --  LSP and Completion
 local servers = {
-  -- clangd = {},
+   clangd = {
+    cmd = {
+      "clangd",
+      "--background-index",
+      "--suggest-missing-includes",
+      "--clang-tidy",
+      "--header-insertion=iwyu",
+    },
+    init_options = {
+      clangdFileStatus = true,
+    },
+    filetypes = {
+      "c",
+    },
+  },
+  -- nix language server
+  nil_ls = true,
+
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
+  -- ocaml language server
+    ocamllsp = {
+    -- cmd = {},
+    settings = {
+      codelens = { enable = true },
+    },
+
+    get_language_id = function(_, ftype)
+      return ftype
+    end,
+  },
+
+  -- lua language server
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
