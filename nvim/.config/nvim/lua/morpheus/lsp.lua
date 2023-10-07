@@ -51,7 +51,7 @@ end
 
 --  LSP and Completion
 local servers = {
-   clangd = {
+  clangd = {
     cmd = {
       "clangd",
       "--background-index",
@@ -76,7 +76,7 @@ local servers = {
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   -- ocaml language server
-    ocamllsp = {
+  ocamllsp = {
     -- cmd = {},
     settings = {
       codelens = { enable = true },
