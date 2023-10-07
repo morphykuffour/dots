@@ -67,7 +67,7 @@ local servers = {
     },
   },
   -- nix language server
-  nil_ls = true,
+  -- nil_ls = true,
 
   -- gopls = {},
   -- pyright = {},
