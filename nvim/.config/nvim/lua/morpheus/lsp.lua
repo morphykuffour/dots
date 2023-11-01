@@ -76,16 +76,16 @@ local servers = {
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   -- ocaml language server
-  ocamllsp = {
-    -- cmd = {},
-    settings = {
-      codelens = { enable = true },
-    },
-
-    get_language_id = function(_, ftype)
-      return ftype
-    end,
-  },
+  --   ocamllsp = {
+  --   -- cmd = {},
+  --   settings = {
+  --     codelens = { enable = true },
+  --   },
+  --
+  --   get_language_id = function(_, ftype)
+  --     return ftype
+  --   end,
+  -- },
 
   -- lua language server
   lua_ls = {
