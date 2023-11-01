@@ -17,6 +17,13 @@ function vif() {
     nvim "$fname"
     cd $current_dir
 }
+
+# vim to go line
+function vgol ()
+{
+    rg --vimgrep $1 | nvim -q /dev/stdin
+}
+
 # https://jdhao.github.io/2019/06/13/zsh_bind_keys/
 bindkey -s '^p' 'vif^M'
 
