@@ -153,7 +153,7 @@ mkd() {
 # }
 
 change_background() {
-    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(realpath $HOME/Pictures/wallpapers/* | fzf --preview 'sxiv {}')
+    feh --randomize --bg-scale --no-xinerama $HOME/iCloud/Pictures/wallpapers/$(realpath $HOME/iCloud/Pictures/wallpapers/* | fzf --preview 'sxiv {}')
 }
 
 #Enhanced rm
