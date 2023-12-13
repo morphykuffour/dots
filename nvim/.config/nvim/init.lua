@@ -23,6 +23,9 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
+  
+  -- quickfix window
+  'kevinhwang91/nvim-bqf',
 
   -- Startify
   'mhinz/vim-startify',
@@ -185,7 +188,6 @@ require 'morpheus.keymaps'
 require 'morpheus.cmp'
 require 'morpheus.lsp'
 require 'morpheus.wiki'
-
 
 -- Set highlight on search
 vim.o.hlsearch = false
