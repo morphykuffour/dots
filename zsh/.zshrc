@@ -116,8 +116,6 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 autoload edit-command-line
 zle -N edit-command-line
 
-# bindkey -s '^o' 'nvim $(fzf)^M'
-# bindkey -s '^o' "rcd\n"
 
 export VI_MODE_SET_CURSOR=true
 
@@ -286,21 +284,34 @@ zsh_add_plugin() {
 }
 
 # ranger change dir
-ranger-cd() {
+# ranger-cd() {
+#     tmp="$(mktemp)"
+#     ranger --choosedir="$tmp" "$@"
+#     if [ -f "$tmp" ]; then
+#         dir="$(cat "$tmp")"
+#         rm -f "$tmp"
+#         if [ -d "$dir" ]; then
+#             if [ "$dir" != "$(pwd)" ]; then
+#                 cd "$dir"
+#             fi
+#         fi
+#     fi
+# }
+# alias rcd=ranger-cd
+# USE LF TO SWITCH DIRECTORIES AND BIND IT TO CTRL-O
+lfcd () {
     tmp="$(mktemp)"
-    ranger --choosedir="$tmp" "$@"
+    lf -last-dir-path="$tmp" "$@"
     if [ -f "$tmp" ]; then
         dir="$(cat "$tmp")"
         rm -f "$tmp"
-        if [ -d "$dir" ]; then
-            if [ "$dir" != "$(pwd)" ]; then
-                cd "$dir"
-            fi
-        fi
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
     fi
 }
-alias rcd=ranger-cd
-bindkey -s '^O' "rcd\n"
+bindkey -s '^o' 'lfcd\n'
+# bindkey -s '^O' "lf\n"
+# bindkey -s '^o' 'nvim $(fzf)^M'
+# bindkey -s '^o' "rcd\n"
 
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then
