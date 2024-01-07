@@ -18,14 +18,14 @@ function vif() {
     cd $current_dir
 }
 
+# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
+bindkey -s '^p' 'vif^M'
+
 # vim to go line
 function vgol ()
 {
     rg --vimgrep $1 | nvim -q /dev/stdin
 }
-
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
-bindkey -s '^p' 'vif^M'
 
 function vao() {
     fname=$(fzf --preview 'bat {} ') || return
@@ -92,20 +92,22 @@ zsh_add_plugin() {
 }
 
 # ranger change dir
-ranger-cd() {
-    tmp="$(mktemp)"
-    ranger --choosedir="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        if [ -d "$dir" ]; then
-            if [ "$dir" != "$(pwd)" ]; then
-                cd "$dir"
-            fi
-        fi
-    fi
-}
-alias rcd=ranger-cd
+# ranger-cd() {
+#     tmp="$(mktemp)"
+#     ranger --choosedir="$tmp" "$@"
+#     if [ -f "$tmp" ]; then
+#         dir="$(cat "$tmp")"
+#         rm -f "$tmp"
+#         if [ -d "$dir" ]; then
+#             if [ "$dir" != "$(pwd)" ]; then
+#                 cd "$dir"
+#             fi
+#         fi
+#     fi
+# }
+# alias rcd=ranger-cd
+# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
+bindkey -s '^o' 'lf^M'
 
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then
