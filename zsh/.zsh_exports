@@ -48,8 +48,8 @@ export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 export LESSHISTFILE=-
 export QMK_HOME="$HOME/.qmk_firmware"
 export GEM_HOME="$HOME/.local/share/gem/ruby/2.7.0"
-export QMK_HOME="/home/morp/.qmk_firmware"
-export GEM_HOME="/home/morp/.local/share/gem/ruby/2.7.0"
+# export QMK_HOME="/home/morp/.qmk_firmware"
+# export GEM_HOME="/home/morp/.local/share/gem/ruby/2.7.0"
 export ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 export LESSHISTFILE=-
 export MCFLY_KEY_SCHEME=vim
@@ -82,3 +82,5 @@ typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 # nix
 export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
 
+# emacs
+ export INSIDE_EMACS=t 
