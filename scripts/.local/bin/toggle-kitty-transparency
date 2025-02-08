@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+kitty_path="$HOME/dots/kitty/.config/kitty/kitty.conf"  # Expand home directory properly
+
+# Detect if using macOS (BSD sed) or Linux (GNU sed)
+if sed --version 2>/dev/null | grep -q "GNU"; then
+    SED_CMD="sed -i"
+else
+    SED_CMD="sed -i ''"
+fi
+
+if grep -q 'background_opacity 0.7' "$kitty_path"; then
+    $SED_CMD 's/background_opacity 0.7/background_opacity 1/g' "$kitty_path"
+    echo "Done! Reload kitty config!"
+elif grep -q 'background_opacity 1' "$kitty_path"; then
+    $SED_CMD 's/background_opacity 1/background_opacity 0.7/g' "$kitty_path"
+    echo "Done! Reload kitty config!"
+else
+    echo "There's no background_opacity present in the current kitty theme..."
+fi
