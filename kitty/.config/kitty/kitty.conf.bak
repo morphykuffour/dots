@@ -9,9 +9,11 @@ include ./config/window.conf
 include ./config/shell.conf
 include ./config/tweaks.conf
 include ./config/mappings.conf
-# background_opacity 0.5
+
+background_opacity 0.9
+
 # BEGIN_KITTY_THEME
-# Brogrammer
+# Gruvbox Dark
 include current-theme.conf
 # END_KITTY_THEME
 
