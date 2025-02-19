@@ -256,3 +256,12 @@ autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+  pattern = "*",
+  callback = function()
+    local mode = vim.fn.mode()
+    vim.fn.system(string.format("echo '%s' > /tmp/vim_mode", mode))
+  end,
+})
+
