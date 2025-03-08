@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+git rm --cached tmux/.tmux/plugins/tmux-modal
+git rm --cached tmux/.tmux/plugins/tmux-open
+git rm --cached tmux/.tmux/plugins/tmux-yank
+git rm --cached tmux/.tmux/plugins/tmux-resurrect
+git rm --cached zsh/.zsh/plugins/fast-syntax-highlighting
+git rm --cached zsh/.zsh/plugins/fzf-gems
+git rm --cached zsh/.zsh/plugins/git-flow-completion
+git rm --cached zsh/.zsh/plugins/zsh-autosuggestions
+git rm --cached zsh/.zsh/plugins/zsh-histdb
+git rm --cached zsh/.zsh/plugins/zsh-pandoc-completion
+git rm --cached zsh/.zsh/plugins/zsh-system-clipboard
+git rm --cached zsh/.zsh/plugins/zshmarks
+
+git submodule status
