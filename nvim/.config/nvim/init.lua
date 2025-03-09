@@ -192,6 +192,7 @@ require 'morpheus.keymaps'
 require 'morpheus.cmp'
 require 'morpheus.lsp'
 require 'morpheus.wiki'
+require('Comment').setup()
 
 -- Set highlight on search
 vim.o.hlsearch = false
