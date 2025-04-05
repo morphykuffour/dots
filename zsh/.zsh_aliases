@@ -59,7 +59,7 @@ alias python='python3'
 alias py="python3"
 alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 alias weather='curl wttr.in'
-alias bat="\bat"
+# alias bat="\bat"
 alias lsb="lsb_release -a"
 alias nvdir="cd $HOME/.config/nvim"
 # alias lua="lua5.4"
@@ -122,7 +122,7 @@ alias cp='cp -v'
 alias mv='mv -iv'
 alias xclip='xclip -selection c'
 command -v vim > /dev/null && alias vi='vim'
-alias cat='bat'
+# alias cat='bat'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -131,11 +131,11 @@ alias ip='ip --color=auto'
 alias ll='ls -la'
 alias la='ls -a'
 alias l='ls -F'
-alias bat='bat --theme=ansi' && \
-alias cat='bat --pager=never' && \
+# alias bat='bat --theme=ansi' && \
+# alias cat='bat --pager=never' && \
 alias less='bat'
 alias batcat='bat --theme=ansi' && \
-alias cat='bat --pager=never' && \
+# alias cat='bat --pager=never' && \
 alias less='batcat'
 alias m='make'
 alias news='newsboat'
