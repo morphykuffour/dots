@@ -535,3 +535,12 @@ function conda-shell {
     nix-shell ~/.conda-shell.nix
 }
 
+# Set brightness of external display
+# Reference material for https://youtu.be/_Vy7m-LhGEc episode
+function b() {
+  if [ -z "$1" ] || [ "$1" = "--help" ]; then
+    printf "%s\n" "Usage: b integer"
+    return 0
+  fi
+  m1ddc set luminance $1 > /dev/null
+}
