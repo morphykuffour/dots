@@ -1,0 +1,98 @@
+{
+	"name": "Vimium C",
+	"@time": "10/8/2025, 8:27:46 PM",
+	"time": 1759969666632,
+	"environment": {
+		"extension": "2.12.2",
+		"platform": "mac",
+		"chromium": 141
+	},
+	"exclusionRules": [
+		{
+			"passKeys": "",
+			"pattern": ":https://leetcode.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://config.qmk.fm/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://config.qmk.fm/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://type-fu.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://github.dev/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.keybr.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://monkeytype.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://pwn.college/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://gnusenpai.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.colemak.academy/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://10fastfingers.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.overleaf.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://github.dev/"
+		},
+		{
+			"passKeys": "# / ? c d e g i j k l l n p r s u x ",
+			"pattern": ":https://mail.google.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://vportal.procore.prod/"
+		}
+	],
+	"keyMappings": [
+		"#!no-check",
+		"# Move current tab to new window ",
+		"map W moveTabToNewWindow",
+		"# Make a current tab zoom in ",
+		"map z zoomIn",
+		"",
+		"# Make a current tab zoom out ",
+		"map Z zoomOut",
+		"",
+		"# Make a current tab zoom reset to 100%",
+		"map = zoomReset",
+		"",
+		"map f LinkHints.activate newtab=\"window\"",
+		"# map xxx LinkHints.activateXXXXXX newtab=\"window\"",
+		"",
+		"map o Vomnibar.activateInNewTab clickLike",
+		"mapKey <enter:o> <s-enter>",
+		"",
+		"run <v-nw> $s#reuse=\"new-wnd\" mask",
+		"#run t nw createTab",
+		"run P nw openCopiedUrlInNewTab",
+		"# run xxx nw openXXXXX",
+		""
+	],
+	"showAdvancedCommands": false
+}
