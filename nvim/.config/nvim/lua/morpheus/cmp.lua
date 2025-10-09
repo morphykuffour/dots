@@ -1,26 +1,67 @@
--- [[ Configure nvim-cmp ]]
--- See `:help cmp`
-local cmp = require 'cmp'
+-- [[ Configure blink.cmp ]]
+-- Completely replace nvim-cmp with blink.cmp
+
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
-cmp.setup {
+-- Initialize blink.cmp with minimal supported options
+local blink = require('blink.cmp')
+
+-- Configure blink.cmp with minimal verified options
+blink.setup({
+  -- Basic configuration
+  fuzzy = {
+    implementation = 'lua'
+  }
+})
+
+-- We still need a basic cmp configuration
+local cmp = require('cmp')
+cmp.setup({
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
   },
-  mapping = cmp.mapping.preset.insert {
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+  },
+  -- Use blink's formatting
+  formatting = {
+    format = blink.format,
+  },
+  -- Use minimal UI settings to avoid conflicts
+  completion = {
+    completeopt = 'menu,menuone,noinsert',
+  },
+  -- Use a more minimal UI
+  window = {
+    -- Disable documentation window
+    documentation = false,
+    -- Disable scrollbar in completion window
+    completion = {
+      scrollbar = false
+    }
+  },
+  view = {
+    entries = { name = 'custom', selection_order = 'near_cursor' }
+  },
+  experimental = {
+    ghost_text = false
+  },
+  -- Define key mappings
+  mapping = {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<CR>'] = cmp.mapping.confirm({ 
       behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
+      select = true 
+    }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -40,8 +81,20 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
-}
+})
+
+-- Disable the default nvim-cmp UI completely for insert mode
+cmp.setup.cmdline('/', {
+  enabled = false,
+})
+cmp.setup.cmdline(':', {
+  enabled = false,
+})
+
+-- Update LSP capabilities
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+-- Make capabilities available to the LSP setup
+if vim.g.lsp_capabilities == nil then
+  vim.g.lsp_capabilities = capabilities
+end

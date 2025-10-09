@@ -10,10 +10,10 @@ include ./config/shell.conf
 include ./config/tweaks.conf
 include ./config/mappings.conf
 
-background_opacity 0.9
+background_opacity 1
 
 # BEGIN_KITTY_THEME
-# Gruvbox Dark
+# Default
 include current-theme.conf
 # END_KITTY_THEME
 
