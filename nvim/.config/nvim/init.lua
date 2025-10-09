@@ -23,7 +23,10 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
-  
+
+  -- comment
+  'tpope/vim-commentary',
+
   -- quickfix window
   'kevinhwang91/nvim-bqf',
 
@@ -46,22 +49,22 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     opts = function(_, opts)
       local nls = require("null-ls")
       if type(opts.sources) == "table" then
-          vim.list_extend(opts.sources, {
-              nls.builtins.code_actions.statix,
-              nls.builtins.formatting.alejandra,
-              nls.builtins.diagnostics.deadnix,
-          })
+        vim.list_extend(opts.sources, {
+          nls.builtins.code_actions.statix,
+          nls.builtins.formatting.alejandra,
+          nls.builtins.diagnostics.deadnix,
+        })
       end
     end,
   },
@@ -78,6 +81,9 @@ require('lazy').setup({
 
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
+      
+      -- Add blink.cmp for blinking completion items
+      'Saghen/blink.cmp',
     },
   },
 
@@ -98,16 +104,16 @@ require('lazy').setup({
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
-        vim.keymap.set({'n', 'v'}, ']c', function()
+        vim.keymap.set({ 'n', 'v' }, ']c', function()
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to next hunk"})
-        vim.keymap.set({'n', 'v'}, '[c', function()
+        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+        vim.keymap.set({ 'n', 'v' }, '[c', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
+        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
       end,
     },
   },
@@ -179,6 +185,15 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+
+  -- local plugins
+  {
+    dir = '~/tmp/lookup.nvim',
+    dependencies = {
+      "nvim-lua/plenary.nvim",         -- required
+    },
+  },
+
 }, {})
 
 require 'morpheus.plugins.autoformat'
@@ -266,3 +281,9 @@ vim.api.nvim_create_autocmd("ModeChanged", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "nix",
+  callback = function()
+    vim.bo.commentstring = "# %s"
+  end,
+})

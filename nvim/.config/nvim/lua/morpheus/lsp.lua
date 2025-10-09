@@ -67,8 +67,11 @@ local servers = {
     },
   },
   -- nix language server
-  -- nil_ls = true,
-
+  nil_ls = {},
+  
+  -- bash language server
+  bashls = {},
+  
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
@@ -99,9 +102,12 @@ local servers = {
 -- Setup neovim lua configuration
 require('neodev').setup()
 
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- nvim-cmp supports additional completion capabilities
+-- Check if global capabilities are set by cmp module
+local capabilities = vim.g.lsp_capabilities or vim.lsp.protocol.make_client_capabilities()
+if not vim.g.lsp_capabilities then
+  capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+end
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
