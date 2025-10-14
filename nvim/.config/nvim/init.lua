@@ -187,12 +187,12 @@ require('lazy').setup({
   },
 
   -- local plugins
-  {
-    dir = '~/tmp/lookup.nvim',
-    dependencies = {
-      "nvim-lua/plenary.nvim",         -- required
-    },
-  },
+  -- {
+  --   dir = '~/tmp/lookup.nvim',
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",         -- required
+  --   },
+  -- },
 
 }, {})
 
