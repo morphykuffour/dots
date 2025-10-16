@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+# Exit immediately on errors, unset variables, or failed pipes
+set -euo pipefail
+
+# Define history file paths
+HIST_FILE="$HOME/.zsh_history"
+BAD_HIST_FILE="$HOME/.zsh_history_bad"
+BACKUP_FILE="${HIST_FILE}.bak.$(date +%Y%m%d%H%M%S)"
+
+# Function for error handling
+error_exit() {
+  print "Error: $1" >&2
+  exit 1
+}
+
+# Check if history file exists
+if [[ ! -f "$HIST_FILE" ]]; then
+  error_exit "No ~/.zsh_history file found."
+fi
+
+# Backup the current history file
+cp "$HIST_FILE" "$BACKUP_FILE" || error_exit "Failed to create backup at $BACKUP_FILE"
+
+# Move to .zsh_history_bad safely
+mv "$HIST_FILE" "$BAD_HIST_FILE" || error_exit "Failed to rename history file."
+
+# Use 'strings' to filter human-readable content
+if ! strings "$BAD_HIST_FILE" > "$HIST_FILE"; then
+  mv "$BACKUP_FILE" "$HIST_FILE"
+  error_exit "Failed to clean history file, restored from backup."
+fi
+
+# Reload the cleaned history into the current shell
+fc -R "$HIST_FILE" || error_exit "fc command failed. Verify zsh environment."
+
+# Cleanup temporary file
+rm -f "$BAD_HIST_FILE"
+
+print "History file sanitized and reloaded successfully. Backup stored at $BACKUP_FILE"
+
