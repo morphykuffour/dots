@@ -1,7 +1,7 @@
 {
 	"name": "Vimium C",
-	"@time": "10/8/2025, 8:27:46 PM",
-	"time": 1759969666632,
+	"@time": "10/20/2025, 9:24:22 PM",
+	"time": 1761009862328,
 	"environment": {
 		"extension": "2.12.2",
 		"platform": "mac",
@@ -88,11 +88,13 @@
 		"map o Vomnibar.activateInNewTab clickLike",
 		"mapKey <enter:o> <s-enter>",
 		"",
+		"# open image in new tab",
+		"map xx LinkHints.activateOpenImage",
+		"",
 		"run <v-nw> $s#reuse=\"new-wnd\" mask",
 		"#run t nw createTab",
 		"run P nw openCopiedUrlInNewTab",
 		"# run xxx nw openXXXXX",
 		""
-	],
-	"showAdvancedCommands": false
+	]
 }
