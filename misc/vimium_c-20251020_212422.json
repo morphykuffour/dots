@@ -89,7 +89,7 @@
 		"mapKey <enter:o> <s-enter>",
 		"",
 		"# open image in new tab",
-		"map xx LinkHints.activateOpenImage",
+		"map sx LinkHints.activateOpenImage",
 		"",
 		"run <v-nw> $s#reuse=\"new-wnd\" mask",
 		"#run t nw createTab",
