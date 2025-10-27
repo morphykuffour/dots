@@ -7,7 +7,7 @@
 
 [core]
     editor = nvim
-    pager = delta --line-numbers
+    pager = delta
 
 
 [pull]
@@ -24,9 +24,16 @@
 
 [delta]
     features = decorations
-    side-by-side = true
+	side-by-side = true
     line-numbers-left-format = ""
     line-numbers-right-format = "│ "
+	navigate = true
+	light = false
+	line-numbers = true
+	syntax-theme = gruvbox-dark
+	file-style = bold yellow ul
+	file-decoration-style = none
+	hunk-header-style = file line-number syntax
 [delta "interactive"]
     keep-plus-minus-markers = false
 
@@ -40,3 +47,11 @@
     hunk-header-style = file line-number syntax
 [init]
 	defaultBranch = main
+[merge]
+	tool = nvimdiff
+	conflictstyle = diff3
+[mergetool "nvimdiff"]
+	cmd = nvim -d $LOCAL $REMOTE $MERGED -c \"$wincmd w\" -c \"wincmd J\"
+[diff]
+	tool = nvimdiff
+	colorMoved = default
