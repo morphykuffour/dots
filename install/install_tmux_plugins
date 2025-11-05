@@ -5,3 +5,4 @@ git clone https://github.com/tmux-plugins/tmux-resurrect.git $HOME/.tmux/plugins
 git clone https://github.com/tmux-plugins/tmux-yank.git $HOME/.tmux/plugins/tmux-yank
 git clone https://github.com/tmux-plugins/tmux-open.git $HOME/.tmux/plugins/tmux-open
 git clone https://github.com/whame/tmux-modal.git $HOME/.tmux/plugins/tmux-modal
+git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
