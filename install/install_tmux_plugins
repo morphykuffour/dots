@@ -1,8 +1,86 @@
 #!/usr/bin/env bash
 
-git clone https://github.com/tmux-plugins/tmux-open.git $HOME/.tmux/plugins/tmux-open
-git clone https://github.com/tmux-plugins/tmux-resurrect.git $HOME/.tmux/plugins/tmux-resurrect
-git clone https://github.com/tmux-plugins/tmux-yank.git $HOME/.tmux/plugins/tmux-yank
-git clone https://github.com/tmux-plugins/tmux-open.git $HOME/.tmux/plugins/tmux-open
-git clone https://github.com/whame/tmux-modal.git $HOME/.tmux/plugins/tmux-modal
-git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+set -euo pipefail
+
+mkdir -p "$HOME/.tmux/plugins"
+
+# Dependencies needed by SessionX
+install_deps() {
+  case "$(uname -s)" in
+    Darwin)
+      if command -v brew >/dev/null 2>&1; then
+        # fzf provides fzf-tmux script
+        brew list fzf >/dev/null 2>&1 || brew install fzf
+        brew list bat >/dev/null 2>&1 || brew install bat
+      else
+        echo "Homebrew not found. Install Homebrew from https://brew.sh then re-run this script." >&2
+      fi
+      ;;
+    Linux)
+      # Best-effort for common distros; adjust to your package manager if needed
+      if command -v apt >/dev/null 2>&1; then
+        sudo apt update -y
+        sudo apt install -y fzf bat ripgrep
+      elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y fzf bat ripgrep
+      elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -S --noconfirm fzf bat ripgrep
+      else
+        echo "Please install fzf (includes fzf-tmux) and bat with your package manager." >&2
+      fi
+      ;;
+    *)
+      echo "Unknown OS. Please install fzf (includes fzf-tmux) and bat manually." >&2
+      ;;
+  esac
+}
+
+install_deps
+
+# Create convenience symlinks if binaries differ on some distros
+mkdir -p "$HOME/.local/bin"
+# Debian/Ubuntu sometimes ships bat as 'batcat'
+if ! command -v bat >/dev/null 2>&1 && command -v batcat >/dev/null 2>&1; then
+  ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
+fi
+# Ensure fzf-tmux is reachable if installed in non-standard location
+if ! command -v fzf-tmux >/dev/null 2>&1; then
+  if [ -x "$(brew --prefix 2>/dev/null)/opt/fzf/bin/fzf-tmux" ]; then
+    ln -sf "$(brew --prefix)/opt/fzf/bin/fzf-tmux" "$HOME/.local/bin/fzf-tmux"
+  elif [ -x "/usr/share/doc/fzf/examples/fzf-tmux" ]; then
+    ln -sf "/usr/share/doc/fzf/examples/fzf-tmux" "$HOME/.local/bin/fzf-tmux"
+  fi
+fi
+
+# Core: TPM
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+
+# Essentials
+if [ ! -d "$HOME/.tmux/plugins/tmux-open" ]; then
+  git clone https://github.com/tmux-plugins/tmux-open.git "$HOME/.tmux/plugins/tmux-open"
+fi
+if [ ! -d "$HOME/.tmux/plugins/tmux-yank" ]; then
+  git clone https://github.com/tmux-plugins/tmux-yank.git "$HOME/.tmux/plugins/tmux-yank"
+fi
+
+# New session manager (replaces tmux-resurrect/continuum)
+if [ ! -d "$HOME/.tmux/plugins/tmux-sessionx" ]; then
+  git clone https://github.com/omerxx/tmux-sessionx "$HOME/.tmux/plugins/tmux-sessionx"
+fi
+
+# Optional: tmux-modal (leave if you use it)
+if [ ! -d "$HOME/.tmux/plugins/tmux-modal" ]; then
+  git clone https://github.com/whame/tmux-modal.git "$HOME/.tmux/plugins/tmux-modal"
+fi
+
+# Remove old session plugins if present (no longer used)
+if [ -d "$HOME/.tmux/plugins/tmux-resurrect" ]; then
+  rm -rf "$HOME/.tmux/plugins/tmux-resurrect"
+fi
+if [ -d "$HOME/.tmux/plugins/tmux-continuum" ]; then
+  rm -rf "$HOME/.tmux/plugins/tmux-continuum"
+fi
+
+echo "Installed/updated tmux plugins. Launch tmux and press Prefix + I to finalize via TPM."
