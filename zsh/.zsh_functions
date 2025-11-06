@@ -544,3 +544,19 @@ function b() {
   fi
   m1ddc set luminance $1 > /dev/null
 }
+
+# open last downloaded file (macOS)
+function ord() {
+    downloads_dir="$HOME/Downloads"
+    
+    # Find the most recent file
+    latest_file=$(ls -t "$downloads_dir" | head -n 1)
+    
+    # Check if a file is found
+    if [[ -n $latest_file ]]; then
+        echo "Latest downloaded file: $latest_file"
+        open $latest_file
+    else
+        echo "No files found in the Downloads folder."
+    fi
+}
