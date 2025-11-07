@@ -70,6 +70,11 @@ if [ ! -d "$HOME/.tmux/plugins/tmux-sessionx" ]; then
   git clone https://github.com/omerxx/tmux-sessionx "$HOME/.tmux/plugins/tmux-sessionx"
 fi
 
+# Hint-based text selection (like Vimium)
+if [ ! -d "$HOME/.tmux/plugins/tmux-thumbs" ]; then
+  git clone https://github.com/fcsonline/tmux-thumbs "$HOME/.tmux/plugins/tmux-thumbs"
+fi
+
 # Optional: tmux-modal (leave if you use it)
 if [ ! -d "$HOME/.tmux/plugins/tmux-modal" ]; then
   git clone https://github.com/whame/tmux-modal.git "$HOME/.tmux/plugins/tmux-modal"
