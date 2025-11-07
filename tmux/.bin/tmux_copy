@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Read stdin fully (tmux copy-pipe passes selection on stdin)
+buf=$(cat || true)
+[ -z "${buf}" ] && exit 0
+
+os_name=$(uname -s 2>/dev/null || echo "")
+
+# 1) Prefer kitty's clipboard when running under kitty
+if [ "${TERM-}" = "xterm-kitty" ] && command -v kitty >/dev/null 2>&1; then
+  if printf %s "${buf}" | kitty +kitten clipboard >/dev/null 2>&1; then
+    exit 0
+  fi
+fi
+
+# 2) macOS pbcopy
+if command -v pbcopy >/dev/null 2>&1; then
+  printf %s "${buf}" | pbcopy
+  exit 0
+fi
+
+# 3) wl-copy (Wayland)
+if command -v wl-copy >/dev/null 2>&1; then
+  printf %s "${buf}" | wl-copy
+  exit 0
+fi
+
+# 4) xclip/xsel (X11)
+if command -v xclip >/dev/null 2>&1; then
+  printf %s "${buf}" | xclip -selection clipboard
+  exit 0
+fi
+if command -v xsel >/dev/null 2>&1; then
+  printf %s "${buf}" | xsel --clipboard --input
+  exit 0
+fi
+
+# 5) OSC 52 fallback (works over SSH with modern tmux if set-clipboard on)
+# Encode and emit an OSC 52 sequence; wrap for tmux if needed
+emit_osc52() {
+  local data maxlen esc osc
+  # Some terminals have max OSC payloads; keep generous but safe
+  maxlen=100000
+  data=$(printf %s "${buf}" | base64 | tr -d '\n')
+  if [ "${#data}" -gt "${maxlen}" ]; then
+    data="$(printf %s "${buf}" | head -c $((maxlen/2)) | base64 | tr -d '\n')"
+  fi
+  osc="\033]52;c;${data}\a"
+  if [ -n "${TMUX-}" ]; then
+    # DCS passthrough for tmux
+    printf "\033Ptmux;\033%s\033\\" "${osc}"
+  else
+    printf %b "${osc}"
+  fi
+}
+
+emit_osc52 >/dev/tty 2>/dev/null || emit_osc52 || true
+exit 0
+
+
