@@ -16,6 +16,20 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Bootstrap secrets (decrypt OPENAI_API_KEY via rage if present)
+pcall(function()
+  require('morpheus.secrets').bootstrap_openai_from_rage()
+end)
+
+-- Enable fenced code block highlighting in markdown
+vim.g.vim_markdown_fenced_languages = {
+  'bash=sh', 'sh=sh', 'zsh=sh',
+  'js=javascript', 'ts=typescript', 'tsx=typescriptreact',
+  'json=json', 'yaml=yaml', 'toml=toml',
+  'lua=lua', 'vim=vim', 'vimscript=vim',
+  'go=go', 'rust=rust', 'cpp=cpp', 'c=c', 'python=python',
+}
+
 -- Install your plugins.
 require('lazy').setup({
 
@@ -45,15 +59,22 @@ require('lazy').setup({
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    -- Allow disabling LSP for isolated tests
+    cond = function()
+      return not vim.g.__disable_lsp
+    end,
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
+      { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       version = '*', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
+    config = function()
+      require 'morpheus.lsp'
+    end,
   },
   {
     "nvimtools/none-ls.nvim",
@@ -81,41 +102,34 @@ require('lazy').setup({
 
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
-      
+
       -- Add blink.cmp for blinking completion items
       'Saghen/blink.cmp',
     },
   },
 
   {
+    'olimorris/codecompanion.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'hrsh7th/nvim-cmp',
+    },
+    event = 'VeryLazy',
+    config = function()
+      require('morpheus.plugins.ai')
+    end,
+  },
+
+  {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
-    opts = {
-      -- See `:help gitsigns.txt`
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-      on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-
-        -- don't override the built-in and fugitive keymaps
-        local gs = package.loaded.gitsigns
-        vim.keymap.set({ 'n', 'v' }, ']c', function()
-          if vim.wo.diff then return ']c' end
-          vim.schedule(function() gs.next_hunk() end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
-        vim.keymap.set({ 'n', 'v' }, '[c', function()
-          if vim.wo.diff then return '[c' end
-          vim.schedule(function() gs.prev_hunk() end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
-      end,
-    },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('morpheus.gitsigns')
+    end,
+    -- Add lazy loading to prevent early initialization issues
+    event = { 'BufReadPre', 'BufNewFile' },
   },
 
   {
@@ -186,7 +200,7 @@ require('lazy').setup({
           pattern = [[\b(KEYWORDS):]], -- ripgrep regex
         },
       })
-      
+
       -- Add keybindings for todo-comments
       vim.keymap.set("n", "]t", function()
         require("todo-comments").jump_next()
@@ -198,6 +212,21 @@ require('lazy').setup({
 
       -- You can also use telescope integration
       vim.keymap.set("n", "<leader>st", "<cmd>TodoTelescope<cr>", { desc = "[S]earch [T]odos" })
+    end
+  },
+
+  -- Vim Markdown plugin for proper markdown folding (like linkarzu's config)
+  {
+    "plasticboy/vim-markdown",
+    ft = "markdown",
+    config = function()
+      -- Enable markdown folding
+      vim.g.vim_markdown_folding_disabled = 0
+      vim.g.vim_markdown_folding_style = "stacked"
+      vim.g.vim_markdown_fold_heading = 1
+      vim.g.vim_markdown_fold_fenced_codeblocks = 1
+      vim.g.vim_markdown_fold_toc = 1
+      vim.g.vim_markdown_fold_toc_fenced = 1
     end
   },
 
@@ -258,6 +287,10 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
+    -- Load at startup so parsers install once, not on first file open
+    config = function()
+      require('morpheus.treesitter')
+    end,
   },
 
   -- local plugins
@@ -272,11 +305,9 @@ require('lazy').setup({
 
 require 'morpheus.plugins.autoformat'
 require 'morpheus.plugins.debug'
-require 'morpheus.treesitter'
 require 'morpheus.telescope'
 require 'morpheus.keymaps'
 require 'morpheus.cmp'
-require 'morpheus.lsp'
 require 'morpheus.wiki'
 
 -- Set highlight on search
@@ -298,6 +329,9 @@ vim.o.breakindent = true
 
 -- Save undo history
 vim.o.undofile = true
+
+-- Disable swapfiles to avoid W325 prompts when reopening files
+vim.o.swapfile = false
 
 -- Case-insensitive searching UNLESS \C or capital in search
 vim.o.ignorecase = true
@@ -347,6 +381,7 @@ autocmd('TextYankPost', {
   pattern = '*',
 })
 
+-- TODO: get https://github.com/morphykuffour/rawtalk to work
 vim.api.nvim_create_autocmd("ModeChanged", {
   pattern = "*",
   callback = function()
@@ -361,3 +396,16 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.commentstring = "# %s"
   end,
 })
+
+-- TODO: explore better colorscheme
+-- vim.cmd.colorscheme 'vim'
+vim.cmd.colorscheme 'onedark'
+
+-- Configure diff colors for better conflict visibility
+vim.cmd([[
+highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+]])
+
+

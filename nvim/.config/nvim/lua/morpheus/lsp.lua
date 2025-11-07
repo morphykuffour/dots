@@ -69,9 +69,6 @@ local servers = {
   -- nix language server
   nil_ls = {},
   
-  -- bash language server
-  bashls = {},
-  
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
@@ -93,6 +90,8 @@ local servers = {
   -- lua language server
   lua_ls = {
     Lua = {
+      runtime = { version = 'LuaJIT' },
+      diagnostics = { globals = { 'vim' } },
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
@@ -116,13 +115,24 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end
-}
+-- Configure and enable each server using the new vim.lsp.config API
+for server_name, server_settings in pairs(servers) do
+  local config = {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = server_settings,
+    filetypes = (server_settings or {}).filetypes,
+    cmd = (server_settings or {}).cmd,
+    init_options = (server_settings or {}).init_options,
+  }
+  vim.lsp.config(server_name, config)
+  vim.lsp.enable(server_name)
+end
+
+-- Configure bashls
+vim.lsp.config('bashls', {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  filetypes = { 'sh', 'bash' },
+})
+vim.lsp.enable('bashls')

@@ -4,6 +4,125 @@ local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 local keymap = vim.api.nvim_set_keymap
 
+-- Markdown Folding Functions using vim-markdown plugin (like linkarzu's config)
+-- This uses the proven vim-markdown plugin for proper VSCode-like folding
+
+-- Set up markdown folding using vim-markdown plugin
+local function setup_markdown_folding()
+  if vim.bo.filetype ~= "markdown" then
+    return false
+  end
+  
+  -- Use vim-markdown's syntax-based folding (like linkarzu's config)
+  vim.opt_local.foldmethod = "syntax"
+  vim.opt_local.foldlevel = 99 -- Start with all folds open like VSCode
+  vim.opt_local.foldenable = true
+  
+  return true
+end
+
+function markdown_fold_all()
+  if not setup_markdown_folding() then
+    vim.notify("This function only works in markdown files", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Set fold level to 1 to show only top-level headers
+  vim.opt_local.foldlevel = 1
+  
+  vim.notify("Folded all sections to top level (VSCode style)", vim.log.levels.INFO)
+end
+
+function markdown_fold_all_except_selected()
+  if not setup_markdown_folding() then
+    vim.notify("This function only works in markdown files", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Get current cursor position
+  local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  
+  -- Find the current section header level
+  local current_section_level = 0
+  for i = cursor_line, 1, -1 do
+    local line = lines[i]
+    if line and line:match("^#+ ") then
+      current_section_level = #line:match("^(#+)")
+      break
+    end
+  end
+  
+  -- Set fold level to show only the current section and its subsections
+  vim.opt_local.foldlevel = current_section_level
+  
+  vim.notify("Folded all sections except current (VSCode style)", vim.log.levels.INFO)
+end
+
+function markdown_unfold_all()
+  if not setup_markdown_folding() then
+    vim.notify("This function only works in markdown files", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Unfold everything (like VSCode)
+  vim.opt_local.foldlevel = 99
+  
+  vim.notify("Unfolded all sections (VSCode style)", vim.log.levels.INFO)
+end
+
+function markdown_fold_current_section()
+  if not setup_markdown_folding() then
+    vim.notify("This function only works in markdown files", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Get current cursor position
+  local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  
+  -- Find the current section header level
+  local current_section_level = 0
+  for i = cursor_line, 1, -1 do
+    local line = lines[i]
+    if line and line:match("^#+ ") then
+      current_section_level = #line:match("^(#+)")
+      break
+    end
+  end
+  
+  -- Set fold level to hide the current section
+  vim.opt_local.foldlevel = current_section_level - 1
+  
+  vim.notify("Folded current section (VSCode style)", vim.log.levels.INFO)
+end
+
+function markdown_unfold_current_section()
+  if not setup_markdown_folding() then
+    vim.notify("This function only works in markdown files", vim.log.levels.WARN)
+    return
+  end
+  
+  -- Get current cursor position
+  local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  
+  -- Find the current section header level
+  local current_section_level = 0
+  for i = cursor_line, 1, -1 do
+    local line = lines[i]
+    if line and line:match("^#+ ") then
+      current_section_level = #line:match("^(#+)")
+      break
+    end
+  end
+  
+  -- Set fold level to show the current section and its subsections
+  vim.opt_local.foldlevel = current_section_level + 1
+  
+  vim.notify("Unfolded current section (VSCode style)", vim.log.levels.INFO)
+end
+
 vim.keymap.set("n", "<leader>/", function()
 	-- You can pass additional configuration to telescope to change theme, layout, etc.
 	require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
@@ -169,6 +288,32 @@ map_tele("<space>bs", "anime_selector")
 -- Git
 -- m.nmap("<leader>gg", ":Neogit <CR>")
 -- m.nmap("<leader>gd", ":DiffviewOpen<CR>")
+
+-- Git conflict resolution keymaps (from blog post)
+m.nmap("<leader>gs", ":Git<CR>", { desc = "[G]it [S]tatus" })
+m.nmap("<leader>gd", ":Gdiffsplit<CR>", { desc = "[G]it [D]iff split" })
+m.nmap("<leader>gc", ":Git commit<CR>", { desc = "[G]it [C]ommit" })
+m.nmap("<leader>gb", ":Git blame<CR>", { desc = "[G]it [B]lame" })
+m.nmap("<leader>gm", ":Git mergetool<CR>", { desc = "[G]it [M]ergetool" })
+
+-- Quick conflict resolution
+m.nmap("<leader>gj", ":diffget //3<CR>", { desc = "Get changes from [R]ight (REMOTE)" })
+m.nmap("<leader>gf", ":diffget //2<CR>", { desc = "Get changes from [L]eft (LOCAL)" })
+
+-- Improve diff experience
+vim.opt.diffopt:append('algorithm:patience')
+vim.opt.diffopt:append('indent-heuristic')
+
+-- Custom functions for conflict resolution
+vim.cmd([[
+function! ConflictStats()
+    let l:conflict_pattern = '^<<<<<<< '
+    let l:conflicts = search(l:conflict_pattern, 'n')
+    echo "Remaining conflicts: " . l:conflicts
+endfunction
+]])
+
+m.nmap("<leader>gcs", ":call ConflictStats()<CR>", { desc = "[G]it [C]onflict [S]tats" })
 
 m.nmap("<leader>cls", "<cmd>SymbolsOutline<cr>")
 
@@ -442,3 +587,65 @@ keymap("n", "<F12>", ":let _s=@/<Bar>:%s/s+$//e<Bar>:let @/=_s<Bar><CR>")
 keymap("n", "<leader>wd", function()
 	vim.cmd(string.format(":85vnew ~/Org/zettelkasten/notes/note-%s.md", os.date("%Y-%m-%d")))
 end, { desc = "[/de] notes]", noremap = true })
+
+-- Markdown Folding Keybindings
+vim.keymap.set("n", "<leader>mf", function() markdown_fold_all() end, { desc = "[M]arkdown [F]old All" })
+vim.keymap.set("n", "<leader>ms", function() markdown_fold_all_except_selected() end, { desc = "[M]arkdown fold all except [S]elected" })
+vim.keymap.set("n", "<leader>mu", function() markdown_unfold_all() end, { desc = "[M]arkdown [U]nfold All" })
+vim.keymap.set("n", "<leader>mc", function() markdown_fold_current_section() end, { desc = "[M]arkdown fold [C]urrent section" })
+vim.keymap.set("n", "<leader>mo", function() markdown_unfold_current_section() end, { desc = "[M]arkdown unfold current secti[O]n" })
+
+-- Note: Markdown folding is now handled in lua/morpheus/treesitter.lua
+-- The vim-markdown plugin provides syntax-based folding for markdown files
+
+-- Custom gf function to handle quoted file paths
+local function open_quoted_file()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- Convert to 1-based column
+  
+  -- Look for quoted strings that might be file paths
+  local patterns = {
+    -- Double quotes
+    '"[^"]*"',
+    -- Single quotes  
+    "'[^']*'",
+    -- Backticks
+    '`[^`]*`'
+  }
+  
+  local best_match = nil
+  local best_start = 0
+  local best_end = 0
+  
+  for _, pattern in ipairs(patterns) do
+    local start = 1
+    while true do
+      local match_start, match_end = line:find(pattern, start)
+      if not match_start then break end
+      
+      -- Check if cursor is within this match
+      if col >= match_start and col <= match_end then
+        best_match = line:sub(match_start + 1, match_end - 1) -- Remove quotes
+        best_start = match_start
+        best_end = match_end
+        break
+      end
+      start = match_end + 1
+    end
+    if best_match then break end
+  end
+  
+  if best_match then
+    -- Try to open the file
+    local success = pcall(vim.cmd, "edit " .. vim.fn.fnameescape(best_match))
+    if not success then
+      vim.notify("Could not open file: " .. best_match, vim.log.levels.ERROR)
+    end
+  else
+    -- Fall back to default gf behavior
+    vim.cmd("normal! gf")
+  end
+end
+
+-- Override gf keybinding to handle quoted file paths
+vim.keymap.set("n", "gf", open_quoted_file, { desc = "Open file under cursor (handles quoted paths)" })
