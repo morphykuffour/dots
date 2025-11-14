@@ -649,3 +649,15 @@ end
 
 -- Override gf keybinding to handle quoted file paths
 vim.keymap.set("n", "gf", open_quoted_file, { desc = "Open file under cursor (handles quoted paths)" })
+
+-- Forward search from neovim to zathura
+function SyncTexForward()
+  local linenumber = vim.fn.line(".")
+  local colnumber = vim.fn.col(".")
+  local filename = vim.fn.expand("%:p")
+  local filenamePDF = filename:gsub("%.tex$", ".pdf")
+  local execstr = "!zathura --synctex-forward " .. linenumber .. ":" .. colnumber .. ":" .. filename .. " " .. filenamePDF .. " &>/dev/null &"
+  vim.cmd(execstr)
+end
+
+vim.keymap.set("n", "<leader>lv", SyncTexForward, { desc = "Forward search to zathura" })
