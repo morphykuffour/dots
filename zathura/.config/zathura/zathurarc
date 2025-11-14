@@ -1,10 +1,10 @@
 # $HOME/.config/zathura/zathurarc
 
-# Adding reverse search between emacs and zathura
+# Adding reverse search between neovim and zathura
 # https://magmath.com/vim-how-to-use-reverse-and-forward-search-with-vim-and-zathura.html
+# Note: Start neovim with: nvim --listen /tmp/nvim-server
 set synctex true
-set synctex-editor-command "emacsclient +%{line} %{input}"
-# set synctex-editor-command "nvim --remote-silent +%{line} %{input}"
+set synctex-editor-command "nvim --server /tmp/nvim-server --remote +%{line} %{input}"
 
 
 set selection-clipboard clipboard
