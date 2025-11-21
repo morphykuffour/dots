@@ -661,3 +661,20 @@ function SyncTexForward()
 end
 
 vim.keymap.set("n", "<leader>lv", SyncTexForward, { desc = "Forward search to zathura" })
+
+-- remove emojis from the current buffer
+local function remove_emojis_from_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+  local emoji_pattern = "[\240-\244][\128-\191][\128-\191][\128-\191]"
+
+  for i, line in ipairs(lines) do
+    lines[i] = line:gsub(emoji_pattern, "")
+  end
+
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+end
+
+vim.api.nvim_create_user_command("RemoveEmojis", remove_emojis_from_buffer, {})
+-- vim.keymap.set("n", "<leader>er", RemoveEmojis, { desc = "removes emojis from the current buffer" })
