@@ -1,0 +1,147 @@
+{
+	"name": "Vimium C",
+	"newTabUrl": "http://raspberrypi:8888/",
+	"exclusionRules": [
+		{
+			"passKeys": "",
+			"pattern": ":https://leetcode.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://config.qmk.fm/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://type-fu.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://github.dev/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.keybr.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://monkeytype.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://pwn.college/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://gnusenpai.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.colemak.academy/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://10fastfingers.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.overleaf.com/"
+		},
+		{
+			"passKeys": "# / ? c d e g i j k l l n p r s u x ",
+			"pattern": ":https://mail.google.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://vportal.procore.prod/"
+		}
+	],
+	"keyMappings": [
+		"#!no-check",
+		"# Move current tab to new window ",
+		"map W moveTabToNewWindow",
+		"# Make a current tab zoom in ",
+		"map z zoomIn",
+		"",
+		"# Make a current tab zoom out ",
+		"map Z zoomOut",
+		"",
+		"# Make a current tab zoom reset to 100%",
+		"map = zoomReset",
+		"",
+		"map f LinkHints.activate",
+		"",
+		"map o Vomnibar.activateInNewTab clickLike",
+		"mapKey <enter:o> <s-enter>",
+		"",
+		"# open image in new tab",
+		"map sx LinkHints.activateOpenImage",
+		"",
+		"run <v-nw> $s#reuse=\"new-wnd\" mask",
+		"run P nw openCopiedUrlInNewTab",
+		"",
+		"# Linkding integration (via Tailscale)",
+		"# Save current page to linkding",
+		"map ,l openUrl url=\"http://raspberrypi:9090/bookmarks/new?url=$U&title=$T&auto_close\"",
+		"# Save current page with selection as description",
+		"map ,L openUrl url=\"http://raspberrypi:9090/bookmarks/new?url=$U&title=$T&description=$S&auto_close\"",
+		"",
+		"# Search linkding bookmarks",
+		"map ,b Vomnibar.activate keyword=\"ld\"",
+		"",
+		"# Quick search keymaps",
+		"map ,s Vomnibar.activate keyword=\"sx\"",
+		"map ,d Vomnibar.activate keyword=\"ddg\"",
+		"map ,y Vomnibar.activate keyword=\"yt\"",
+		"map ,g Vomnibar.activate keyword=\"gh\"",
+		"map ,q Vomnibar.activate keyword=\"qw\"",
+		""
+	],
+	"searchEngines": [
+		"bi: https://cn.bing.com/search?q=$s",
+		"bi|bing: https://www.bing.com/search?q=%s \\",
+		"  blank=https://www.bing.com/ Bing",
+		"b|ba|baidu|百度: https://www.baidu.com/s?ie=utf-8&wd=%s \\",
+		"  blank=https://www.baidu.com/ 百度",
+		"sg|sogou|sougou: https://www.sogou.com/web?ie=UTF-8&query=$s 搜狗",
+		"360|360so|360sou|360ss: https://www.so.com/s?ie=UTF-8&q=$s 360 搜索",
+		"br|brave: https://search.brave.com/search?q=%s Brave",
+		"d|dd|ddg|duckduckgo: https://duckduckgo.com/?q=%s DuckDuckGo",
+		"ec|ecosia: https://www.ecosia.org/search?q=%s Ecosia",
+		"qw|qwant: https://www.qwant.com/?q=%s Qwant",
+		"ya|yd|yandex: https://yandex.com/search/?text=%s Yandex",
+		"yh|yahoo: https://search.yahoo.com/search?p=%s Yahoo",
+		"maru|mailru|mail.ru: https://go.mail.ru/search?q=%s Mail.ru",
+		"",
+		"g.m|gm|g.map|gmap: https://www.google.com/maps?q=%s \\",
+		"  blank=https://www.google.com/maps Google Maps",
+		"b.m|bm|map|b.map|bmap|百度地图: \\",
+		"  https://api.map.baidu.com/geocoder?output=html&address=%s&src=vimium-c \\",
+		"  blank=https://map.baidu.com/",
+		"y|yt: https://www.youtube.com/results?search_query=%s \\",
+		"  blank=https://www.youtube.com/ YouTube",
+		"w|wiki: https://www.wikipedia.org/w/index.php?search=%s Wikipedia",
+		"g.s|gs|gscholar: https://scholar.google.com/scholar?q=$s \\",
+		"  scholar.google.com re=/^(?:\\.[a-z]{2,4})?\\/scholar\\b.*?[#&?]q=([^#&]*)/i \\",
+		"  blank=https://scholar.google.com/ Google Scholar",
+		"",
+		"a|ae|ali|alie|aliexp: https://www.aliexpress.com/wholesale?SearchText=%s \\",
+		"  blank=https://www.aliexpress.com/ AliExpress",
+		"j|jd|jb|joy|joybuy: https://www.joybuy.com/search?keywords=%s \\",
+		"  blank=https://www.joybuy.com/ Joybuy",
+		"az|amazon: https://www.amazon.com/s?k=%s \\",
+		"  blank=https://www.amazon.com/ Amazon",
+		"",
+		"\\:i: vimium://sed/s/^//,lower\\ $S re= Lower case",
+		"v.m|math: vimium://math\\ $S re= Calculate",
+		"v.p: vimium://parse\\ $S re= Redo Search",
+		"gh|github: https://github.com/search?q=$s \\",
+		"  blank=https://github.com/ GitHub Repo",
+		"ge|gitee: https://search.gitee.com/?type=repository&q=$s \\",
+		"  blank=https://gitee.com/ Gitee 仓库",
+		"js\\:|Js: javascript:\\ $S; JavaScript",
+		"",
+		"ld: http://raspberrypi:9090/bookmarks?q=%s linkding",
+		"s|sx|searx|searxng: http://optiplex-nixos:8888/search?q=%s SearXNG",
+		""
+	]
+}
