@@ -83,3 +83,4 @@ FIXME/.DS_Store
 
 misc/.newsboat/cache.db
 misc/.newsboat/cache.db.lock
+scripts/.local/bin/claude
