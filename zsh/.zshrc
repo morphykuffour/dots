@@ -198,6 +198,7 @@ fpath+=$HOME/.zsh/completions
 fpath=($HOME/.zsh/completions/nix-zsh-completions $fpath)
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
 source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
