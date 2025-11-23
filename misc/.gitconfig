@@ -25,8 +25,8 @@
 [delta]
     features = decorations
 	side-by-side = true
-    line-numbers-left-format = ""
-    line-numbers-right-format = "│ "
+    line-numbers-left-format = "{nm:>4} │"
+    line-numbers-right-format = "{np:>4} │"
 	navigate = true
 	light = false
 	line-numbers = true
@@ -34,15 +34,22 @@
 	file-style = bold yellow ul
 	file-decoration-style = none
 	hunk-header-style = file line-number syntax
+	# Labels for side-by-side view
+	left-label = "OLD (base)"
+	right-label = "NEW (current)"
+	# Different colors for left/right line numbers
+	line-numbers-left-style = red
+	line-numbers-right-style = green
 [delta "interactive"]
     keep-plus-minus-markers = false
 
 [delta "decorations"]
     commit-decoration-style = blue ol
     commit-style = raw
-    file-style = omit
+    file-style = bold yellow ul
+    file-decoration-style = yellow ol
     hunk-header-decoration-style = blue box
-    hunk-header-file-style = red
+    hunk-header-file-style = bold cyan
     hunk-header-line-number-style = "#067a00"
     hunk-header-style = file line-number syntax
 [init]
