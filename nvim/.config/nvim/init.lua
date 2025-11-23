@@ -244,20 +244,20 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Add indentation guides even on blank lines
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    ---@module "ibl"
-    ---@type ibl.config
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {}
-    -- opts = {
-    --   char = '┊',
-    --   show_trailing_blankline_indent = false,
-    -- },
-  },
+  --{
+  --  -- Add indentation guides even on blank lines
+  --  "lukas-reineke/indent-blankline.nvim",
+  --  main = "ibl",
+  --  ---@module "ibl"
+  --  ---@type ibl.config
+  --  -- Enable `lukas-reineke/indent-blankline.nvim`
+  --  -- See `:help indent_blankline.txt`
+  --  opts = {}
+  --  -- opts = {
+  --  --   char = '┊',
+  --  --   show_trailing_blankline_indent = false,
+  --  -- },
+  --},
 
   -- Fuzzy Finder (files, lsp, etc)
   {
