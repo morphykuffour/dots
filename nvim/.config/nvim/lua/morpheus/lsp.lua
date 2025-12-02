@@ -68,7 +68,7 @@ local servers = {
   },
   -- nix language server
   nil_ls = {},
-  
+
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
@@ -108,12 +108,12 @@ if not vim.g.lsp_capabilities then
   capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 end
 
--- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
-
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+-- Mason is already set up via config function in init.lua
+-- Temporarily disable mason-lspconfig to test
+-- local mason_lspconfig = require 'mason-lspconfig'
+-- mason_lspconfig.setup {
+--   ensure_installed = vim.tbl_keys(servers),
+-- }
 
 -- Configure and enable each server using the new vim.lsp.config API
 for server_name, server_settings in pairs(servers) do
