@@ -156,3 +156,8 @@ alias ns='nix-env -qaP'
 alias psa="systemctl --user start picom"
 alias pst="systemctl --user stop picom"
 
+# Emacs daemon aliases
+alias emacs="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c -a ''"
+alias e="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -nw -a ''"
+alias ec="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c -a ''"
+alias ekill="emacsclient -e '(kill-emacs)'"
