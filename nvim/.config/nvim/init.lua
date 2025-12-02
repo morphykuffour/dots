@@ -46,6 +46,11 @@ require('lazy').setup({
 
   -- Startify
   'mhinz/vim-startify',
+
+  -- themes
+  { "miikanissi/modus-themes.nvim", priority = 1000 },
+  { "Shatur/neovim-ayu", priority = 1000 },
+
   {
     "NeogitOrg/neogit",
     dependencies = {
@@ -57,6 +62,17 @@ require('lazy').setup({
     config = true
   },
   {
+    -- Mason must load before LSP
+    'williamboman/mason.nvim',
+    config = function()
+      require('mason').setup()
+    end,
+  },
+  {
+    'williamboman/mason-lspconfig.nvim',
+    dependencies = { 'williamboman/mason.nvim' },
+  },
+  {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     -- Allow disabling LSP for isolated tests
@@ -64,10 +80,9 @@ require('lazy').setup({
       return not vim.g.__disable_lsp
     end,
     dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', opts = {} },
+      'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-      { 'j-hui/fidget.nvim',       version = '*', opts = {} },
+      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -92,9 +107,13 @@ require('lazy').setup({
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
+    event = 'InsertEnter',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
+      {
+        'L3MON4D3/LuaSnip',
+        build = 'make install_jsregexp',
+      },
       'saadparwaiz1/cmp_luasnip',
 
       -- Adds LSP completion capabilities
@@ -106,6 +125,9 @@ require('lazy').setup({
       -- Add blink.cmp for blinking completion items
       'Saghen/blink.cmp',
     },
+    config = function()
+      require 'morpheus.cmp'
+    end,
   },
 
   {
@@ -115,6 +137,7 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter',
       'hrsh7th/nvim-cmp',
     },
+    version = "v17.33.0",
     event = 'VeryLazy',
     config = function()
       require('morpheus.plugins.ai')
@@ -234,21 +257,6 @@ require('lazy').setup({
     },
   },
 
-  --{
-  --  -- Add indentation guides even on blank lines
-  --  "lukas-reineke/indent-blankline.nvim",
-  --  main = "ibl",
-  --  ---@module "ibl"
-  --  ---@type ibl.config
-  --  -- Enable `lukas-reineke/indent-blankline.nvim`
-  --  -- See `:help indent_blankline.txt`
-  --  opts = {}
-  --  -- opts = {
-  --  --   char = '┊',
-  --  --   show_trailing_blankline_indent = false,
-  --  -- },
-  --},
-
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
@@ -297,7 +305,7 @@ require 'morpheus.plugins.autoformat'
 require 'morpheus.plugins.debug'
 require 'morpheus.telescope'
 require 'morpheus.keymaps'
-require 'morpheus.cmp'
+-- require 'morpheus.cmp' -- Now loaded in plugin config above
 require 'morpheus.wiki'
 
 -- Set highlight on search
@@ -387,10 +395,26 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- TODO: explore better colorscheme
--- vim.cmd.colorscheme 'vim'
--- vim.cmd.colorscheme 'default'
-vim.cmd.colorscheme 'retrobox'
+-- Set colorscheme based on time of day
+-- Light theme before noon, dark theme after noon
+local hour = tonumber(os.date("%H"))
+if hour < 12 then
+  require('ayu').setup({
+    mirage = false,
+    terminal = true,
+    overrides = {},
+  })
+  vim.o.background = 'light'
+  vim.cmd.colorscheme 'ayu-light'
+else
+  require('ayu').setup({
+    mirage = false,
+    terminal = true,
+    overrides = {},
+  })
+  vim.o.background = 'dark'
+  vim.cmd.colorscheme 'ayu-dark'
+end
 
 -- Configure diff colors for better conflict visibility
 vim.cmd([[
