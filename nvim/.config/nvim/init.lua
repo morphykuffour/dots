@@ -133,15 +133,6 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
-
-  {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     event = "VeryLazy", -- Load after startup
@@ -237,7 +228,6 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
         component_separators = '|',
         section_separators = '',
       },
@@ -314,7 +304,7 @@ require 'morpheus.wiki'
 vim.o.hlsearch = false
 
 -- Make line numbers default
-vim.wo.number = true
+-- vim.wo.number = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -399,7 +389,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- TODO: explore better colorscheme
 -- vim.cmd.colorscheme 'vim'
-vim.cmd.colorscheme 'onedark'
+-- vim.cmd.colorscheme 'default'
+vim.cmd.colorscheme 'retrobox'
 
 -- Configure diff colors for better conflict visibility
 vim.cmd([[
