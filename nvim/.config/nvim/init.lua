@@ -82,7 +82,16 @@ require('lazy').setup({
     dependencies = {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {
+          notification = {
+            window = {
+              winblend = 0,
+            },
+          },
+        },
+      },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -398,24 +407,26 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Set colorscheme based on time of day
 -- Light theme before noon, dark theme after noon
-local hour = tonumber(os.date("%H"))
-if hour < 12 then
-  require('ayu').setup({
-    mirage = false,
-    terminal = true,
-    overrides = {},
-  })
-  vim.o.background = 'dark'
-  vim.cmd.colorscheme 'ayu-dark'
-else
-  require('ayu').setup({
-    mirage = false,
-    terminal = true,
-    overrides = {},
-  })
-  vim.o.background = 'light'
-  vim.cmd.colorscheme 'ayu-light'
-end
+-- local hour = tonumber(os.date("%H"))
+-- if hour < 12 then
+--   require('ayu').setup({
+--     mirage = false,
+--     terminal = true,
+--     overrides = {},
+--   })
+--   vim.o.background = 'dark'
+--   vim.cmd.colorscheme 'ayu-dark'
+-- else
+--   require('ayu').setup({
+--     mirage = false,
+--     terminal = true,
+--     overrides = {},
+--   })
+--   vim.o.background = 'light'
+--   vim.cmd.colorscheme 'ayu-light'
+-- end
+
+vim.cmd.colorscheme 'vim'
 
 -- Configure diff colors for better conflict visibility
 vim.cmd([[
