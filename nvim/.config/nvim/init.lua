@@ -93,15 +93,16 @@ require('lazy').setup({
   },
   {
     "nvimtools/none-ls.nvim",
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      if type(opts.sources) == "table" then
-        vim.list_extend(opts.sources, {
-          nls.builtins.code_actions.statix,
-          nls.builtins.formatting.alejandra,
-          nls.builtins.diagnostics.deadnix,
-        })
-      end
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.code_actions.statix,
+          null_ls.builtins.formatting.alejandra,
+          null_ls.builtins.diagnostics.deadnix,
+        },
+      })
     end,
   },
   {
@@ -404,16 +405,16 @@ if hour < 12 then
     terminal = true,
     overrides = {},
   })
-  vim.o.background = 'light'
-  vim.cmd.colorscheme 'ayu-light'
+  vim.o.background = 'dark'
+  vim.cmd.colorscheme 'ayu-dark'
 else
   require('ayu').setup({
     mirage = false,
     terminal = true,
     overrides = {},
   })
-  vim.o.background = 'dark'
-  vim.cmd.colorscheme 'ayu-dark'
+  vim.o.background = 'light'
+  vim.cmd.colorscheme 'ayu-light'
 end
 
 -- Configure diff colors for better conflict visibility
