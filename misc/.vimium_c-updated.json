@@ -53,6 +53,14 @@
 		{
 			"passKeys": "",
 			"pattern": ":https://vportal.procore.prod/"
+		},
+		{
+			"passKeys": "",
+			"pattern": "^https?://192\\.168\\.1\\.73/"
+		},
+		{
+			"passKeys": "",
+			"pattern": "^https?://192\\.168\\.1\\.73/"
 		}
 	],
 	"keyMappings": [
@@ -95,6 +103,7 @@
 		"map ,q Vomnibar.activate keyword=\"qw\"",
 		""
 	],
+	"newTabUrl": "http://raspberrypi:8888/",
 	"searchEngines": [
 		"bi: https://cn.bing.com/search?q=$s",
 		"bi|bing: https://www.bing.com/search?q=%s \\",
