@@ -96,3 +96,6 @@ export RAGE_BIN=/etc/profiles/per-user/morph/bin/rage
 export AGE_IDENTITY_FILE=$HOME/.config/age/keys.txt
 export OPENAI_AGE_FILE=$HOME/.config/nvim/secrets/openai.age
 export DIRENV_LOG_FORMAT="" 
+
+# croc relay server with tailscale
+export CROC_RELAY="optiplex-nixos.tail-scale.ts.net:9009"
