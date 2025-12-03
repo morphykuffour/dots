@@ -140,7 +140,7 @@
 		"js\\:|Js: javascript:\\ $S; JavaScript",
 		"",
 		"ld: http://raspberrypi:9090/bookmarks?q=%s linkding",
-		"s|sx|searx|searxng: https://optiplex-nixos.tailc585e.ts.net/search?q=%s SearXNG",
+		"s|sx|searx|searxng: https://optiplex-nixos.tailc585e.ts.net:8443/?q=%s SearXNG",
 		""
 	]
 }
