@@ -49,6 +49,7 @@ require('lazy').setup({
 
   -- themes
   { "miikanissi/modus-themes.nvim", priority = 1000 },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   { "Shatur/neovim-ayu", priority = 1000 },
 
   {
@@ -407,26 +408,28 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Set colorscheme based on time of day
 -- Light theme before noon, dark theme after noon
--- local hour = tonumber(os.date("%H"))
--- if hour < 12 then
---   require('ayu').setup({
---     mirage = false,
---     terminal = true,
---     overrides = {},
---   })
---   vim.o.background = 'dark'
---   vim.cmd.colorscheme 'ayu-dark'
--- else
---   require('ayu').setup({
---     mirage = false,
---     terminal = true,
---     overrides = {},
---   })
---   vim.o.background = 'light'
---   vim.cmd.colorscheme 'ayu-light'
--- end
-
-vim.cmd.colorscheme 'vim'
+local hour = tonumber(os.date("%H"))
+if hour < 16 then
+  require('catppuccin').setup({
+    background = {
+      light = "latte",
+      dark = "mocha"
+    },
+  })
+  vim.o.background = 'light'
+  vim.cmd.colorscheme 'catppuccin-latte'
+else
+  require('catppuccin').setup({
+    background = {
+      light = "latte",
+      dark = "mocha"
+    },
+  })
+  vim.o.background = 'dark'
+  vim.cmd.colorscheme 'catppuccin-mocha'
+end
+-- colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+-- vim.cmd.colorscheme 'vim'
 
 -- Configure diff colors for better conflict visibility
 vim.cmd([[
