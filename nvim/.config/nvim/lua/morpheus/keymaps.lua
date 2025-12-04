@@ -320,9 +320,6 @@ m.nmap("<leader>cls", "<cmd>SymbolsOutline<cr>")
 m.nmap("<leader>sv", "<cmd>lua ReloadConfig()<cr>")
 vim.cmd("command! ReloadConfig lua ReloadConfig()")
 
-vim.cmd("command! CopyBufferName lua CopyBufferName()")
-m.nmap("<leader>bn", "<cmd>lua CopyBufferName()<cr>")
-m.nmap("<leader>sa", "<cmd>Scratch<cr>")
 
 m.nmap("gx", "<Plug>(openbrowser-smart-search)<cr>")
 m.vmap("gx", "<Plug>(openbrowser-smart-search)<cr>")
@@ -569,13 +566,17 @@ keymap("n", "<leader>gd", "<cmd> DiffviewOpen<CR>")
 keymap("n", "<leader>cls", "<cmd>SymbolsOutline<cr>")
 
 keymap("n", "<leader>sv", "<cmd>lua ReloadConfig()<cr>")
+keymap("n", "<leader>sv", "<cmd>lua ReloadConfig()<cr>")
+
 vim.api.nvim_create_user_command("CopyBufferName", function()
-	vim.cmd("echo expand('%:p')")
-	vim.cmd("let @+ = expand('%:p')")
-	vim.cmd('echo "Full path of " . expand(\'%:t\') . " was copied to system clipboard"')
+    vim.cmd("echo expand('%:p')")
+    vim.cmd("let @+ = expand('%:p')")
+    vim.cmd('echo "Full path of " . expand(\'%:t\') . " was copied to system clipboard"')
 end, {})
-keymap("n", "<leader>bn", "<cmd> CopyBufferName()<cr>")
-keymap("n", "<leader>sa", "<cmd>Scratch<cr>")
+vim.cmd("command! CopyBufferName lua CopyBufferName()")
+keymap("n", "<leader>bn", "<cmd>CopyBufferName<cr>")
+
+m.nmap("<leader>sa", "<cmd>Scratch<cr>")
 
 keymap("n", "gx", "<Plug>(openbrowser-smart-search)<cr>")
 keymap("v", "gx", "<Plug>(openbrowser-smart-search)<cr>")
