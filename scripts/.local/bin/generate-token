@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Generate a 64-character random ASCII token
+
+# Use /dev/urandom to generate random bytes and convert to base64
+# Then remove non-alphanumeric characters and take first 64 chars
+LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 64
+echo
