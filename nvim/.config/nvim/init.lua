@@ -408,27 +408,28 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Set colorscheme based on time of day
 -- Light theme before noon, dark theme after noon
-local hour = tonumber(os.date("%H"))
-if hour < 16 then
-  require('catppuccin').setup({
-    background = {
-      light = "latte",
-      dark = "mocha"
-    },
-  })
-  vim.o.background = 'light'
-  vim.cmd.colorscheme 'catppuccin-latte'
-else
-  require('catppuccin').setup({
-    background = {
-      light = "latte",
-      dark = "mocha"
-    },
-  })
-  vim.o.background = 'dark'
-  vim.cmd.colorscheme 'catppuccin-mocha'
-end
+-- local hour = tonumber(os.date("%H"))
+-- if hour < 16 then
+--   require('catppuccin').setup({
+--     background = {
+--       light = "latte",
+--       dark = "mocha"
+--     },
+--   })
+--   vim.o.background = 'light'
+--   vim.cmd.colorscheme 'catppuccin-latte'
+-- else
+--   require('catppuccin').setup({
+--     background = {
+--       light = "latte",
+--       dark = "mocha"
+--     },
+--   })
+--   vim.o.background = 'dark'
+--   vim.cmd.colorscheme 'catppuccin-mocha'
+-- end
 -- colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+vim.cmd.colorscheme 'catppuccin-mocha'
 -- vim.cmd.colorscheme 'vim'
 
 -- Configure diff colors for better conflict visibility
