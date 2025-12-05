@@ -545,16 +545,54 @@ function b() {
   m1ddc set luminance $1 > /dev/null
 }
 
-# open last downloaded file (macOS)
+# Cross-platform open command
+function o() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: o <file|directory|URL>"
+        return 1
+    fi
+
+    case "$OSTYPE" in
+        darwin*)
+            # macOS
+            open "$@"
+            ;;
+        linux*)
+            # Linux
+            if command -v xdg-open &> /dev/null; then
+                xdg-open "$@" &> /dev/null
+            elif command -v wslview &> /dev/null; then
+                # WSL with wslu installed
+                wslview "$@"
+            elif [[ -f /proc/sys/fs/binfmt_misc/WSLInterop ]]; then
+                # WSL without wslu - use Windows explorer
+                explorer.exe "$@"
+            else
+                echo "Error: No suitable 'open' command found for Linux"
+                return 1
+            fi
+            ;;
+        msys*|cygwin*|win32)
+            # Windows Git Bash/Cygwin
+            start "$@"
+            ;;
+        *)
+            echo "Error: Unsupported operating system: $OSTYPE"
+            return 1
+            ;;
+    esac
+}
+
+# open last downloaded file
 function ord() {
     downloads_dir="$HOME/Downloads"
-    
+
     latest_file=$(\ls -t "$downloads_dir" | head -n 1)
-    
+
     if [[ -n $latest_file ]]; then
         full_path="$downloads_dir/$latest_file"
         echo "Latest downloaded file: $latest_file"
-        open "$full_path"
+        o "$full_path"
     else
         echo "No files found in the Downloads folder."
     fi
