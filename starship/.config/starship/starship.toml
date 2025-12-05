@@ -5,7 +5,6 @@ format = """$directory\
 $git_branch\
 $git_status\
 $fill\
-$time\
 $line_break\
 $jobs\
 $character"""
@@ -21,11 +20,6 @@ error_symbol = "[\\$](bold red)"
 
 [directory]
 style = "cyan"
-
-[time]
-disabled = false
-format = '[$time](blue bold)'
-time_format = "%F %R"
 
 [git_branch]
 format = ' [$symbol$branch]($style)'
