@@ -2,6 +2,7 @@ plugged/
 session/
 node_modules/
 package-lock.json
+lazy-lock.json
 package.json
 /plugin/packer_compiled.lua
 ./vimfiles/sql.vim

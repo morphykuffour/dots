@@ -211,5 +211,5 @@ source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plug
 
 # ------------------------------- ZSH APPS ------------------------------------
 eval "$(mcfly init zsh)"
-eval "$(direnv hook zsh)"
+# eval "$(direnv hook zsh)"
 export MCFLY_KEY_SCHEME=vim
