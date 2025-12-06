@@ -91,10 +91,10 @@ export INSIDE_EMACS=t
  # pdflatex
 export PATH=$PATH:/Library/TeX/texbin
 
-# ai
+# ai - using agenix with SSH keys for consistent secret management
 export RAGE_BIN=/etc/profiles/per-user/morph/bin/rage
-export AGE_IDENTITY_FILE=$HOME/.config/age/keys.txt
-export OPENAI_AGE_FILE=$HOME/.config/nvim/secrets/openai.age
+export AGE_IDENTITY_FILE=$HOME/.ssh/id_ed25519
+export OPENAI_AGE_FILE=$HOME/nix/secrets/openai.age
 export DIRENV_LOG_FORMAT="" 
 
 # croc relay server with tailscale
