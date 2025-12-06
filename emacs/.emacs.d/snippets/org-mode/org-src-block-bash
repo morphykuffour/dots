@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: org-mode-src-block-bash
+# key: <srcbash
+# --
+
+#+BEGIN_SRC bash :results output
+$0
+#+END_SRC
