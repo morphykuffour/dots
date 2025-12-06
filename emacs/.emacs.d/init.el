@@ -389,8 +389,10 @@
 (use-package circadian
   :ensure t
   :config
-  (setq calendar-latitude 40.0)
-  (setq calendar-longitude -70.0)
+  ;; Set your location for sunrise/sunset times
+  ;; Find your coordinates at: https://www.latlong.net/
+  (setq calendar-latitude 40.0)   ; Replace with your latitude
+  (setq calendar-longitude -70.0) ; Replace with your longitude
   (setq circadian-themes '((:sunrise . modus-operandi)
                            (:sunset  . modus-vivendi)))
   ;; (setq circadian-themes '((:sunrise . gruvbox-light-medium)
@@ -515,7 +517,9 @@
   :commands (mu4e)
   :config
 
-  (setq user-mail-address "your-email@example.com")
+  ;; Set your email address (consider using custom.el or environment variable)
+  ;; (setq user-mail-address "your-email@protonmail.com")
+  (setq user-mail-address (or (getenv "EMAIL") user-mail-address))
 
   (setq mu4e-change-filenames-when-moving t ; avoid sync conflicts
       mu4e-update-interval (* 5 60) ; check mail every 5 minutes (faster updates)
@@ -543,7 +547,7 @@
       mu4e-view-show-images t                   ; show images in the view buffer
       mu4e-use-fancy-chars nil                  ; disable fancy chars for better compatibility
       mu4e-compose-signature-auto-include nil   ; I don't want a message signature
-      mu4e-compose-reply-ignore-address '("no-?reply" "your-email@example.com")
+      mu4e-compose-reply-ignore-address `("no-?reply" ,user-mail-address)
       ;; Async mail fetching
       mu4e-index-update-in-background t ; update index in background
       mu4e-hide-index-messages t ; hide indexing messages for cleaner UI
@@ -678,9 +682,9 @@
  '(custom-safe-themes
    '("871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8" default))
  '(org-agenda-files
-   '("~/dots/emacs/.emacs.d/init.el" "/home/user/iCloud/Org/Todo.org"
-     "/home/user/Org/agenda/tasks.org" "/home/user/Org/agenda/school.org"
-     "/home/user/Org/agenda/birthdays.org" "/home/user/Org/agenda/habits.org"))
+   '("~/dots/emacs/.emacs.d/init.el" "~/iCloud/Org/Todo.org"
+     "~/Org/agenda/tasks.org" "~/Org/agenda/school.org"
+     "~/Org/agenda/birthdays.org" "~/Org/agenda/habits.org"))
  '(send-mail-function 'smtpmail-send-it))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
