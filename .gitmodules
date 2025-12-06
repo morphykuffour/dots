@@ -1,3 +1,0 @@
-[submodule "emacs/.emacs.d"]
-	path = emacs/.emacs.d
-	url = git@github.com:morphykuffour/.emacs.d.git
