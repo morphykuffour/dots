@@ -193,7 +193,7 @@ require("morpheus.statusline")
 vim.g.loaded_python_provider = 0 -- disable python2
 
 if os.getenv("NIX_PATH") ~= nil or os.getenv("NIX_PATH") ~= "" then
-	vim.g.python3_host_prog = "/home/morp/.nix-profile/bin/python3"
+	vim.g.python3_host_prog = os.getenv("HOME") .. "/.nix-profile/bin/python3"
 end
 -- vim.g.python3_host_prog = "/usr/bin/python3" -- nix takes care of this
 

@@ -71,8 +71,8 @@ dap.configurations.python = {
 	},
 }
 
--- /home/morp/miniconda3/envs/bookmark-zettelkasten/bin/python
--- /home/morp/miniconda3/bin/python
+-- $HOME/miniconda3/envs/bookmark-zettelkasten/bin/python
+-- $HOME/miniconda3/bin/python
 
 -- dap.configurations.python = {
 -- 	{
