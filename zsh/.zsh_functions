@@ -597,3 +597,20 @@ function ord() {
         echo "No files found in the Downloads folder."
     fi
 }
+
+# Edit agenix secrets (must be run from ~/nix)
+# Usage: agenix-edit secrets/openai.age
+function agenix-edit() {
+    local current_dir="$PWD"
+    local secret_file="${1:-secrets/openai.age}"
+    local identity="${2:-$HOME/.ssh/id_ed25519}"
+
+    cd ~/nix || { echo "Error: ~/nix directory not found"; return 1; }
+    agenix -e "$secret_file" -i "$identity"
+    cd "$current_dir"
+}
+
+# Quick edit OpenAI API key
+function edit-openai-key() {
+    agenix-edit secrets/openai.age
+}
