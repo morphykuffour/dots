@@ -50,16 +50,17 @@ end
 
 -- Decrypt OPENAI_API_KEY using rage/age if env var is not set
 -- Defaults:
---   enc file: ~/.config/nvim/secrets/openai.age
---   identity: $AGE_IDENTITY_FILE or ~/.config/age/keys.txt
+--   enc file: ~/nix/secrets/openai.age
+--   identity: $AGE_IDENTITY_FILE or ~/.ssh/id_ed25519
 function M.bootstrap_openai_from_rage(opts)
   if vim.env.OPENAI_API_KEY and vim.env.OPENAI_API_KEY ~= '' then
     return
   end
 
   opts = opts or {}
-  local enc_file = opts.enc_file or os.getenv('OPENAI_AGE_FILE') or vim.fn.expand('~/.config/nvim/secrets/openai.age')
-  local id_file = opts.identity_file or os.getenv('AGE_IDENTITY_FILE') or vim.fn.expand('~/.config/age/keys.txt')
+  local home = os.getenv('HOME') or vim.fn.expand('~')
+  local enc_file = opts.enc_file or os.getenv('OPENAI_AGE_FILE') or (home .. '/nix/secrets/openai.age')
+  local id_file = opts.identity_file or os.getenv('AGE_IDENTITY_FILE') or (home .. '/.ssh/id_ed25519')
 
   if not file_exists(enc_file) then
     dbg('openai.age not found at ' .. enc_file)
@@ -105,8 +106,9 @@ end
 
 function M.test(opts)
   local dec, dec_path = pick_decryptor()
-  local enc_file = (opts and opts.enc_file) or os.getenv('OPENAI_AGE_FILE') or vim.fn.expand('~/.config/nvim/secrets/openai.age')
-  local id_file = (opts and opts.identity_file) or os.getenv('AGE_IDENTITY_FILE') or vim.fn.expand('~/.config/age/keys.txt')
+  local home = os.getenv('HOME') or vim.fn.expand('~')
+  local enc_file = (opts and opts.enc_file) or os.getenv('OPENAI_AGE_FILE') or (home .. '/nix/secrets/openai.age')
+  local id_file = (opts and opts.identity_file) or os.getenv('AGE_IDENTITY_FILE') or (home .. '/.ssh/id_ed25519')
 
   local facts = {
     'Decryptor: ' .. (dec or 'none'),
