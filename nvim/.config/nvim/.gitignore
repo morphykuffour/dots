@@ -6,3 +6,6 @@ lazy-lock.json
 package.json
 /plugin/packer_compiled.lua
 ./vimfiles/sql.vim
+# LSP auto-generated config (machine-specific paths)
+.luarc.json
+lua/.luarc.json
