@@ -1,15 +1,12 @@
-# dotfiles  
-This main repo is for my arch linux dotfiles.
+# NixOS dotfiles.
 
-## Installing
+Install `git` and GNU `stow`
 
-You will need `git` and GNU `stow`
-
-Clone into your `$HOME` directory or `~`
+Clone repo into your `$HOME` directory or `~`
 
 ```bash
 cd $HOME
-git clone --single-branch --branch main https://github.com/morphykuffour/dotfiles.git 
+git clone https://github.com/morphykuffour/dotfiles.git 
 ```
 
 Run `stow` to symlink everything or just select what you want
