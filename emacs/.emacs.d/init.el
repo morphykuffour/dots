@@ -300,6 +300,30 @@
   (eat-eshell-mode)
   (setq eshell-visual-commands '()))
 
+;; terminal setup
+(use-package better-shell
+  :straight t)
+
+(use-package eterm-256color
+
+  :straight t
+  :hook (term-mode . eterm-256color-mode))
+
+(use-package vterm
+  :straight t
+
+  :bind*(:map vterm-mode-map
+  ("C-x C-k" . vterm-copy-mode)
+
+  :map vterm-copy-mode-map
+   ("C-x C-k" . vterm-copy-mode))
+
+  :config
+  (setq vterm-max-scrollback 100000))
+
+(use-package multi-vterm
+  :straight t)
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 (require 'rainbow-delimiters)
