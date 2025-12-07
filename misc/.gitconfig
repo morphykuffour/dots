@@ -3,7 +3,7 @@
 # 1. Edit this file manually with your info, OR
 # 2. Run: git config --global user.email "$EMAIL" && git config --global user.name "$FULL_NAME"
 [user]
-	email = your-email@example.com
+	email = morpkuff@gmail.com
 	name = Morphy Kuffour
 
 # [push]
