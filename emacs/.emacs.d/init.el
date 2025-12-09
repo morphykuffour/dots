@@ -56,15 +56,16 @@
         ((boundp 'user-init-directory) user-init-directory)
         (t "~/.emacs.d/")))
 
-;; copy pasta
+;; Helper function to load config files
 (defun load-user-file (file)
+  "Load a file in current user's configuration directory."
   (interactive "f")
-  "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
 
 (load-user-file "config/font-resize.el")
 (load-user-file "config/keymaps.el")
 (load-user-file "config/utils.el")
+(load-user-file "config/vterm-config.el")
 ;; (load-user-file "config/org-mode.el")
 
 ;; sensible settings from hrs
