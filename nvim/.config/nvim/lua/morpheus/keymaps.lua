@@ -679,3 +679,15 @@ end
 
 vim.api.nvim_create_user_command("RemoveEmojis", remove_emojis_from_buffer, {})
 -- vim.keymap.set("n", "<leader>er", RemoveEmojis, { desc = "removes emojis from the current buffer" })
+
+
+function strip_trailing_whitespace()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  for i, line in ipairs(lines) do
+    lines[i] = line:gsub("%s+$", "")
+  end
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+end
+
+vim.api.nvim_create_user_command("RemoveTrailingSpaces", strip_trailing_whitespace, {})
