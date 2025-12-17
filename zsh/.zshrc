@@ -105,19 +105,41 @@ _comp_options+=(globdots)# Include hidden files.
 bindkey -v
 export KEYTIMEOUT=1
 
+
+# Cursor shape for vim mode
+function zle-keymap-select {
+if [[ $KEYMAP == vicmd ]] || [[ $1 = 'block' ]]; then
+  echo -ne '\e[1 q'  # Block cursor for normal mode
+elif [[ $KEYMAP == main ]] || [[ $KEYMAP == viins ]] || [[ $KEYMAP = "" ]] || [[ $1 = 'beam' ]]; then
+  echo -ne '\e[5 q'  # Beam cursor for insert mode
+fi
+}
+zle -N zle-keymap-select
+
+# Initialize cursor shape on shell start
+function zle-line-init {
+echo -ne '\e[5 q'  # Beam cursor
+}
+zle -N zle-line-init
+
+# Reset cursor to beam on command execution
+preexec() {
+echo -ne '\e[5 q'
+}
+
 # fix cursor
 # Change cursor shape for different vi modes.
-function zle-keymap-select {
-  if [[ ${KEYMAP} == vicmd ]] ||
-     [[ $1 = 'block' ]]; then
-    echo -ne '\e[1 q'
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
-  fi
-}
+# function zle-keymap-select {
+# if [[ ${KEYMAP} == vicmd ]] ||
+#    [[ $1 = 'block' ]]; then
+#   echo -ne '\e[1 q'
+# elif [[ ${KEYMAP} == main ]] ||
+#      [[ ${KEYMAP} == viins ]] ||
+#      [[ ${KEYMAP} = '' ]] ||
+#      [[ $1 = 'beam' ]]; then
+#   echo -ne '\e[5 q'
+# fi
+# }
 zle -N zle-keymap-select
 zle-line-init() {
     zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
@@ -236,3 +258,7 @@ source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plug
 eval "$(mcfly init zsh)"
 # eval "$(direnv hook zsh)"
 export MCFLY_KEY_SCHEME=vim
+
+
+# Source local environment variables (not tracked in dotfiles)
+[ -f ~/.zshenv.local ] && source ~/.zshenv.local
