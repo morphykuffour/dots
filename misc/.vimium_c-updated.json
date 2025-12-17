@@ -1,6 +1,13 @@
 {
 	"name": "Vimium C",
 	"newTabUrl": "http://raspberrypi:8888/",
+	"@time": "12/17/2025, 12:23:41 PM",
+	"time": 1765992221549,
+	"environment": {
+		"extension": "2.12.2",
+		"platform": "mac",
+		"chromium": 143
+	},
 	"exclusionRules": [
 		{
 			"passKeys": "",
@@ -96,7 +103,7 @@
 		"map ,b Vomnibar.activate keyword=\"ld\"",
 		"",
 		"# Toggle picture-in-picture for current video",
-		"map ,p openUrl url=\"javascript:(async function(){if(documentPictureInPicture?.window){documentPictureInPicture.window.close()}else if(window.documentPictureInPicture){const v=document.querySelector('video');if(v){const w=640,h=360;const pipWindow=await documentPictureInPicture.requestWindow({width:w,height:h});pipWindow.moveTo(screen.width-w-20,screen.height-h-100);pipWindow.document.body.style.margin='0';pipWindow.document.body.appendChild(v);const style=pipWindow.document.createElement('style');style.textContent='video{width:100%;height:100%}';pipWindow.document.head.appendChild(style);pipWindow.addEventListener('pagehide',()=>{document.body.appendChild(v)})}}else if(document.pictureInPictureElement){document.exitPictureInPicture().catch(()=>{})}else{const v=document.querySelector('video');if(v){v.requestPictureInPicture().catch(()=>{})}}})();\"",
+ 		"map ,p openUrl url=\"javascript:(async function(){if(documentPictureInPicture?.window){documentPictureInPicture.window.close()}else if(window.documentPictureInPicture){const v=document.querySelector('video');if(v){const w=640,h=360;const pipWindow=await documentPictureInPicture.requestWindow({width:w,height:h});pipWindow.moveTo(screen.width-w-20,screen.height-h-100);pipWindow.document.body.style.margin='0';pipWindow.document.body.appendChild(v);const style=pipWindow.document.createElement('style');style.textContent='video{width:100%;height:100%}';pipWindow.document.head.appendChild(style);pipWindow.addEventListener('pagehide',()=>{document.body.appendChild(v)})}}else if(document.pictureInPictureElement){document.exitPictureInPicture().catch(()=>{})}else{const v=document.querySelector('video');if(v){v.requestPictureInPicture().catch(()=>{})}}})();\"",
 		"",
 		"# Quick search keymaps",
 		"map ,s Vomnibar.activate keyword=\"sx\"",
@@ -104,11 +111,10 @@
 		"map ,y Vomnibar.activate keyword=\"yt\"",
 		"map ,g Vomnibar.activate keyword=\"gh\"",
 		"map ,q Vomnibar.activate keyword=\"qw\"",
-		"",
-		"# Custom scroll and vomnibar mappings",
-		"map { scrollPageUp",
-		"map } scrollPageDown",
-		"map : Vomnibar.activateInNewTab",
+ 		"# Custom scroll and vomnibar mappings",
+ 		"map { scrollPageUp",
+ 		"map } scrollPageDown",
+ 		"map : Vomnibar.activateInNewTab",
 		""
 	],
 	"newTabUrl": "http://raspberrypi:8888/",
@@ -135,7 +141,7 @@
 		"  blank=https://map.baidu.com/",
 		"y|yt: https://www.youtube.com/results?search_query=%s \\",
 		"  blank=https://www.youtube.com/ YouTube",
-		"w|wiki|wk: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia",
+		"w|wiki: https://www.wikipedia.org/w/index.php?search=%s Wikipedia",
 		"g.s|gs|gscholar: https://scholar.google.com/scholar?q=$s \\",
 		"  scholar.google.com re=/^(?:\\.[a-z]{2,4})?\\/scholar\\b.*?[#&?]q=([^#&]*)/i \\",
 		"  blank=https://scholar.google.com/ Google Scholar",
@@ -144,14 +150,14 @@
 		"  blank=https://www.aliexpress.com/ AliExpress",
 		"j|jd|jb|joy|joybuy: https://www.joybuy.com/search?keywords=%s \\",
 		"  blank=https://www.joybuy.com/ Joybuy",
-		"az|amazon: https://www.amazon.com/s/?field-keywords=%s \\",
+		"az|amazon: https://www.amazon.com/s?k=%s \\",
 		"  blank=https://www.amazon.com/ Amazon",
 		"",
 		"\\:i: vimium://sed/s/^//,lower\\ $S re= Lower case",
 		"v.m|math: vimium://math\\ $S re= Calculate",
 		"v.p: vimium://parse\\ $S re= Redo Search",
-		"gh|github: https://github.com/search?q=%s&type=repositories \\",
-		"  blank=https://github.com/ GitHub",
+		"gh|github: https://github.com/search?q=$s \\",
+		"  blank=https://github.com/ GitHub Repo",
 		"ge|gitee: https://search.gitee.com/?type=repository&q=$s \\",
 		"  blank=https://gitee.com/ Gitee 仓库",
 		"js\\:|Js: javascript:\\ $S; JavaScript",
@@ -160,5 +166,26 @@
 		"s|sx|searx|searxng: https://optiplex-nixos.tailc585e.ts.net:8443/?q=%s SearXNG",
 		""
 	],
-	"vimiumCSS": "div > .vimiumHintMarker {\n/* linkhint boxes */\nbackground: SteelBlue;\nborder: 1px solid Black;\n}\n\ndiv > .vimiumHintMarker span {\n/* linkhint text */\ncolor: Black;\nfont-weight: bold;\nfont-size: 12px;\ntext-shadow: none;\n}\n\ndiv > .vimiumHintMarker > .matchingCharacter {\n/* linkhint text match */\ncolor: DarkGray;\n}"
+	"userDefinedCss": [
+		"# CSS",
+		"div > .vimiumHintMarker {",
+		"/* linkhint boxes */",
+		"background: SteelBlue;",
+		"border: 1px solid Black;",
+		"}",
+		"",
+		"div > .vimiumHintMarker span {",
+		"/* linkhint text */",
+		"color: Black;",
+		"font-weight: bold;",
+		"font-size: 12px;",
+		"text-shadow: none;",
+		"}",
+		"",
+		"div > .vimiumHintMarker > .matchingCharacter {",
+		"/* linkhint text match */",
+		"color: DarkGray;",
+		"}",
+		""
+	]
 }
