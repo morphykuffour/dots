@@ -46,11 +46,16 @@ export PATH="$HOME/tmp/platform-tools:$PATH"
 
 export DOTFILES=$HOME/dots
 export PATH=$PATH:/usr/local/go/bin
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/sbin:$PATH"
+
+# macOS-specific Homebrew paths
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+    export PATH="/opt/homebrew/sbin:$PATH"
+    export PKG_CONFIG_PATH="/opt/homebrew/opt/libxml2/lib/pkgconfig"
+    export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+fi
+
 export PATH="/usr/local/bin:$PATH"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/libxml2/lib/pkgconfig"
-export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 # export VAGRANT_DEFAULT_PROVIDER=libvirt
 export LESSHISTFILE=-
 export QMK_HOME="$HOME/.qmk_firmware"
@@ -61,26 +66,74 @@ export ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 export LESSHISTFILE=-
 export MCFLY_KEY_SCHEME=vim
 export STARSHIP_CONFIG='$HOME/.config/starship/starship.toml'
-export PKG_CONFIG_PATH=/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
+
+# macOS-specific PKG_CONFIG_PATH with Cellar and X11
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    export PKG_CONFIG_PATH=/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
+fi
+
 export NODE_PATH="$HOME/Downloads/node-v16.15.1-linux-x64/lib/node_modules"
 
+# NVM lazy loading - speeds up shell startup significantly
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Lazy load nvm - only load when first used
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # Add nvm bins to PATH without loading nvm
+  [ -d "$NVM_DIR/versions/node" ] && export PATH="$NVM_DIR/versions/node/$(ls -1 $NVM_DIR/versions/node | tail -1)/bin:$PATH"
+
+  # Lazy load function
+  nvm() {
+    unset -f nvm node npm npx
+    \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    nvm "$@"
+  }
+  node() {
+    unset -f nvm node npm npx
+    \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    node "$@"
+  }
+  npm() {
+    unset -f nvm node npm npx
+    \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    npm "$@"
+  }
+  npx() {
+    unset -f nvm node npm npx
+    \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    npx "$@"
+  }
+fi
 
 # hledger
 export LEDGER_FILE=$HOME/Dropbox/Finances/main.journal    # use this file by default
 
-# WSL environment
+# Browser configuration - cross-platform
 if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
     # WSL environment
     export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
     # export DISPLAY="$(hostname).local:0.0"
     export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
     export LIBGL_ALWAYS_INDIRECT=0
-
+elif [[ "$(uname -s)" == "Darwin" ]]; then
+    # macOS
+    export BROWSER="open"
 else
-    export BROWSER="brave-browser"
+    # Linux - try common browsers
+    if command -v brave &> /dev/null; then
+        export BROWSER="brave"
+    elif command -v brave-browser &> /dev/null; then
+        export BROWSER="brave-browser"
+    elif command -v firefox &> /dev/null; then
+        export BROWSER="firefox"
+    elif command -v chromium &> /dev/null; then
+        export BROWSER="chromium"
+    else
+        export BROWSER="xdg-open"
+    fi
 fi
 
 # paste with <p> in vi-mode zsh with tmux support
@@ -90,10 +143,12 @@ typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
 
 # emacs
-export INSIDE_EMACS=t 
+export INSIDE_EMACS=t
 
- # pdflatex
-export PATH=$PATH:/Library/TeX/texbin
+# pdflatex - macOS-specific path
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    export PATH=$PATH:/Library/TeX/texbin
+fi
 
 # ai - using agenix with SSH keys for consistent secret management
 export RAGE_BIN=/etc/profiles/per-user/morph/bin/rage
