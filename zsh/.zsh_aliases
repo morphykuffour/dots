@@ -161,3 +161,7 @@ alias emacs="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c -a ''"
 alias e="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -nw -a ''"
 alias ec="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c -a ''"
 alias ekill="emacsclient -e '(kill-emacs)'"
+
+# Touchpad control for XPS 17
+alias killtouchpad="xinput disable 'DELL098F:00 04F3:311C Touchpad'"
+alias revivetouchpad="xinput enable 'DELL098F:00 04F3:311C Touchpad'"
