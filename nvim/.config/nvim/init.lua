@@ -289,7 +289,7 @@ require('lazy').setup({
     },
   },
 
-{ 'glacambre/firenvim', build = ":call firenvim#install(0)" },
+-- { 'glacambre/firenvim', build = ":call firenvim#install(0)" },
 
   {
     -- Highlight, edit, and navigate code

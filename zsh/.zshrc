@@ -255,18 +255,26 @@ command -v starship &> /dev/null && eval "$(starship init zsh)"
 # Load essential plugins immediately
 [ -f $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh ] && source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
 
+# Load zsh-defer for proper async plugin loading
+[ -f $HOME/.zsh/plugins/zsh-defer/zsh-defer.plugin.zsh ] && source $HOME/.zsh/plugins/zsh-defer/zsh-defer.plugin.zsh
+
 # Defer non-essential plugins to load asynchronously after prompt appears
-# This significantly speeds up shell startup
-function zsh_load_deferred_plugins() {
+# This significantly speeds up shell startup while keeping all plugins functional
+if (( $+functions[zsh-defer] )); then
+  # Defer loading to after prompt appears for fast startup
+  zsh-defer source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
+  zsh-defer source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  zsh-defer source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+  zsh-defer source $HOME/.zsh/fzf-gems/fzf_git_functions.sh
+  zsh-defer source $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
+else
+  # Fallback: load immediately if zsh-defer is not available
   [ -f $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh ] && source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
   [ -f $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
   [ -f $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ] && source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-  [ -f $HOME/.zsh/fzf-gems/fzf_git_functions.sh ] && . $HOME/.zsh/fzf-gems/fzf_git_functions.sh
-  [ -f $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh ] && . $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
-}
-
-# Load deferred plugins in background after first prompt
-zsh-defer zsh_load_deferred_plugins 2>/dev/null || zsh_load_deferred_plugins &!
+  [ -f $HOME/.zsh/fzf-gems/fzf_git_functions.sh ] && source $HOME/.zsh/fzf-gems/fzf_git_functions.sh
+  [ -f $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh ] && source $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
+fi
 
 # ------------------------------- ZSH APPS ------------------------------------
 command -v mcfly &> /dev/null && eval "$(mcfly init zsh)"
