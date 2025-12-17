@@ -707,7 +707,7 @@
  '(custom-safe-themes
    '("871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8" default))
  '(org-agenda-files
-   '("~/dots/emacs/.emacs.d/init.el" "~/iCloud/Org/Todo.org"
+   '("~/dots/emacs/.emacs.d/init.el" "~/Sync/Org/Todo.org"
      "~/Org/agenda/tasks.org" "~/Org/agenda/school.org"
      "~/Org/agenda/birthdays.org" "~/Org/agenda/habits.org"))
  '(send-mail-function 'smtpmail-send-it))
