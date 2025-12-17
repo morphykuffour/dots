@@ -62,8 +62,21 @@ PROMPT_EOL_MARK=
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 
 # ------------------------------ ZSH completion system ------------------------
+# Speed up compinit by skipping security check on cache if < 24h old
 autoload -Uz compinit
-compinit -d ~/.cache/zsh/zcompdump
+setopt EXTENDEDGLOB
+local zcompdump="${ZDOTDIR:-$HOME}/.cache/zsh/zcompdump"
+if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
+  zcompile "$zcompdump"
+fi
+# Only check cache once per day
+if [[ -n ${zcompdump}(#qNmh-24) ]]; then
+  compinit -C -d "$zcompdump"
+else
+  compinit -d "$zcompdump"
+fi
+unsetopt EXTENDEDGLOB
+
 compdef _gnu_generic delta
 # compdef _qmk qmk
 _comp_options+=(globdots)		# Include hidden files.
@@ -83,8 +96,8 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
 
 # ----------------------------------- MISC -----------------------------------
-# enable terminal linewrap
-setterm -linewrap on 2> /dev/null
+# enable terminal linewrap (skip if in kitty as it handles this)
+[[ "$TERM" != "xterm-kitty" ]] && setterm -linewrap on 2> /dev/null
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -93,12 +106,8 @@ case "$TERM" in
         ;;
 esac
 
-# Basic auto/tab complete:
-autoload -U compinit
-zstyle ':completion:*' menu select
+# Note: compinit already called above with optimizations
 zmodload zsh/complist
-compinit
-_comp_options+=(globdots)# Include hidden files.
 
 #  ---------------------------- Key bindings -------------------------------------
 # vi mode
@@ -208,12 +217,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
 zstyle ':fzf-tab:*' switch-group ',' '.'
 
-# WSL environment
-if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
-    export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
-else
-    export BROWSER="brave"
-fi
+# BROWSER is configured in .zsh_exports with better cross-platform detection
 
 # open vscode from terminal in Mac OS
 case "$(uname -s)" in
@@ -223,9 +227,9 @@ case "$(uname -s)" in
     alias o="open"
     ;;
   Linux)
-    source $HOME/.zsh/completions/autojump.zsh
+    [ -f $HOME/.zsh/completions/autojump.zsh ] && source $HOME/.zsh/completions/autojump.zsh
     # source $HOME/.zsh/completions/home-manager.zsh
-    source $HOME/.zsh/completions/gh.zsh
+    [ -f $HOME/.zsh/completions/gh.zsh ] && source $HOME/.zsh/completions/gh.zsh
     # open () { xdg-open "$*" &}
     # alias o="thunar"
     ;;
@@ -239,23 +243,33 @@ export ZDOTDIR=$HOME/.zsh
 source $HOME/.zsh_aliases
 source $HOME/.zsh_exports
 source $HOME/.zsh_functions
-fpath+=$HOME/.zsh/completions
-fpath=($HOME/.zsh/completions/nix-zsh-completions $fpath)
+
+# Add completions to fpath if they exist
+[ -d $HOME/.zsh/completions ] && fpath+=$HOME/.zsh/completions
+[ -d $HOME/.zsh/completions/nix-zsh-completions ] && fpath=($HOME/.zsh/completions/nix-zsh-completions $fpath)
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
-eval "$(starship init zsh)"
-source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
-source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
-source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+command -v starship &> /dev/null && eval "$(starship init zsh)"
 
-. $HOME/.zsh/fzf-gems/fzf_git_functions.sh
-. $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
+# Load essential plugins immediately
+[ -f $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh ] && source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
 
+# Defer non-essential plugins to load asynchronously after prompt appears
+# This significantly speeds up shell startup
+function zsh_load_deferred_plugins() {
+  [ -f $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh ] && source $HOME/.zsh/plugins/zsh-system-clipboard/zsh-system-clipboard.zsh
+  [ -f $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source $HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  [ -f $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ] && source $HOME/.zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+  [ -f $HOME/.zsh/fzf-gems/fzf_git_functions.sh ] && . $HOME/.zsh/fzf-gems/fzf_git_functions.sh
+  [ -f $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh ] && . $HOME/.zsh/fzf-gems/fzf_git_keybindings.zsh
+}
+
+# Load deferred plugins in background after first prompt
+zsh-defer zsh_load_deferred_plugins 2>/dev/null || zsh_load_deferred_plugins &!
 
 # ------------------------------- ZSH APPS ------------------------------------
-eval "$(mcfly init zsh)"
+command -v mcfly &> /dev/null && eval "$(mcfly init zsh)"
 # eval "$(direnv hook zsh)"
 export MCFLY_KEY_SCHEME=vim
 
