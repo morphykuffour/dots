@@ -104,6 +104,11 @@
 		"map ,y Vomnibar.activate keyword=\"yt\"",
 		"map ,g Vomnibar.activate keyword=\"gh\"",
 		"map ,q Vomnibar.activate keyword=\"qw\"",
+		"",
+		"# Custom scroll and vomnibar mappings",
+		"map { scrollPageUp",
+		"map } scrollPageDown",
+		"map : Vomnibar.activateInNewTab",
 		""
 	],
 	"newTabUrl": "http://raspberrypi:8888/",
@@ -130,7 +135,7 @@
 		"  blank=https://map.baidu.com/",
 		"y|yt: https://www.youtube.com/results?search_query=%s \\",
 		"  blank=https://www.youtube.com/ YouTube",
-		"w|wiki: https://www.wikipedia.org/w/index.php?search=%s Wikipedia",
+		"w|wiki|wk: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia",
 		"g.s|gs|gscholar: https://scholar.google.com/scholar?q=$s \\",
 		"  scholar.google.com re=/^(?:\\.[a-z]{2,4})?\\/scholar\\b.*?[#&?]q=([^#&]*)/i \\",
 		"  blank=https://scholar.google.com/ Google Scholar",
@@ -139,14 +144,14 @@
 		"  blank=https://www.aliexpress.com/ AliExpress",
 		"j|jd|jb|joy|joybuy: https://www.joybuy.com/search?keywords=%s \\",
 		"  blank=https://www.joybuy.com/ Joybuy",
-		"az|amazon: https://www.amazon.com/s?k=%s \\",
+		"az|amazon: https://www.amazon.com/s/?field-keywords=%s \\",
 		"  blank=https://www.amazon.com/ Amazon",
 		"",
 		"\\:i: vimium://sed/s/^//,lower\\ $S re= Lower case",
 		"v.m|math: vimium://math\\ $S re= Calculate",
 		"v.p: vimium://parse\\ $S re= Redo Search",
-		"gh|github: https://github.com/search?q=$s \\",
-		"  blank=https://github.com/ GitHub Repo",
+		"gh|github: https://github.com/search?q=%s&type=repositories \\",
+		"  blank=https://github.com/ GitHub",
 		"ge|gitee: https://search.gitee.com/?type=repository&q=$s \\",
 		"  blank=https://gitee.com/ Gitee 仓库",
 		"js\\:|Js: javascript:\\ $S; JavaScript",
@@ -154,5 +159,6 @@
 		"ld: http://raspberrypi:9090/bookmarks?q=%s linkding",
 		"s|sx|searx|searxng: https://optiplex-nixos.tailc585e.ts.net:8443/?q=%s SearXNG",
 		""
-	]
+	],
+	"vimiumCSS": "div > .vimiumHintMarker {\n/* linkhint boxes */\nbackground: SteelBlue;\nborder: 1px solid Black;\n}\n\ndiv > .vimiumHintMarker span {\n/* linkhint text */\ncolor: Black;\nfont-weight: bold;\nfont-size: 12px;\ntext-shadow: none;\n}\n\ndiv > .vimiumHintMarker > .matchingCharacter {\n/* linkhint text match */\ncolor: DarkGray;\n}"
 }
