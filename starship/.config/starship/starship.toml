@@ -1,7 +1,7 @@
 # Performance
 command_timeout = 500
 
-format = """$directory\
+format = """$custom\
 $git_branch\
 $git_status\
 $fill\
@@ -18,7 +18,109 @@ symbol = " "
 success_symbol = "[\\$](bold green)"
 error_symbol = "[\\$](bold red)"
 
-[directory]
+# Custom SCP-style prompt: user@host:path with intelligent shortening
+[custom.scp_prompt]
+command = '''
+# Get terminal width
+term_width=${COLUMNS:-80}
+
+# Reserve space for git info, prompt chars (~25-30 chars)
+max_path_len=$((term_width - 30))
+[ $max_path_len -lt 25 ] && max_path_len=25
+
+# Get components
+user=$(whoami)
+host=$(hostname -s)
+path="$PWD"
+
+# Replace home with ~
+home="$HOME"
+if [[ "$path" == "$home"* ]]; then
+    path="~${path#$home}"
+fi
+
+# Emacs-style progressive path shortening
+# Strategy: progressively shorten from leftmost dirs, keeping last component full
+shorten_path() {
+    local p="$1"
+    local maxlen="$2"
+
+    # If path fits, return as-is
+    [ ${#p} -le $maxlen ] && echo "$p" && return
+
+    # Extract prefix (~ or empty)
+    local prefix=""
+    if [[ "$p" == "~"* ]]; then
+        prefix="~"
+        p="${p:1}"
+    fi
+
+    # Split into array
+    IFS='/' read -ra parts <<< "$p"
+    local n=${#parts[@]}
+
+    # Try progressively shorter versions
+    # Start by shortening all but last, then shorten more aggressively
+    for shorten_len in 3 2 1; do
+        local result=""
+        for i in "${!parts[@]}"; do
+            local part="${parts[$i]}"
+            [ -z "$part" ] && continue
+
+            if [ $i -eq $((n - 1)) ]; then
+                # Last component: keep full or truncate if needed
+                result="${result}/${part}"
+            else
+                # Shorten to shorten_len chars (keep leading . if present)
+                if [[ "$part" == .* ]]; then
+                    local short=".${part:1:$shorten_len}"
+                else
+                    local short="${part:0:$shorten_len}"
+                fi
+                result="${result}/${short}"
+            fi
+        done
+
+        result="${prefix}${result}"
+        if [ ${#result} -le $maxlen ]; then
+            echo "$result"
+            return
+        fi
+    done
+
+    # Still too long - truncate last component too
+    local result=""
+    local last_budget=$((maxlen - n * 2 - ${#prefix}))
+    [ $last_budget -lt 5 ] && last_budget=5
+
+    for i in "${!parts[@]}"; do
+        local part="${parts[$i]}"
+        [ -z "$part" ] && continue
+
+        if [ $i -eq $((n - 1)) ]; then
+            if [ ${#part} -gt $last_budget ]; then
+                result="${result}/${part:0:$((last_budget-1))}…"
+            else
+                result="${result}/${part}"
+            fi
+        else
+            if [[ "$part" == .* ]]; then
+                result="${result}/.${part:1:1}"
+            else
+                result="${result}/${part:0:1}"
+            fi
+        fi
+    done
+
+    echo "${prefix}${result}"
+}
+
+short_path=$(shorten_path "$path" $max_path_len)
+echo "${user}@${host}:${short_path}"
+'''
+when = "true"
+shell = ["bash", "--noprofile", "--norc"]
+format = "[$output]($style) "
 style = "cyan"
 
 [git_branch]
