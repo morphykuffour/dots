@@ -224,4 +224,55 @@ emacsWatcher = hs.application.watcher.new(function(appName, eventType, appObject
 end)
 emacsWatcher:start()
 
+-- ============================================================================
+-- Window Focus Highlight - Show border on focused window
+-- ============================================================================
+
+local focusBorder = nil
+local focusBorderColor = {hex = "#FFDB00", alpha = 1}
+local focusBorderWidth = 4
+
+local function updateFocusBorder()
+    -- Clean up existing border
+    if focusBorder then
+        focusBorder:delete()
+        focusBorder = nil
+    end
+
+    local win = hs.window.focusedWindow()
+    if not win then return end
+
+    local frame = win:frame()
+
+    focusBorder = hs.canvas.new(frame)
+    focusBorder:appendElements({
+        type = "rectangle",
+        action = "stroke",
+        strokeColor = focusBorderColor,
+        strokeWidth = focusBorderWidth,
+        roundedRectRadii = {xRadius = 8, yRadius = 8},
+    })
+    focusBorder:level(hs.canvas.windowLevels.overlay)
+    focusBorder:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
+    focusBorder:show()
+end
+
+-- Watch for window focus changes
+focusWatcher = hs.window.filter.new():setDefaultFilter()
+focusWatcher:subscribe(hs.window.filter.windowFocused, updateFocusBorder)
+focusWatcher:subscribe(hs.window.filter.windowMoved, function(win)
+    if win == hs.window.focusedWindow() then
+        updateFocusBorder()
+    end
+end)
+focusWatcher:subscribe(hs.window.filter.windowUnfocused, function()
+    if focusBorder then
+        focusBorder:delete()
+        focusBorder = nil
+    end
+end)
+
+-- Initial border for currently focused window
+updateFocusBorder()
+
 hs.alert.show("Hammerspoon config loaded")
