@@ -2,6 +2,102 @@
 
 # -------------------------------- FUNCTIONS ---------------------------------
 
+# -------------------------------- TMUX ALIAS EXPANSION ---------------------------------
+# Expands aliases in tmux window title so you see "git commit" instead of "gca"
+
+# Function to expand a single alias to its definition
+_expand_alias() {
+    local cmd="$1"
+    local expanded
+
+    # Check if the command is an alias
+    if expanded=$(alias "$cmd" 2>/dev/null); then
+        # Extract just the expansion part (after the '=')
+        # Handle both 'alias gca="git add .; git commit"' and 'gca="git add .; git commit"'
+        expanded="${expanded#*=}"
+        # Remove surrounding quotes if present
+        expanded="${expanded#[\'\"]}"
+        expanded="${expanded%[\'\"]}"
+        echo "$expanded"
+        return 0
+    fi
+    return 1
+}
+
+# Function to intelligently expand command for display
+_expand_command_for_display() {
+    local full_cmd="$1"
+    local first_word="${full_cmd%% *}"
+    local rest=""
+
+    # Get everything after the first word
+    if [[ "$full_cmd" == *" "* ]]; then
+        rest=" ${full_cmd#* }"
+    fi
+
+    # Try to expand the first word if it's an alias
+    local expanded
+    if expanded=$(_expand_alias "$first_word"); then
+        # For compound aliases like "git add .; git commit", just show the main action
+        # Extract the most meaningful part
+        if [[ "$expanded" == *";"* ]] || [[ "$expanded" == *"&&"* ]]; then
+            # For chains, show a summary: "git add+commit"
+            local primary_cmd="${expanded%%;*}"
+            primary_cmd="${primary_cmd%%&&*}"
+            primary_cmd="${primary_cmd## }"
+            primary_cmd="${primary_cmd%% }"
+            echo "${primary_cmd}${rest}"
+        else
+            echo "${expanded}${rest}"
+        fi
+    else
+        echo "$full_cmd"
+    fi
+}
+
+# Preexec hook - runs before each command
+# Updates tmux window name with expanded alias
+_tmux_expand_alias_preexec() {
+    # Only run if we're in tmux
+    [[ -z "$TMUX" ]] && return
+
+    local cmd="$1"
+
+    # Skip if command is empty or just whitespace
+    [[ -z "${cmd// }" ]] && return
+
+    # Expand the command
+    local expanded=$(_expand_command_for_display "$cmd")
+
+    # Truncate if too long (keep first 30 chars)
+    if [[ ${#expanded} -gt 30 ]]; then
+        expanded="${expanded:0:27}..."
+    fi
+
+    # Set the tmux window name
+    # Using automatic-rename off ensures our name sticks
+    tmux rename-window "$expanded" 2>/dev/null
+}
+
+# Precmd hook - runs before prompt is displayed (after command finishes)
+# Resets window name to shell or path
+_tmux_expand_alias_precmd() {
+    # Only run if we're in tmux
+    [[ -z "$TMUX" ]] && return
+
+    # Reset to a sensible default (current directory basename)
+    tmux rename-window "${PWD##*/}" 2>/dev/null
+}
+
+# Register hooks (only if in zsh)
+if [[ -n "$ZSH_VERSION" ]]; then
+    autoload -Uz add-zsh-hook
+    add-zsh-hook preexec _tmux_expand_alias_preexec
+    add-zsh-hook precmd _tmux_expand_alias_precmd
+fi
+
+# -------------------------------- END TMUX ALIAS EXPANSION ---------------------------------
+
 # Function to source files if they exist
 zsh_add_file() {
     [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
