@@ -18,7 +18,7 @@
 (defvar morph--file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
 
-;; Disable package.el in favor of straight.el
+;; Disable package.el - packages managed by Nix
 (setq package-enable-at-startup nil
       package-quickstart nil)
 
