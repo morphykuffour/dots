@@ -208,4 +208,20 @@ hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", function(files)
     end
 end):start()
 
+-- ============================================================================
+-- Emacs - Always focus when launched
+-- ============================================================================
+
+emacsWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
+    if appName == "Emacs" and eventType == hs.application.watcher.launched then
+        hs.timer.doAfter(0.5, function()
+            local emacs = hs.application.get("Emacs")
+            if emacs then
+                emacs:activate()
+            end
+        end)
+    end
+end)
+emacsWatcher:start()
+
 hs.alert.show("Hammerspoon config loaded")
