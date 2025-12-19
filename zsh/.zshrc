@@ -114,6 +114,74 @@ zmodload zsh/complist
 bindkey -v
 export KEYTIMEOUT=1
 
+# Visual feedback for yank operations (like vim's highlight on yank)
+# Load sched module for timing
+zmodload zsh/sched 2>/dev/null
+
+function _clear_yank_highlight_widget() {
+    region_highlight=()
+    zle -R 2>/dev/null
+}
+zle -N _clear_yank_highlight_widget
+
+# Wrapper for vi-yank that adds highlight
+function _vi-yank-with-highlight() {
+    zle .vi-yank
+    if [[ -n $CUTBUFFER ]]; then
+        local start=$MARK
+        local end=$CURSOR
+        if (( start > end )); then
+            local tmp=$start
+            start=$end
+            end=$tmp
+        fi
+        region_highlight=("$start $end bg=yellow fg=black")
+        zle -R
+        # Clear highlight after 0.2 seconds using sched
+        sched +0.2 'zle && zle _clear_yank_highlight_widget' 2>/dev/null
+    fi
+}
+
+# Wrapper for vi-yank-eol that adds highlight
+function _vi-yank-eol-with-highlight() {
+    local old_cursor=$CURSOR
+    zle .vi-yank-eol
+    if [[ -n $CUTBUFFER ]]; then
+        region_highlight=("$old_cursor $CURSOR bg=yellow fg=black")
+        zle -R
+        sched +0.2 'zle && zle _clear_yank_highlight_widget' 2>/dev/null
+    fi
+}
+
+# Wrapper for vi-yank-whole-line that adds highlight
+function _vi-yank-whole-line-with-highlight() {
+    zle .vi-yank-whole-line
+    if [[ -n $CUTBUFFER ]]; then
+        local bol=0
+        local eol=${#BUFFER}
+        for (( i=$CURSOR-1; i>=0; i-- )); do
+            if [[ ${BUFFER[$i]} == $'\n' ]]; then
+                bol=$((i+1))
+                break
+            fi
+        done
+        for (( i=$CURSOR+1; i<=${#BUFFER}; i++ )); do
+            if [[ ${BUFFER[$i]} == $'\n' ]]; then
+                eol=$i
+                break
+            fi
+        done
+        region_highlight=("$bol $eol bg=yellow fg=black")
+        zle -R
+        sched +0.2 'zle && zle _clear_yank_highlight_widget' 2>/dev/null
+    fi
+}
+
+# Replace the default widgets with our wrappers
+zle -N vi-yank _vi-yank-with-highlight
+zle -N vi-yank-eol _vi-yank-eol-with-highlight
+zle -N vi-yank-whole-line _vi-yank-whole-line-with-highlight
+
 
 # Cursor shape for vim mode
 function zle-keymap-select {
