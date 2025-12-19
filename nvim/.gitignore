@@ -1,0 +1,9 @@
+# Neovim package manager lock files
+lazy-lock.json
+.config/nvim/lazy-lock.json
+
+# Plugin directories
+.config/nvim/plugin/
+
+# Neovim runtime
+.config/nvim/.netrwhist
