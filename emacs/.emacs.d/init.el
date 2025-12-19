@@ -2,13 +2,51 @@
 
 ;;; Commentary:
 ;; emacs os config for writing and productivity
+;; Performance optimized with Kyure-A speedups
 ; MacOS X
 ; brew tap d12frosted/emacs-plus
 ; brew install emacs-plus@31 --with-mailutils --with-modern-black-dragon-icon
 
 ;;; Code:
 
-;; Measure startup time
+;;; --- DELAYED EXECUTION SYSTEM (from Kyure-A) ---
+;; This system defers low-priority configurations to idle time
+
+(defvar morph/delayed-priority-high-configurations '()
+  "High priority delayed configurations.")
+
+(defvar morph/delayed-priority-low-configurations '()
+  "Low priority delayed configurations (executed during idle time).")
+
+(defmacro with-delayed-execution (priority &rest body)
+  "Execute BODY with delayed execution based on PRIORITY.
+PRIORITY can be :high or :low."
+  (declare (indent 1))
+  `(cond
+    ((eq ,priority :high)
+     (push (lambda () ,@body) morph/delayed-priority-high-configurations))
+    ((eq ,priority :low)
+     (push (lambda () ,@body) morph/delayed-priority-low-configurations))
+    (t
+     (error "Unknown priority: %s" ,priority))))
+
+;; Execute high priority configs after init (0.1 sec delay)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-with-timer 0.1 nil
+                            (lambda ()
+                              (dolist (fn (nreverse morph/delayed-priority-high-configurations))
+                                (funcall fn))))))
+
+;; Execute low priority configs during idle time (0.3 sec delay, every 0.001 sec)
+(run-with-timer 0.3 0.001
+                (lambda ()
+                  (when morph/delayed-priority-low-configurations
+                    (let ((fn (pop morph/delayed-priority-low-configurations)))
+                      (when fn (funcall fn))))))
+
+;;; --- STARTUP TIME MEASUREMENT ---
+
 (defun morph/display-startup-time ()
   "Display Emacs startup time in the minibuffer."
   (message "Emacs loaded in %s with %d garbage collections."
@@ -19,13 +57,8 @@
 
 (add-hook 'emacs-startup-hook #'morph/display-startup-time)
 
-;; Reset garbage collection settings after startup
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold (* 16 1024 1024) ; 16mb
-                  gc-cons-percentage 0.1)
-            ;; Restore file-name-handler-alist
-            (setq file-name-handler-alist morph--file-name-handler-alist)))
+;;; --- GCMH (Garbage Collection Magic Hack) ---
+;; Automatically manages GC thresholds for optimal performance
 
 ;; GC when focus is lost (helps keep things snappy)
 (add-hook 'focus-out-hook #'garbage-collect)
@@ -47,7 +80,28 @@
 ;; Configure use-package with straight.el
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
-(use-package org :straight (:type built-in))
+
+;;; --- USE-PACKAGE OPTIMIZATION SETTINGS (from Kyure-A) ---
+;; Defer loading by default for faster startup
+(setq use-package-always-defer t)
+(setq use-package-always-ensure t)
+(setq use-package-expand-minimally t)
+(setq use-package-compute-statistics nil)  ; Disable statistics for speed (enable for debugging)
+
+;;; --- GCMH PACKAGE (Garbage Collection Magic Hack) ---
+;; Manages GC thresholds automatically for optimal performance
+(use-package gcmh
+  :demand t
+  :config
+  (setq gcmh-idle-delay 5
+        gcmh-high-cons-threshold (* 128 1024 1024)  ; 128MB during work
+        gcmh-low-cons-threshold (* 16 1024 1024))   ; 16MB when idle
+  (gcmh-mode 1)
+  ;; Restore file-name-handler-alist after GCMH is set up
+  (when (boundp 'morph--file-name-handler-alist)
+    (setq file-name-handler-alist morph--file-name-handler-alist)))
+
+(use-package org :straight (:type built-in) :defer t)
 
 (defconst user-init-dir
   (cond ((and (boundp 'user-init-file) user-init-file)
@@ -88,7 +142,9 @@
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
 ;; Smex for M-x command history (required by nano-counsel)
-(use-package smex)
+(use-package smex
+  :defer t
+  :commands smex)
 
 (use-package counsel
   :bind
@@ -143,8 +199,9 @@
 
 (use-package undo-tree
   :ensure t
-  :init
-  ;; globally turn on undo-tree
+  :defer 2
+  :config
+  ;; globally turn on undo-tree (deferred 2 seconds)
   (global-undo-tree-mode))
 
 (setq evil-undo-system 'undo-tree)
@@ -290,11 +347,11 @@
   ;; :ensure-system-package (delta . "cargo install git-delta")
   :hook (magit-mode . magit-delta-mode))
 
-(use-package exec-path-from-shell)
-
-(getenv "SHELL")
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :defer 1
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package eat
   :config
@@ -330,10 +387,11 @@
 (require 'rainbow-delimiters)
 
 (use-package which-key
-  :init (which-key-mode)
+  :defer 2
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.3))
+  (setq which-key-idle-delay 0.3)
+  (which-key-mode))
 
 
 (setq hl-todo-keyword-faces
@@ -728,11 +786,7 @@
  '(markdown-inline-code-face ((t (:inherit default))))
  '(markdown-pre-face ((t (:inherit default)))))
 
-;;; Performance optimizations
-
-;; Reduce rendering workload
-(setq-default bidi-display-reordering nil  ; Disable bidirectional text for performance
-              bidi-paragraph-direction 'left-to-right)
+;;; Performance optimizations (additional to early-init.el)
 
 ;; Make scrolling smoother
 (setq scroll-step 1
@@ -749,5 +803,36 @@
 
 ;; Don't compact font caches during GC
 (setq inhibit-compacting-font-caches t)
+
+;; Process handling for better performance
+(setq process-adaptive-read-buffering nil)
+
+;; Disable VC for tramp
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+
+;; Chrome Emacs - Browser extension support
+;; Provides atomic-chrome server for the "Chrome Emacs" browser extension
+;; https://github.com/KarimAziev/chrome-emacs
+(use-package atomic-chrome
+  :demand t
+  :straight (atomic-chrome
+             :repo "KarimAziev/atomic-chrome"
+             :type git
+             :host github)
+  :config
+  (setq atomic-chrome-extension-type-list '(atomic-chrome))
+  (setq atomic-chrome-buffer-open-style 'frame)  ; Open in new frame (or 'split, 'full)
+  (setq atomic-chrome-default-major-mode 'markdown-mode)
+  (setq atomic-chrome-url-major-mode-alist
+        '(("github\\.com" . gfm-mode)
+          ("gitlab\\.com" . gfm-mode)
+          ("reddit\\.com" . markdown-mode)
+          ("stackoverflow\\.com" . markdown-mode)
+          ("" . markdown-mode)))  ; Default fallback
+  ;; Start the WebSocket server on port 64292 (Chrome Emacs default)
+  (atomic-chrome-start-server))
 
 ;;; init.el ends here
