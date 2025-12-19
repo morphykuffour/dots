@@ -75,6 +75,8 @@ alias e="$EDITOR"
 alias v.="$EDITOR ."
 alias t='tmux'
 alias :q='exit'
+alias td='todoist'
+
 # Distro-specific: apt update (only for Debian/Ubuntu, not NixOS)
 if command -v apt &> /dev/null; then
     alias sau="sudo apt update"
