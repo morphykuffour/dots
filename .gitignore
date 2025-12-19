@@ -1,6 +1,7 @@
 dwm/
 slock/
 zsh.old/
+**/backup_*/
 tmux/.tmux/resurrect/*
 notes.txt
 keyd/.config/keyd/app.log
