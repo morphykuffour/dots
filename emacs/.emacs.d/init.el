@@ -63,28 +63,14 @@ PRIORITY can be :high or :low."
 ;; GC when focus is lost (helps keep things snappy)
 (add-hook 'focus-out-hook #'garbage-collect)
 
-;; straight.el package manager
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Configure use-package with straight.el
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
+;;; --- USE-PACKAGE CONFIGURATION ---
+;; Packages are managed by Nix, use-package only configures them
+(require 'use-package)
 
 ;;; --- USE-PACKAGE OPTIMIZATION SETTINGS (from Kyure-A) ---
 ;; Defer loading by default for faster startup
 (setq use-package-always-defer t)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)  ; Packages installed by Nix, not use-package
 (setq use-package-expand-minimally t)
 (setq use-package-compute-statistics nil)  ; Disable statistics for speed (enable for debugging)
 
@@ -101,7 +87,7 @@ PRIORITY can be :high or :low."
   (when (boundp 'morph--file-name-handler-alist)
     (setq file-name-handler-alist morph--file-name-handler-alist)))
 
-(use-package org :straight (:type built-in) :defer t)
+(use-package org :ensure nil :defer t)  ; Built-in package
 
 (defconst user-init-dir
   (cond ((and (boundp 'user-init-file) user-init-file)
@@ -147,6 +133,7 @@ PRIORITY can be :high or :low."
   :commands smex)
 
 (use-package counsel
+  :demand t
   :bind
   ("M-x" . 'counsel-M-x)
   ("C-x b" . 'counsel-switch-buffer)
@@ -175,11 +162,8 @@ PRIORITY can be :high or :low."
   ;; Disable fuzzy matching for M-x completely (if needed)
   (setq counsel-M-x-use-fuzzy nil))
 
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
-
 (use-package ivy
+  :demand t
   :diminish
   :bind (("C-f" . swiper)
          :map ivy-minibuffer-map
@@ -192,13 +176,17 @@ PRIORITY can be :high or :low."
   :config
   (ivy-mode 1))
 
+;; ivy-rich loading disabled temporarily - causes init errors
+;; (with-eval-after-load 'ivy
+;;   (require 'ivy-rich)
+;;   (ivy-rich-mode 1))
+
 (use-package pdf-tools
   :defer t
   :mode ("\\.pdf\\'" . pdf-view-mode))
 ;; (pdf-tools-install)
 
 (use-package undo-tree
-  :ensure t
   :defer 2
   :config
   ;; globally turn on undo-tree (deferred 2 seconds)
@@ -207,6 +195,7 @@ PRIORITY can be :high or :low."
 (setq evil-undo-system 'undo-tree)
 
 (use-package evil
+  :demand t
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
@@ -229,8 +218,8 @@ PRIORITY can be :high or :low."
   (define-key evil-insert-state-map (kbd "C-r") 'evil-redo))
 
 (use-package evil-collection
-  :ensure t
   :after evil
+  :demand t
   :config
   (evil-collection-init))
 
@@ -241,6 +230,7 @@ PRIORITY can be :high or :low."
   (evil-org-agenda-set-keys))
 
 (use-package evil-commentary
+  :demand t
   :config
   (evil-commentary-mode))
 
@@ -251,12 +241,8 @@ PRIORITY can be :high or :low."
 ;; macOS: Command+Q to quit Emacs (without confirmation)
 (global-set-key (kbd "s-q") 'save-buffers-kill-emacs)
 
-;; Install mu4e extensions from rougier's repos
-(straight-use-package
- '(mu4e-dashboard :type git :host github :repo "rougier/mu4e-dashboard"))
-
-(straight-use-package
- '(mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding"))
+;; mu4e extensions - installed via Nix overlay or manually
+;; mu4e-dashboard and mu4e-thread-folding from rougier
 
 ;; Load experimental modules (theme colors already initialized above)
 ;; nano-mu4e is experimental and can cause issues - commented out for stability
@@ -341,7 +327,7 @@ PRIORITY can be :high or :low."
   (setq magit-push-always-verify nil
         git-commit-summary-max-length 50))
 
-(use-package magit-popup :ensure t :demand t)
+(use-package magit-popup :demand t)
 
 (use-package magit-delta
   ;; :ensure-system-package (delta . "cargo install git-delta")
@@ -359,17 +345,14 @@ PRIORITY can be :high or :low."
   (setq eshell-visual-commands '()))
 
 ;; terminal setup
-(use-package better-shell
-  :straight t)
+;; better-shell not available in nixpkgs
+;; (use-package better-shell)
 
-(use-package eterm-256color
-
-  :straight t
-  :hook (term-mode . eterm-256color-mode))
+;; eterm-256color marked as broken in nixpkgs
+;; (use-package eterm-256color
+;;   :hook (term-mode . eterm-256color-mode))
 
 (use-package vterm
-  :straight t
-
   :bind*(:map vterm-mode-map
   ("C-x C-k" . vterm-copy-mode)
 
@@ -379,15 +362,14 @@ PRIORITY can be :high or :low."
   :config
   (setq vterm-max-scrollback 100000))
 
-(use-package multi-vterm
-  :straight t)
+(use-package multi-vterm)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 (require 'rainbow-delimiters)
 
 (use-package which-key
-  :defer 2
+  :demand t
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3)
@@ -411,8 +393,7 @@ PRIORITY can be :high or :low."
 (setq dired-listing-switches "-al --group-directories-first")
 
 (use-package dired
-  :straight nil
-  :ensure nil
+  :ensure nil  ; Built-in package
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :config
@@ -438,8 +419,9 @@ PRIORITY can be :high or :low."
         global-auto-revert-non-file-buffers t))
 
 
-(use-package dired-single
-  :commands (dired dired-jump))
+;; dired-single not available in nixpkgs
+;; (use-package dired-single
+;;   :commands (dired dired-jump))
 
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -452,7 +434,6 @@ PRIORITY can be :high or :low."
   (dired-mode . nerd-icons-dired-mode))
 
 (use-package vertico
-  :ensure t
   :config
   (vertico-mode))
 
@@ -470,7 +451,6 @@ PRIORITY can be :high or :low."
 (use-package gruvbox-theme)
 
 (use-package circadian
-  :ensure t
   :config
   ;; Set your location for sunrise/sunset times
   ;; Find your coordinates at: https://www.latlong.net/
@@ -509,7 +489,6 @@ PRIORITY can be :high or :low."
 ;; https://github.com/org-roam/org-roam/issues/397#issuecomment-611751481
 ;; https://github.com/org-roam/org-roam-ui/issues/213
 (use-package org-roam
-  :ensure t
   :custom
   (org-roam-directory (file-truename "~/Org/zettelkasten"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -527,11 +506,9 @@ PRIORITY can be :high or :low."
   (require 'org-roam-protocol))
 
 (use-package org-roam-ui
-  :straight
-    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    :after org-roam
+  :after org-roam
 ;;  :hook (after-init . org-roam-ui-mode)
-    :config
+  :config
     (setq org-roam-ui-sync-theme t
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
@@ -596,7 +573,7 @@ PRIORITY can be :high or :low."
 
 (use-package mu4e
   :load-path  "/usr/local/share/emacs/site-lisp/mu/mu4e/"
-  :straight nil
+  :ensure nil  ; Installed via system (brew/nix)
   :commands (mu4e)
   :config
 
@@ -714,7 +691,6 @@ PRIORITY can be :high or :low."
 
 
 (use-package org-msg
-  :straight t
   :after mu4e
   :config
   (setq mail-user-agent 'mu4e-user-agent)
@@ -739,7 +715,6 @@ PRIORITY can be :high or :low."
 ;;          ("C-c C-e" . markdown-do)))
 
 (use-package markdown-mode
-  :ensure t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode))
   :init
@@ -818,10 +793,6 @@ PRIORITY can be :high or :low."
 ;; https://github.com/KarimAziev/chrome-emacs
 (use-package atomic-chrome
   :demand t
-  :straight (atomic-chrome
-             :repo "KarimAziev/atomic-chrome"
-             :type git
-             :host github)
   :config
   (setq atomic-chrome-extension-type-list '(atomic-chrome))
   (setq atomic-chrome-buffer-open-style 'frame)  ; Open in new frame (or 'split, 'full)
