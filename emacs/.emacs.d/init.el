@@ -77,6 +77,8 @@ PRIORITY can be :high or :low."
 ;;; --- GCMH PACKAGE (Garbage Collection Magic Hack) ---
 ;; Manages GC thresholds automatically for optimal performance
 (use-package gcmh
+  :ensure nil  ; Don't try to install, must be available via Nix
+  :if (locate-library "gcmh")  ; Only load if available
   :demand t
   :config
   (setq gcmh-idle-delay 5
@@ -88,6 +90,24 @@ PRIORITY can be :high or :low."
     (setq file-name-handler-alist morph--file-name-handler-alist)))
 
 (use-package org :ensure nil :defer t)  ; Built-in package
+
+;; Tab bar mode with keybindings (built-in, load early)
+(use-package tab-bar
+    :ensure nil  ; Built-in package, no need to ensure
+    :demand t    ; Load immediately so keybindings work
+    :init
+    ;; Unset conflicting keybindings first
+    (dotimes (n 5)
+        (global-unset-key (kbd (format "C-%d" n)))
+        (global-unset-key (kbd (format "M-%d" n))))
+    :config
+    (tab-bar-mode t)
+    ;; Define keybindings in :config to ensure they override defaults
+    (global-set-key (kbd "M-0") 'tab-bar-switch-to-tab)
+    (global-set-key (kbd "M-1") (lambda () (interactive) (tab-bar-select-tab 1)))
+    (global-set-key (kbd "M-2") (lambda () (interactive) (tab-bar-select-tab 2)))
+    (global-set-key (kbd "M-3") (lambda () (interactive) (tab-bar-select-tab 3)))
+    (global-set-key (kbd "M-4") (lambda () (interactive) (tab-bar-select-tab 4))))
 
 (defconst user-init-dir
   (cond ((and (boundp 'user-init-file) user-init-file)
@@ -760,6 +780,7 @@ PRIORITY can be :high or :low."
  '(markdown-header-face-6 ((t (:inherit default :weight normal))))
  '(markdown-inline-code-face ((t (:inherit default))))
  '(markdown-pre-face ((t (:inherit default)))))
+
 
 ;;; Performance optimizations (additional to early-init.el)
 

@@ -392,14 +392,63 @@ autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- TODO: get https://github.com/morphykuffour/rawtalk to work
+-- Rawtalk: QMK Layer Switcher Integration
+-- Socket-based for near-instant mode switching
+local rawtalk = {}
+local socket_path = "/tmp/rawtalk.sock"
+local uv = vim.loop
+local client = nil
+local connected = false
+
+local function connect()
+    if connected then return true end
+    client = uv.new_pipe(false)
+    client:connect(socket_path, function(err)
+        if err then
+            connected = false
+        else
+            connected = true
+        end
+    end)
+    vim.wait(50, function() return connected end, 10)
+    return connected
+end
+
+local function send_mode(mode)
+    if not connected then connect() end
+    if connected and client then
+        pcall(function() client:write(mode .. "\n") end)
+    end
+end
+
+-- Setup autocmds
+local group = vim.api.nvim_create_augroup("Rawtalk", { clear = true })
+
 vim.api.nvim_create_autocmd("ModeChanged", {
-  pattern = "*",
-  callback = function()
-    local mode = vim.fn.mode()
-    vim.fn.system(string.format("echo '%s' > /tmp/vim_mode", mode))
-  end,
+    group = group,
+    pattern = "*",
+    callback = function()
+        send_mode(vim.fn.mode())
+    end,
 })
+
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = group,
+    callback = function()
+        vim.defer_fn(function()
+            connect()
+            send_mode(vim.fn.mode())
+        end, 100)
+    end,
+})
+
+vim.api.nvim_create_autocmd("VimLeave", {
+    group = group,
+    callback = function()
+        if client then pcall(function() client:close() end) end
+    end,
+})
+
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "nix",

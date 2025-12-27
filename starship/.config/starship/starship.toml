@@ -1,5 +1,5 @@
 # Performance
-command_timeout = 500
+command_timeout = 1000
 
 format = """$custom\
 $git_branch\
@@ -128,8 +128,7 @@ format = ' [$symbol$branch]($style)'
 style = "purple"
 
 [git_status]
-format = '[$all_status$ahead_behind]($style) '
-style = "red"
+disabled = true
 
 # Performance: disable slow modules
 [package]
