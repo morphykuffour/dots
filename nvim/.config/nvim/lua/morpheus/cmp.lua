@@ -27,8 +27,14 @@ cmp.setup({
     completeopt = 'menu,menuone,noinsert',
   },
   window = {
-    documentation = false,
-    completion = { scrollbar = false },
+    documentation = {
+      border = 'rounded',
+      winhighlight = 'Normal:CmpDoc,FloatBorder:CmpDocBorder',
+    },
+    completion = {
+      scrollbar = false,
+      border = 'rounded',
+    },
   },
   view = {
     entries = { name = 'custom', selection_order = 'near_cursor' }

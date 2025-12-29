@@ -308,9 +308,21 @@ case "$(uname -s)" in
 esac
 
 export ZDOTDIR=$HOME/.zsh
-source $HOME/.zsh_aliases
-source $HOME/.zsh_exports
-source $HOME/.zsh_functions
+
+# Helper to compile and source zsh files for faster loading
+_source_compiled() {
+    local file="$1"
+    [[ -f "$file" ]] || return 1
+    # Recompile if source is newer than compiled version
+    if [[ ! -f "${file}.zwc" || "$file" -nt "${file}.zwc" ]]; then
+        zcompile "$file" 2>/dev/null
+    fi
+    source "$file"
+}
+
+_source_compiled $HOME/.zsh_aliases
+_source_compiled $HOME/.zsh_exports
+_source_compiled $HOME/.zsh_functions
 
 # Add completions to fpath if they exist
 [ -d $HOME/.zsh/completions ] && fpath+=$HOME/.zsh/completions
@@ -318,7 +330,34 @@ source $HOME/.zsh_functions
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
-command -v starship &> /dev/null && eval "$(starship init zsh)"
+
+# Cache directory for init scripts
+_zsh_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+[[ -d "$_zsh_cache_dir" ]] || mkdir -p "$_zsh_cache_dir"
+
+# Helper function to cache and source init scripts
+# Usage: _cache_eval "command" "cache_name"
+_cache_eval() {
+    local cmd="$1"
+    local cache_name="$2"
+    local cache_file="$_zsh_cache_dir/${cache_name}.zsh"
+    local bin_path
+
+    # Get the binary path
+    bin_path="$(command -v "${cmd%% *}" 2>/dev/null)" || return 1
+
+    # Regenerate cache if binary is newer or cache doesn't exist
+    if [[ ! -s "$cache_file" || "$bin_path" -nt "$cache_file" ]]; then
+        eval "$cmd" > "$cache_file" 2>/dev/null
+        # Compile for faster loading
+        zcompile "$cache_file" 2>/dev/null
+    fi
+
+    source "$cache_file"
+}
+
+# Starship prompt (cached)
+_cache_eval "starship init zsh" "starship"
 
 # Load essential plugins immediately
 [ -f $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh ] && source $HOME/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
@@ -345,9 +384,14 @@ else
 fi
 
 # ------------------------------- ZSH APPS ------------------------------------
-command -v mcfly &> /dev/null && eval "$(mcfly init zsh)"
-# eval "$(direnv hook zsh)"
 export MCFLY_KEY_SCHEME=vim
+
+# Mcfly (cached and deferred for faster startup)
+if (( $+functions[zsh-defer] )); then
+    zsh-defer _cache_eval "mcfly init zsh" "mcfly"
+else
+    _cache_eval "mcfly init zsh" "mcfly"
+fi
 
 
 # Source local environment variables (not tracked in dotfiles)

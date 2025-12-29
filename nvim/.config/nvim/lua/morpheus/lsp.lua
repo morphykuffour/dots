@@ -6,19 +6,20 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
+local on_attach = function(client, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
     end
-
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  -- Enable inlay hints if supported
+  if client.supports_method('textDocument/inlayHint') then
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    nmap('<leader>th', function()
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+    end, '[T]oggle Inlay [H]ints')
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -66,34 +67,66 @@ local servers = {
       "c",
     },
   },
+
   -- nix language server
-  nil_ls = {},
+  nil_ls = {
+    settings = {
+      ['nil'] = {
+        formatting = { command = { "alejandra" } },
+        nix = {
+          flake = {
+            autoArchive = true,
+            autoEvalInputs = true,
+          },
+        },
+      },
+    },
+  },
+
+  -- python language server
+  pyright = {
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = "openFilesOnly",
+          typeCheckingMode = "basic",
+        },
+      },
+      pyright = {
+        disableOrganizeImports = false,
+      },
+    },
+  },
 
   -- gopls = {},
-  -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
-  -- ocaml language server
-  --   ocamllsp = {
-  --   -- cmd = {},
-  --   settings = {
-  --     codelens = { enable = true },
-  --   },
-  --
-  --   get_language_id = function(_, ftype)
-  --     return ftype
-  --   end,
-  -- },
-
   -- lua language server
   lua_ls = {
-    Lua = {
-      runtime = { version = 'LuaJIT' },
-      diagnostics = { globals = { 'vim' } },
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
+    settings = {
+      Lua = {
+        runtime = { version = 'LuaJIT' },
+        diagnostics = { globals = { 'vim' } },
+        workspace = {
+          checkThirdParty = false,
+          library = vim.api.nvim_get_runtime_file("", true),
+        },
+        completion = {
+          callSnippet = "Replace",
+        },
+        hint = {
+          enable = true,
+          arrayIndex = "Disable",
+          setType = true,
+          paramName = "All",
+          paramType = true,
+        },
+        telemetry = { enable = false },
+      },
     },
   },
 }
@@ -116,14 +149,14 @@ end
 -- }
 
 -- Configure and enable each server using the new vim.lsp.config API
-for server_name, server_settings in pairs(servers) do
+for server_name, server_opts in pairs(servers) do
   local config = {
     capabilities = capabilities,
     on_attach = on_attach,
-    settings = server_settings,
-    filetypes = (server_settings or {}).filetypes,
-    cmd = (server_settings or {}).cmd,
-    init_options = (server_settings or {}).init_options,
+    settings = server_opts.settings or server_opts,
+    filetypes = server_opts.filetypes,
+    cmd = server_opts.cmd,
+    init_options = server_opts.init_options,
   }
   vim.lsp.config(server_name, config)
   vim.lsp.enable(server_name)
