@@ -4,7 +4,7 @@ local function file_exists(path)
   if not path or path == '' then
     return false
   end
-  return vim.loop.fs_stat(path) ~= nil
+  return (vim.uv or vim.loop).fs_stat(path) ~= nil
 end
 
 local function trim(s)
