@@ -3,8 +3,9 @@
 
 -- Configure compiler environment for cross-platform compatibility
 local function setup_compiler_env()
-  local os_name = vim.loop.os_uname().sysname:lower()
-  local arch = vim.loop.os_uname().machine:lower()
+  local uv = vim.uv or vim.loop
+  local os_name = uv.os_uname().sysname:lower()
+  local arch = uv.os_uname().machine:lower()
   
   -- Common compiler flags
   local cxx_flags = ""
@@ -147,7 +148,7 @@ local function setup_treesitter()
     -- Disable for large files to improve performance
     disable = function(lang, buf)
       local max_filesize = 100 * 1024 -- 100 KB
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      local ok, stats = pcall((vim.uv or vim.loop).fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then
         return true
       end
@@ -244,7 +245,7 @@ setup_treesitter()
 
 -- Add command to update treesitter parsers with proper compiler environment
 vim.api.nvim_create_user_command('TSUpdateCompile', function()
-  local os_name = vim.loop.os_uname().sysname:lower()
+  local os_name = (vim.uv or vim.loop).os_uname().sysname:lower()
   
   -- Set up compiler environment before updating
   setup_compiler_env()
@@ -258,7 +259,7 @@ end, { desc = 'Update treesitter parsers with proper compiler environment' })
 
 -- Add command to clean and reinstall treesitter parsers
 vim.api.nvim_create_user_command('TSReinstall', function()
-  local os_name = vim.loop.os_uname().sysname:lower()
+  local os_name = (vim.uv or vim.loop).os_uname().sysname:lower()
   
   -- Set up compiler environment
   setup_compiler_env()
@@ -280,8 +281,9 @@ end, { desc = 'Clean and reinstall treesitter parsers' })
 
 -- Add command to show current compiler environment
 vim.api.nvim_create_user_command('TSShowEnv', function()
-  local os_name = vim.loop.os_uname().sysname:lower()
-  local arch = vim.loop.os_uname().machine:lower()
+  local uv = vim.uv or vim.loop
+  local os_name = uv.os_uname().sysname:lower()
+  local arch = uv.os_uname().machine:lower()
   
   local info = {
     "Treesitter Compiler Environment:",
