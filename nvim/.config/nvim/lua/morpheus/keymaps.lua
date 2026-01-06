@@ -128,10 +128,14 @@ keymap("n", "+", "<C-W>+", opts)
 -- Move text up and down (normal mode)
 keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
 keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
+keymap("n", "∆", "<Esc>:m .+1<CR>==gi", opts) -- macOS Alt+j
+keymap("n", "˚", "<Esc>:m .-2<CR>==gi", opts) -- macOS Alt+k
 
 -- Move text up and down (visual mode)
 keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 keymap("v", "<A-k>", ":m .-2<CR>==", opts)
+keymap("v", "∆", ":m .+1<CR>==", opts) -- macOS Alt+j
+keymap("v", "˚", ":m .-2<CR>==", opts) -- macOS Alt+k
 keymap("v", "p", '"_dP', opts)
 
 -- Move text up and down (visual block mode)
@@ -139,6 +143,8 @@ keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
 keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+keymap("x", "∆", ":move '>+1<CR>gv-gv", opts) -- macOS Alt+j
+keymap("x", "˚", ":move '<-2<CR>gv-gv", opts) -- macOS Alt+k
 
 -- Buffer navigation
 keymap("n", "<S-l>", ":bnext<CR>", opts)
@@ -245,6 +251,9 @@ if telescope_ok then
   end, { desc = "Search dotfiles" })
 
   keymap("n", "<A-x>", function()
+    builtin.keymaps(themes.get_ivy({ winblend = 5, previewer = false }))
+  end, { desc = "Execute keymaps" })
+  keymap("n", "≈", function()
     builtin.keymaps(themes.get_ivy({ winblend = 5, previewer = false }))
   end, { desc = "Execute keymaps" })
 

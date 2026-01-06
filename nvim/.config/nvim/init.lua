@@ -281,6 +281,7 @@ require('lazy').setup({
       local dap = require 'dap'
       local dapui = require 'dapui'
 
+      require('mason').setup()
       require('mason-nvim-dap').setup {
         automatic_installation = true,
         handlers = {},
