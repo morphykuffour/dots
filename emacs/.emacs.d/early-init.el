@@ -27,6 +27,9 @@
 
 ;;; --- UI SUPPRESSION (must happen before frame creation) ---
 
+;; Prevent macOS from opening multiple frames when launched from Raycast/Spotlight
+(setq ns-pop-up-frames nil)
+
 ;; Disable unnecessary UI elements before frame is created
 ;; This is faster than disabling them after
 (push '(menu-bar-lines . 1) default-frame-alist)

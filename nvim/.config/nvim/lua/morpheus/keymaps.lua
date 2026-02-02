@@ -264,6 +264,28 @@ if telescope_ok then
     })
   end, { desc = "Search installed plugins" })
 
+  -- Command search
+  keymap("n", "<leader>fc", function()
+    builtin.commands(themes.get_ivy({ winblend = 5, previewer = false }))
+  end, { desc = "Fuzzy command search" })
+
+  vim.api.nvim_create_user_command("TelescopeFuzzyCommandSearch", function()
+    builtin.commands(themes.get_ivy({ winblend = 5, previewer = false }))
+  end, { desc = "Fuzzy search vim commands" })
+
+  -- Fixed command-mode fuzzy search (replaces broken telescope <Plug> mapping)
+  keymap("c", "<C-t>", function()
+    local cmdline = vim.fn.getcmdline()
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, false, true), "n", false)
+    vim.schedule(function()
+      builtin.command_history(themes.get_ivy({
+        winblend = 5,
+        previewer = false,
+        default_text = cmdline,
+      }))
+    end)
+  end, { desc = "Fuzzy command history search" })
+
   -- Git with delta previewer
   local previewers = require("telescope.previewers")
 
@@ -404,6 +426,80 @@ local function open_quoted_file()
 end
 
 keymap("n", "gf", open_quoted_file, { desc = "Open file under cursor (handles quoted paths)" })
+
+-- Disable netrw's gx mapping (we use our own)
+vim.g.netrw_nogx = 1
+pcall(vim.keymap.del, "n", "gx")
+pcall(vim.keymap.del, "v", "gx")
+
+-- Open URL in Brave browser (works on macOS and Windows)
+local function open_url_in_brave(url)
+  local cmd
+  if vim.fn.has("mac") == 1 then
+    cmd = { "open", "-a", "Brave Browser", url }
+  elseif vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 then
+    -- Windows: try common Brave paths
+    local brave_paths = {
+      vim.fn.expand("$LOCALAPPDATA") .. "\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+      vim.fn.expand("$PROGRAMFILES") .. "\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+      vim.fn.expand("$PROGRAMFILES(X86)") .. "\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+    }
+    for _, path in ipairs(brave_paths) do
+      if vim.fn.filereadable(path) == 1 then
+        cmd = { path, url }
+        break
+      end
+    end
+    if not cmd then
+      cmd = { "cmd", "/c", "start", "", url }
+    end
+  else
+    cmd = { "xdg-open", url }
+  end
+  vim.fn.jobstart(cmd, { detach = true })
+end
+
+local function get_url_under_cursor()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  -- URL pattern
+  local url_pattern = "https?://[%w%-._~:/?#%[%]@!$&'()*+,;=%%]+"
+  local start_pos = 1
+  while true do
+    local url_start, url_end = line:find(url_pattern, start_pos)
+    if not url_start then break end
+    if col >= url_start and col <= url_end then
+      return line:sub(url_start, url_end)
+    end
+    start_pos = url_end + 1
+  end
+  -- Fallback: try word under cursor
+  return vim.fn.expand("<cWORD>")
+end
+
+local function open_url()
+  local url = get_url_under_cursor()
+  if url and url:match("^https?://") then
+    open_url_in_brave(url)
+    vim.notify("Opening: " .. url, vim.log.levels.INFO)
+  else
+    vim.notify("No URL found under cursor", vim.log.levels.WARN)
+  end
+end
+
+local function open_url_visual()
+  vim.cmd('noau normal! "vy')
+  local url = vim.fn.getreg("v")
+  if url and url:match("^https?://") then
+    open_url_in_brave(url)
+    vim.notify("Opening: " .. url, vim.log.levels.INFO)
+  else
+    vim.notify("Selection is not a valid URL", vim.log.levels.WARN)
+  end
+end
+
+keymap("n", "gx", open_url, { desc = "Open URL under cursor in Brave" })
+keymap("v", "gx", open_url_visual, { desc = "Open selected URL in Brave" })
 
 -- Forward search from neovim to zathura (LaTeX)
 local function sync_tex_forward()

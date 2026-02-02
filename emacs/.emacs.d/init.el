@@ -126,6 +126,7 @@ PRIORITY can be :high or :low."
 (load-user-file "config/keymaps.el")
 (load-user-file "config/utils.el")
 (load-user-file "config/vterm-config.el")
+(load-user-file "config/modeline.el")
 ;; (load-user-file "config/org-mode.el")
 
 ;; sensible settings from hrs

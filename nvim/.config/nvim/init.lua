@@ -2,6 +2,11 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Disable netrw's gx (we use custom Brave opener)
+vim.g.netrw_nogx = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -203,6 +208,10 @@ require('lazy').setup({
   {
     "plasticboy/vim-markdown",
     ft = "markdown",
+    init = function()
+      -- Disable vim-markdown's gx (we use our own Brave opener)
+      vim.g.vim_markdown_no_default_key_mappings = 1
+    end,
     config = function()
       vim.g.vim_markdown_folding_disabled = 0
       vim.g.vim_markdown_folding_style = "stacked"

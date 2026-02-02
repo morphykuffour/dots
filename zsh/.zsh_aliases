@@ -93,8 +93,9 @@ alias t="tmux -2"
 alias v="nvim"
 
 # Edit config files
-# alias zrc="$EDITOR $HOME/dots/zsh/.zshrc"
-# alias zrca="$EDITOR $HOME/dots/zsh/.zsh_aliases"
+alias zrc="$EDITOR $HOME/dots/zsh/.zshrc"
+alias zrca="$EDITOR $HOME/dots/zsh/.zsh_aliases"
+alias zrca="$EDITOR $HOME/dots/zsh/.zsh_exports"
 # alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
 alias zrc="nvim $HOME/dots/zsh/.zshrc"
 alias zra="nvim $HOME/dots/zsh/.zsh_aliases"

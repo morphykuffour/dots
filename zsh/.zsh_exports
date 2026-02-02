@@ -159,6 +159,9 @@ export AGE_IDENTITY_FILE=$HOME/.ssh/id_ed25519
 export OPENAI_AGE_FILE=$HOME/nix/secrets/openai.age
 export DIRENV_LOG_FORMAT="" 
 
+# latex
+export PATH="/Library/TeX/texbin:$PATH"
+
 # croc relay server with tailscale
 # TODO: fix relay server
 # export CROC_RELAY="optiplex-nixos.tail-scale.ts.net:9009"
