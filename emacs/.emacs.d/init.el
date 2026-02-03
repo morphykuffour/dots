@@ -197,6 +197,29 @@ PRIORITY can be :high or :low."
   ;; Customize additional connections if needed
   (setq counsel-tramp-custom-connections '()))
 
+;; Fallback: Custom TRAMP connect function (works without counsel-tramp)
+;; Uses built-in TRAMP functions to parse SSH config
+(defun my/tramp-connect ()
+  "Connect to SSH host interactively using TRAMP.
+Fallback function that works without counsel-tramp package."
+  (interactive)
+  (require 'tramp)
+  (let* ((hosts (delete-dups
+                 (mapcar #'car
+                         (append
+                          (when (file-exists-p "~/.ssh/config")
+                            (tramp-parse-sconfig "~/.ssh/config"))
+                          (when (file-exists-p "/etc/ssh/ssh_config")
+                            (tramp-parse-sconfig "/etc/ssh/ssh_config"))))))
+         (host (completing-read "SSH host: " hosts))
+         (default-directory (format "/ssh:%s:~/" host))
+         (remote-dir (read-directory-name "Remote directory: " default-directory)))
+    (find-file remote-dir)))
+
+;; Bind fallback to C-c r if counsel-tramp is not available
+(unless (locate-library "counsel-tramp")
+  (global-set-key (kbd "C-c r") 'my/tramp-connect))
+
 (use-package ivy
   :demand t
   :diminish
