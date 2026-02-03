@@ -126,7 +126,7 @@ PRIORITY can be :high or :low."
 (load-user-file "config/keymaps.el")
 (load-user-file "config/utils.el")
 (load-user-file "config/vterm-config.el")
-(load-user-file "config/modeline.el")
+;; (load-user-file "config/modeline.el")
 ;; (load-user-file "config/org-mode.el")
 
 ;; sensible settings from hrs
@@ -182,6 +182,20 @@ PRIORITY can be :high or :low."
 
   ;; Disable fuzzy matching for M-x completely (if needed)
   (setq counsel-M-x-use-fuzzy nil))
+
+;; Counsel-tramp for interactive SSH host selection via TRAMP
+;; Only load if available via Nix
+(use-package counsel-tramp
+  :ensure nil  ; Don't try to install, must be available via Nix
+  :if (locate-library "counsel-tramp")  ; Only load if available
+  :defer t
+  :commands (counsel-tramp)
+  :bind ("C-c r" . counsel-tramp)
+  :config
+  ;; Default directory to open on remote host
+  (setq counsel-tramp-default-directory "~/")
+  ;; Customize additional connections if needed
+  (setq counsel-tramp-custom-connections '()))
 
 (use-package ivy
   :demand t
@@ -346,7 +360,13 @@ PRIORITY can be :high or :low."
   (require 'git-rebase)
 
   (setq magit-push-always-verify nil
-        git-commit-summary-max-length 50))
+        git-commit-summary-max-length 50)
+
+  ;; TRAMP performance optimizations for Magit (from coredumped.dev)
+  (setq magit-commit-show-diff nil          ; Disable diff in commits for speed
+        magit-branch-direct-configure nil    ; Remove git variable display
+        magit-refresh-status-buffer nil      ; Prevent auto-refresh after commands
+        magit-tramp-pipe-stty-settings 'pty)) ; Better async process handling
 
 (use-package magit-popup :demand t)
 
@@ -804,11 +824,47 @@ PRIORITY can be :high or :low."
 ;; Process handling for better performance
 (setq process-adaptive-read-buffering nil)
 
-;; Disable VC for tramp
+;;; TRAMP Configuration & Optimization (from coredumped.dev)
+;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
+
+;; Basic performance settings
+(setq remote-file-name-inhibit-locks t
+      tramp-use-scp-direct-remote-copying t
+      remote-file-name-inhibit-auto-save-visited t)
+
+;; File copy optimization - inline is faster up to about 2MB
+(setq tramp-copy-size-limit (* 1024 1024)  ; 1MB
+      tramp-verbose 2)
+
+;; Direct async process configuration - reuses connections instead of creating new ones
+(with-eval-after-load 'tramp
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t)))
+
+  (connection-local-set-profiles
+   '(:application tramp :protocol "scp")
+   'remote-direct-async-process))
+
+;; SSH connection sharing for compilation - avoid password re-entry
+(with-eval-after-load 'tramp
+  (with-eval-after-load 'compile
+    (remove-hook 'compilation-mode-hook
+                 #'tramp-compile-disable-ssh-controlmaster-options)))
+
+;; Disable VC for tramp - prevents unnecessary remote operations
 (setq vc-ignore-dir-regexp
       (format "\\(%s\\)\\|\\(%s\\)"
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
+
+;; LSP conditional enablement - disable LSP on remote hosts due to latency
+(defun $lsp-unless-remote ()
+  "Start LSP only if not on a remote host. Disables eldoc and completion on remote."
+  (if (file-remote-p buffer-file-name)
+      (progn (eldoc-mode -1)
+             (setq-local completion-at-point-functions nil))
+    (lsp)))
 
 ;; Chrome Emacs - Browser extension support
 ;; Provides atomic-chrome server for the "Chrome Emacs" browser extension
