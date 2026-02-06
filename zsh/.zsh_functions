@@ -124,7 +124,7 @@ function vgol ()
 }
 
 function vao() {
-    fname=$(fzf --preview 'bat {} ') || return
+    fname=$(fd --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always {}') || return
     nvim "$fname"
 }
 bindkey -s '^f' 'vao^M'
@@ -389,7 +389,7 @@ function vif() {
 bindkey -s '^p' 'vif^M'
 
 function vao() {
-    fname=$(fzf --preview 'bat {} ') || return
+    fname=$(fd --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always {}') || return
     nvim "$fname"
 }
 bindkey -s '^f' 'vao^M'

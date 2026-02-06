@@ -1,2 +1,1 @@
-;; org-clock-save.el - xps17-nixos at <2023-01-03 Tue 10:45>
-(setq org-clock-stored-history '(("~/git/org/refile.org" . 1)))
+/nix/store/66hw1bk72n935rqhgl5hqhsf9mn2g5hr-home-manager-files/.emacs.d/config/org-clock-save.el

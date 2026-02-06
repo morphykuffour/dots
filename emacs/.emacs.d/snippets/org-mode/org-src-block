@@ -1,8 +1,1 @@
-# -*- mode: snippet -*-
-# name: org-mode-src-block
-# key: <src
-# --
-
-#+BEGIN_SRC $0
-$1
-#+END_SRC
+/nix/store/66hw1bk72n935rqhgl5hqhsf9mn2g5hr-home-manager-files/.emacs.d/snippets/org-mode/org-src-block

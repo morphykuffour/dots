@@ -1,3 +1,6 @@
+-- Enable IPC for CLI access
+require("hs.ipc")
+
 -- Auto-position Picture-in-Picture windows
 -- Customize size and position here
 local PIP_WIDTH = 640
@@ -103,8 +106,8 @@ FocusMode.mouseDim = true             -- also dim app under mouse cursor
 FocusMode.windowCornerRadius = 10     -- rounded corners for window holes
 FocusMode.eventSettleDelay = 0.15     -- delay for smoother PaperWM integration
 
--- Toggle FocusMode with a hotkey
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "d", function()
+-- Toggle FocusMode with a hotkey (using Hyper key)
+hs.hotkey.bind({"shift", "ctrl", "alt", "cmd"}, "d", function()
     if FocusMode.enabled then
         FocusMode:exit()
         hs.alert.show("Focus Mode: OFF")
@@ -132,65 +135,65 @@ PaperWM.center_mouse = false
 --     [hs.screen.primaryScreen():id()] = true,  -- only tile on primary screen
 -- }
 
--- Bind hotkeys
+-- Bind hotkeys (using Hyper key: Shift+Ctrl+Alt+Cmd)
 PaperWM:bindHotkeys({
     -- switch to a new focused window in tiled grid
-    focus_left  = {{"ctrl", "alt", "cmd"}, "h"},
-    focus_right = {{"ctrl", "alt", "cmd"}, "l"},
-    focus_up    = {{"ctrl", "alt", "cmd"}, "k"},
-    focus_down  = {{"ctrl", "alt", "cmd"}, "j"},
+    focus_left  = {{"shift", "ctrl", "alt", "cmd"}, "h"},
+    focus_right = {{"shift", "ctrl", "alt", "cmd"}, "l"},
+    focus_up    = {{"shift", "ctrl", "alt", "cmd"}, "k"},
+    focus_down  = {{"shift", "ctrl", "alt", "cmd"}, "j"},
 
     -- move windows around in tiled grid
-    swap_left  = {{"ctrl", "alt", "cmd", "shift"}, "h"},
-    swap_right = {{"ctrl", "alt", "cmd", "shift"}, "l"},
-    swap_up    = {{"ctrl", "alt", "cmd", "shift"}, "k"},
-    swap_down  = {{"ctrl", "alt", "cmd", "shift"}, "j"},
+    swap_left  = {{"ctrl", "alt", "cmd"}, "h"},
+    swap_right = {{"ctrl", "alt", "cmd"}, "l"},
+    swap_up    = {{"ctrl", "alt", "cmd"}, "k"},
+    swap_down  = {{"ctrl", "alt", "cmd"}, "j"},
 
     -- position and resize focused window
-    center_window = {{"ctrl", "alt", "cmd"}, "c"},
-    full_width    = {{"ctrl", "alt", "cmd"}, "f"},
-    cycle_width   = {{"ctrl", "alt", "cmd"}, "r"},
-    cycle_height  = {{"ctrl", "alt", "cmd", "shift"}, "r"},
+    center_window = {{"shift", "ctrl", "alt", "cmd"}, "c"},
+    full_width    = {{"shift", "ctrl", "alt", "cmd"}, "f"},
+    cycle_width   = {{"shift", "ctrl", "alt", "cmd"}, "r"},
+    cycle_height  = {{"ctrl", "alt", "cmd"}, "r"},
 
     -- move focused window into / out of the tiling layer
-    toggle_floating = {{"ctrl", "alt", "cmd"}, "escape"},
+    toggle_floating = {{"shift", "ctrl", "alt", "cmd"}, "escape"},
 
     -- switch to a new Mission Control space
-    switch_space_l = {{"ctrl", "alt", "cmd"}, ","},
-    switch_space_r = {{"ctrl", "alt", "cmd"}, "."},
-    switch_space_1 = {{"ctrl", "alt", "cmd"}, "1"},
-    switch_space_2 = {{"ctrl", "alt", "cmd"}, "2"},
-    switch_space_3 = {{"ctrl", "alt", "cmd"}, "3"},
-    switch_space_4 = {{"ctrl", "alt", "cmd"}, "4"},
-    switch_space_5 = {{"ctrl", "alt", "cmd"}, "5"},
-    switch_space_6 = {{"ctrl", "alt", "cmd"}, "6"},
-    switch_space_7 = {{"ctrl", "alt", "cmd"}, "7"},
-    switch_space_8 = {{"ctrl", "alt", "cmd"}, "8"},
-    switch_space_9 = {{"ctrl", "alt", "cmd"}, "9"},
+    switch_space_l = {{"shift", "ctrl", "alt", "cmd"}, ","},
+    switch_space_r = {{"shift", "ctrl", "alt", "cmd"}, "."},
+    switch_space_1 = {{"shift", "ctrl", "alt", "cmd"}, "1"},
+    switch_space_2 = {{"shift", "ctrl", "alt", "cmd"}, "2"},
+    switch_space_3 = {{"shift", "ctrl", "alt", "cmd"}, "3"},
+    switch_space_4 = {{"shift", "ctrl", "alt", "cmd"}, "4"},
+    switch_space_5 = {{"shift", "ctrl", "alt", "cmd"}, "5"},
+    switch_space_6 = {{"shift", "ctrl", "alt", "cmd"}, "6"},
+    switch_space_7 = {{"shift", "ctrl", "alt", "cmd"}, "7"},
+    switch_space_8 = {{"shift", "ctrl", "alt", "cmd"}, "8"},
+    switch_space_9 = {{"shift", "ctrl", "alt", "cmd"}, "9"},
 
     -- move focused window to a new space and tile
-    move_window_1 = {{"ctrl", "alt", "cmd", "shift"}, "1"},
-    move_window_2 = {{"ctrl", "alt", "cmd", "shift"}, "2"},
-    move_window_3 = {{"ctrl", "alt", "cmd", "shift"}, "3"},
-    move_window_4 = {{"ctrl", "alt", "cmd", "shift"}, "4"},
-    move_window_5 = {{"ctrl", "alt", "cmd", "shift"}, "5"},
-    move_window_6 = {{"ctrl", "alt", "cmd", "shift"}, "6"},
-    move_window_7 = {{"ctrl", "alt", "cmd", "shift"}, "7"},
-    move_window_8 = {{"ctrl", "alt", "cmd", "shift"}, "8"},
-    move_window_9 = {{"ctrl", "alt", "cmd", "shift"}, "9"},
+    move_window_1 = {{"ctrl", "alt", "cmd"}, "1"},
+    move_window_2 = {{"ctrl", "alt", "cmd"}, "2"},
+    move_window_3 = {{"ctrl", "alt", "cmd"}, "3"},
+    move_window_4 = {{"ctrl", "alt", "cmd"}, "4"},
+    move_window_5 = {{"ctrl", "alt", "cmd"}, "5"},
+    move_window_6 = {{"ctrl", "alt", "cmd"}, "6"},
+    move_window_7 = {{"ctrl", "alt", "cmd"}, "7"},
+    move_window_8 = {{"ctrl", "alt", "cmd"}, "8"},
+    move_window_9 = {{"ctrl", "alt", "cmd"}, "9"},
 
     -- cycle through windows sequentially
-    cycle_next = {{"ctrl", "alt", "cmd"}, "n"},
-    cycle_prev = {{"ctrl", "alt", "cmd"}, "p"},
+    cycle_next = {{"shift", "ctrl", "alt", "cmd"}, "n"},
+    cycle_prev = {{"shift", "ctrl", "alt", "cmd"}, "p"},
 
     -- move window to next/prev space
-    move_window_left = {{"ctrl", "alt", "cmd", "shift"}, ","},
-    move_window_right = {{"ctrl", "alt", "cmd", "shift"}, "."},
+    move_window_left = {{"ctrl", "alt", "cmd"}, ","},
+    move_window_right = {{"ctrl", "alt", "cmd"}, "."},
 
     -- additional useful commands (uncomment to enable)
-    -- slurp_in = {{"ctrl", "alt", "cmd"}, "i"},      -- absorb window into column
-    -- barf_out = {{"ctrl", "alt", "cmd"}, "o"},      -- expel window from column
-    -- cycle_layout = {{"ctrl", "alt", "cmd"}, "tab"}, -- cycle column layout
+    -- slurp_in = {{"shift", "ctrl", "alt", "cmd"}, "i"},      -- absorb window into column
+    -- barf_out = {{"shift", "ctrl", "alt", "cmd"}, "o"},      -- expel window from column
+    -- cycle_layout = {{"shift", "ctrl", "alt", "cmd"}, "tab"}, -- cycle column layout
 })
 
 -- Start PaperWM
