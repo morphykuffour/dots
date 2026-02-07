@@ -196,3 +196,5 @@ alias revivetouchpad="xinput enable 'DELL098F:00 04F3:311C Touchpad'"
 # Keyboard layer switching
 alias qw='echo "n" | nc -U /tmp/rawtalk.sock'  # Switch to QWERTY
 alias wq='echo "i" | nc -U /tmp/rawtalk.sock'  # Switch to Colemak-DH
+
+alias clean-my-mac="mole"
