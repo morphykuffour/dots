@@ -1,1 +1,8 @@
-/nix/store/66hw1bk72n935rqhgl5hqhsf9mn2g5hr-home-manager-files/.emacs.d/snippets/org-mode/org-src-block-bash
+# -*- mode: snippet -*-
+# name: org-mode-src-block-bash
+# key: <srcbash
+# --
+
+#+BEGIN_SRC bash :results output
+$0
+#+END_SRC
