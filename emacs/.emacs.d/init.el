@@ -905,6 +905,9 @@ Fallback function that works without counsel-tramp package."
           ("stackoverflow\\.com" . markdown-mode)
           ("" . markdown-mode)))  ; Default fallback
   ;; Start the WebSocket server on port 64292 (Chrome Emacs default)
-  (atomic-chrome-start-server))
+  (atomic-chrome-start-server)
+  
+  ;; Load keybindings
+  (load-file (expand-file-name "config/chrome-emacs-keybindings.el" user-emacs-directory)))
 
 ;;; init.el ends here
