@@ -785,6 +785,18 @@ Fallback function that works without counsel-tramp package."
   (setq markdown-header-scaling nil)   ;; don't let markdown-mode scale headers
   (setq markdown-fontify-code-blocks-natively nil))  ;; disable syntax highlighting in code blocks
 
+;; hledger-mode for plain text accounting
+(use-package hledger-mode
+  :mode ("\\.\\(h?ledger\\|journal\\|j\\)\\'" . hledger-mode)
+  :commands (hledger-mode)
+  :init
+  (setq hledger-jfile "~/Documents/hledger/main.journal") ; Adjust path as needed
+  :config
+  ;; Auto-completion for account names
+  (add-hook 'hledger-mode-hook
+            (lambda ()
+              (company-mode)
+              (setq-local company-backends '(hledger-company)))))
 
 (use-package slime)
 (setq slime-contribs '(slime-fancy))
