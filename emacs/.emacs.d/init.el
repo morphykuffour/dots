@@ -63,6 +63,12 @@ PRIORITY can be :high or :low."
 ;; GC when focus is lost (helps keep things snappy)
 (add-hook 'focus-out-hook #'garbage-collect)
 
+;;; --- PACKAGE MANAGEMENT ---
+;; Add MELPA for packages not available in Nix
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
 ;;; --- USE-PACKAGE CONFIGURATION ---
 ;; Packages are managed by Nix, use-package only configures them
 (require 'use-package)
@@ -798,6 +804,18 @@ Fallback function that works without counsel-tramp package."
               (company-mode)
               (setq-local company-backends '(hledger-company)))))
 
+;; AI Financial Assistant - Local AI-powered transaction categorization
+;; Uses Ollama with Mistral model for local inference
+(when (file-exists-p "~/ai-financial-assistant/emacs/ai-financial-working.el")
+  (load-file "~/ai-financial-assistant/emacs/ai-financial-working.el")
+  ;; Optional: Auto-enable for hledger files
+  (add-hook 'hledger-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c f c") 'ai-financial-categorize-line)
+              (local-set-key (kbd "C-c f C") 'ai-financial-categorize-all)
+              (local-set-key (kbd "C-c f a") 'ai-financial-quick-analysis)
+              (message "AI Financial Assistant ready. C-c f c to categorize."))))
+
 (use-package slime)
 (setq slime-contribs '(slime-fancy))
 (setq slime-net-coding-system 'utf-8-unix)
@@ -807,7 +825,6 @@ Fallback function that works without counsel-tramp package."
   "Connect to SBCL/Swank on localhost:4005 (RISC-V VM)."
   (interactive)
   (slime-connect "localhost" 4005))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -816,9 +833,16 @@ Fallback function that works without counsel-tramp package."
  '(custom-safe-themes
    '("871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8" default))
  '(org-agenda-files
-   '("~/dots/emacs/.emacs.d/init.el" "~/Sync/Org/Todo.org"
-     "~/Org/agenda/tasks.org" "~/Org/agenda/school.org"
-     "~/Org/agenda/birthdays.org" "~/Org/agenda/habits.org"))
+   '("~/dots/emacs/.emacs.d/init.el" "~/Sync/Org/Todo.org" "~/Org/agenda/tasks.org"
+     "~/Org/agenda/school.org" "~/Org/agenda/birthdays.org"
+     "~/Org/agenda/habits.org"))
+ '(package-selected-packages
+   '(async atomic-chrome circadian counsel deadgrep dired-hide-dotfiles eat
+           evil-collection evil-commentary evil-org exec-path-from-shell flx
+           gcmh git-commit gruvbox-theme hledger-mode ivy-rich magit-delta
+           magit-popup markdown-mode modus-themes multi-vterm nerd-icons-dired
+           nix-mode olivetti org-msg org-roam-ui pdf-tools rainbow-delimiters
+           slime smex undo-tree use-package vertico which-key yasnippet))
  '(send-mail-function 'smtpmail-send-it))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -836,6 +860,7 @@ Fallback function that works without counsel-tramp package."
  '(markdown-header-face-6 ((t (:inherit default :weight normal))))
  '(markdown-inline-code-face ((t (:inherit default))))
  '(markdown-pre-face ((t (:inherit default)))))
+
 
 
 ;;; Performance optimizations (additional to early-init.el)
@@ -918,7 +943,7 @@ Fallback function that works without counsel-tramp package."
           ("" . markdown-mode)))  ; Default fallback
   ;; Start the WebSocket server on port 64292 (Chrome Emacs default)
   (atomic-chrome-start-server)
-  
+
   ;; Load keybindings
   (load-file (expand-file-name "config/chrome-emacs-keybindings.el" user-emacs-directory)))
 

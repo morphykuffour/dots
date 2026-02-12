@@ -89,3 +89,16 @@ scripts/.local/bin/claude
 
 
 /misc/.aria2-chrome.json
+
+# AI Financial Assistant (local development)
+/ai-financial-assistant/
+emacs/.emacs.d/ai-financial-assistant/
+emacs/.emacs.d/ai-financial-*.el
+emacs/.emacs.d/local-init.el
+
+# Chrome/Atomic Chrome related files
+emacs/.emacs.d/atomic-chrome-*.el
+emacs/.emacs.d/chrome-emacs/
+emacs/.emacs.d/config/chrome-emacs*
+emacs/.emacs.d/start-atomic-chrome-server.el
+emacs/.emacs.d/test-*.el
