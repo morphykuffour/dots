@@ -102,3 +102,16 @@ emacs/.emacs.d/chrome-emacs/
 emacs/.emacs.d/config/chrome-emacs*
 emacs/.emacs.d/start-atomic-chrome-server.el
 emacs/.emacs.d/test-*.el
+
+# Chrome Emacs temporary files
+emacs/*chrome-emacs*
+emacs/test-chrome-emacs*
+emacs/debug-chrome-emacs*
+emacs/fix-chrome-emacs*
+emacs/start-chrome-emacs*
+emacs/vimium-chrome-emacs*
+
+# Emacs temporary files
+emacs/.emacs.d/places
+emacs/.emacs.d/smex-items
+emacs/.emacs.d/test.journal
