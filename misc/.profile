@@ -40,3 +40,8 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export NODE_OPTIONS=–openssl-legacy-provider
 
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/morph/.lmstudio/bin"
+# End of LM Studio CLI section
+

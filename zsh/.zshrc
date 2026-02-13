@@ -396,3 +396,8 @@ fi
 
 # Source local environment variables (not tracked in dotfiles)
 [ -f ~/.zshenv.local ] && source ~/.zshenv.local
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/morph/.lmstudio/bin"
+# End of LM Studio CLI section
+
