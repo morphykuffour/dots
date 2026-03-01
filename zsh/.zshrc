@@ -240,6 +240,9 @@ bindkey -M menuselect '/' vi-history-search-backward
 bindkey -M vicmd '^e' edit-command-line
 bindkey '^e' edit-command-line
 
+# Alt+e: run command, edit output in $EDITOR, replace buffer
+source ${${(%):-%x}:h}/.edit-command-output.zsh
+
 bindkey -v '^?' backward-delete-char
 bindkey '^U' backward-kill-line
 bindkey '^[[2~' overwrite-mode
