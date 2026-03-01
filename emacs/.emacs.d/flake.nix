@@ -43,16 +43,12 @@
           counsel
           counsel-tramp
           ivy
-          ivy-rich
           swiper
           flx
-          smex
-          vertico
 
           # Git
           magit
           magit-delta
-          magit-popup
           git-commit
           magit-section
           with-editor
@@ -171,8 +167,8 @@
               package = emacsPkgs.emacsWithPackages (epkgs: with epkgs; [
                 use-package gcmh
                 evil evil-collection evil-org evil-commentary undo-tree
-                counsel counsel-tramp ivy ivy-rich swiper flx smex vertico
-                magit magit-delta magit-popup git-commit magit-section with-editor
+                counsel counsel-tramp ivy swiper flx
+                magit magit-delta git-commit magit-section with-editor
                 org-roam org-roam-ui org-msg
                 vterm multi-vterm eat
                 which-key rainbow-delimiters olivetti deadgrep

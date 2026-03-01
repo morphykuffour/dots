@@ -693,48 +693,65 @@
           ("leetcode\\.com" . typescript-ts-mode)
           ("" . markdown-mode)))
 
-  ;; Frame transparency (50%)
-  (defun atomic-chrome--set-frame-alpha (frame)
-    "Set FRAME to 50% transparency."
-    (when (framep frame)
-      (set-frame-parameter frame 'alpha '(50 . 50))))
-
+  ;; --- Frame transparency (50%) ---
   (defun atomic-chrome--apply-frame-settings (orig-fn buffer title)
     "Apply transparency to newly created atomic-chrome frame."
     (let ((frame (funcall orig-fn buffer title)))
       (when (framep frame)
-        (atomic-chrome--set-frame-alpha frame))
+        (set-frame-parameter frame 'alpha '(50 . 50)))
       frame))
   (advice-add 'atomic-chrome-show-edit-buffer
               :around #'atomic-chrome--apply-frame-settings)
 
-  ;; Fix :wq breaking the server
-  (defun atomic-chrome--evil-save-and-close ()
-    "Save text to browser and close atomic-chrome buffer properly."
+  ;; --- Focus browser when done editing ---
+  (defun atomic-chrome--focus-browser ()
+    "Focus Brave Browser (falling back to Chrome/Safari)."
+    (call-process "osascript" nil 0 nil
+                  "-e" "tell application \"System Events\"
+  set frontApp to name of first application process whose frontmost is true
+end tell
+if frontApp is \"Emacs\" then
+  tell application \"Brave Browser\" to activate
+end if"))
+
+  ;; --- Proper close: send text, close buffer, restart server, focus browser ---
+  (defun atomic-chrome--close-and-refocus ()
+    "Send buffer to browser, close properly, ensure server, focus browser."
     (interactive)
     (when (bound-and-true-p atomic-chrome-edit-mode)
       (atomic-chrome-send-buffer-text)
-      (atomic-chrome-close-current-buffer)))
+      (let ((buf (current-buffer)))
+        ;; Close the edit buffer through atomic-chrome's proper cleanup
+        (atomic-chrome-close-current-buffer)
+        ;; Ensure server is alive after close
+        (run-with-timer 0.3 nil #'atomic-chrome--ensure-server)
+        ;; Focus browser
+        (run-with-timer 0.1 nil #'atomic-chrome--focus-browser))))
 
+  ;; Hook into atomic-chrome's own done hook for any close path
+  (add-hook 'atomic-chrome-edit-done-hook #'atomic-chrome--focus-browser)
+
+  ;; --- Evil :wq / :q overrides ---
   (with-eval-after-load 'evil
     (evil-define-command atomic-chrome--evil-write-quit ()
-      "Save to browser and close atomic-chrome buffer, or normal :wq."
       :repeat nil
       (if (bound-and-true-p atomic-chrome-edit-mode)
-          (atomic-chrome--evil-save-and-close)
+          (atomic-chrome--close-and-refocus)
         (evil-save-and-close)))
 
     (evil-define-command atomic-chrome--evil-quit ()
-      "Close atomic-chrome buffer, or normal :q."
       :repeat nil
       (if (bound-and-true-p atomic-chrome-edit-mode)
-          (atomic-chrome-close-current-buffer)
+          (progn
+            (atomic-chrome-close-current-buffer)
+            (run-with-timer 0.3 nil #'atomic-chrome--ensure-server)
+            (run-with-timer 0.1 nil #'atomic-chrome--focus-browser))
         (evil-quit)))
 
     (evil-ex-define-cmd "wq" 'atomic-chrome--evil-write-quit)
     (evil-ex-define-cmd "q" 'atomic-chrome--evil-quit))
 
-  ;; Server auto-restart safety net
+  ;; --- Robust server lifecycle ---
   (defun atomic-chrome--server-alive-p ()
     "Return non-nil if the atomic-chrome websocket server is alive."
     (and (boundp 'atomic-chrome-server-atomic-chrome)
@@ -746,27 +763,34 @@
     "Restart the atomic-chrome server if it has died."
     (unless (atomic-chrome--server-alive-p)
       (ignore-errors
+        ;; Clean up stale server state before restarting
+        (when (boundp 'atomic-chrome-server-atomic-chrome)
+          (setq atomic-chrome-server-atomic-chrome nil))
         (atomic-chrome-start-server)
         (message "atomic-chrome: server restarted"))))
 
+  ;; Multiple safety nets (all lightweight - just a boundp + processp check)
   (add-hook 'delete-frame-functions
             (lambda (_frame)
               (run-with-timer 0.5 nil #'atomic-chrome--ensure-server)))
-
   (add-hook 'focus-in-hook #'atomic-chrome--ensure-server)
+  (add-hook 'window-configuration-change-hook
+            (lambda ()
+              (run-with-idle-timer 1 nil #'atomic-chrome--ensure-server)))
 
-  ;; Keybindings
-  (define-key atomic-chrome-edit-mode-map (kbd "C-c C-c") 'atomic-chrome-close-current-buffer)
-  (define-key atomic-chrome-edit-mode-map (kbd "C-c C-k") 'atomic-chrome-close-current-buffer)
+  ;; --- Keybindings ---
+  (define-key atomic-chrome-edit-mode-map (kbd "C-c C-c") 'atomic-chrome--close-and-refocus)
+  (define-key atomic-chrome-edit-mode-map (kbd "C-c C-k") 'atomic-chrome--close-and-refocus)
   (define-key atomic-chrome-edit-mode-map (kbd "C-x C-s") 'atomic-chrome-send-buffer-text)
 
   (global-set-key (kbd "C-c a s")
                   (lambda () (interactive)
-                    (atomic-chrome-stop-server)
+                    (ignore-errors (atomic-chrome-stop-server))
                     (sit-for 0.3)
                     (atomic-chrome-start-server)
                     (message "atomic-chrome: server restarted on port 64292")))
 
+  ;; Start the server
   (atomic-chrome-start-server))
 
 ;;; init.el ends here
