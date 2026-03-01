@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Update Kitty tab title when tmux window/session changes
+
+# Only run if we're actually in Kitty
+if [ "${TERM}" = "xterm-kitty" ] && [ -n "${KITTY_WINDOW_ID}" ]; then
+    # Get tmux info if we're in a tmux session
+    if [ -n "${TMUX}" ]; then
+        session_name=$(tmux display-message -p '#S' 2>/dev/null)
+        window_name=$(tmux display-message -p '#W' 2>/dev/null)
+        window_index=$(tmux display-message -p '#I' 2>/dev/null)
+        cwd=$(tmux display-message -p '#{pane_current_path}' 2>/dev/null)
+        
+        # Create abbreviated path
+        if [[ "$cwd" = "$HOME"* ]]; then
+            cwd="~${cwd#$HOME}"
+        fi
+        
+        # Create title with tmux info
+        if [ -n "$session_name" ] && [ -n "$window_name" ] && [ -n "$window_index" ]; then
+            title="$cwd:$session_name[$window_index:$window_name]"
+        else
+            title="$cwd"
+        fi
+    else
+        # Not in tmux, just use current directory
+        cwd=$(pwd)
+        if [[ "$cwd" = "$HOME"* ]]; then
+            cwd="~${cwd#$HOME}"
+        fi
+        title="$cwd"
+    fi
+    
+    # Use Kitty's remote control to set tab title
+    kitty @ set-tab-title "$title" >/dev/null 2>&1
+fi

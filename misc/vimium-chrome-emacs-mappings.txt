@@ -1,0 +1,30 @@
+# Chrome Emacs Integration for Vimium-C
+# Add these mappings to your Vimium-C key mappings configuration
+
+# Method 1: Use hints to focus text fields (then manually trigger Chrome Emacs)
+map ge LinkHints.activate action="focus" clickable="input[type=text],input[type=search],input[type=email],input[type=password],textarea,[contenteditable=true]"
+
+# Method 2: Direct activation on currently focused field
+map ,e openUrl url="javascript:(function(){const el=document.activeElement;if(el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.contentEditable==='true')){el.click();setTimeout(()=>{const e=new MouseEvent('click',{bubbles:true});el.dispatchEvent(e);},50);}else{alert('Focus on a text field first');}})();"
+
+# Method 3: Visual hint system for Chrome Emacs activation
+map gE openUrl url="javascript:(function(){const editables=document.querySelectorAll('input[type=text],input[type=search],input[type=email],input[type=password],textarea,[contenteditable=true]');if(editables.length===0){alert('No editable fields found');return;}const hints=[];const hintChars='asdfghjklqwertyuiopzxcvbnm';const validEditables=[];editables.forEach((el,idx)=>{const rect=el.getBoundingClientRect();if(rect.width>0&&rect.height>0&&rect.top>=0&&rect.left>=0&&rect.bottom<=window.innerHeight&&rect.right<=window.innerWidth){validEditables.push(el);}});validEditables.forEach((el,idx)=>{const rect=el.getBoundingClientRect();const hint=document.createElement('div');hint.className='vimium-chrome-emacs-hint';hint.style.cssText='position:fixed;z-index:2147483647;background:#ffeb3b;color:black;padding:2px 6px;border:2px solid black;font-family:monospace;font-size:14px;font-weight:bold;top:'+(rect.top-2)+'px;left:'+(rect.left-2)+'px;pointer-events:none;box-shadow:0 2px 4px rgba(0,0,0,0.3);';hint.textContent=hintChars[idx%hintChars.length].toUpperCase();document.body.appendChild(hint);hints.push({hint,element:el,char:hintChars[idx%hintChars.length]});});if(hints.length===0){alert('No visible text fields found');return;}function cleanup(){hints.forEach(h=>h.hint.remove());document.removeEventListener('keypress',handleKeyPress);document.removeEventListener('keydown',handleEscape);}function activateChromeEmacs(element){element.focus();element.click();setTimeout(()=>{element.click();const chromeEmacsButton=document.querySelector('[id*=atomic],[class*=atomic],[id*=chrome-emacs],[class*=chrome-emacs]');if(chromeEmacsButton){chromeEmacsButton.click();}},100);}function handleKeyPress(e){const match=hints.find(h=>h.char===e.key.toLowerCase());if(match){cleanup();activateChromeEmacs(match.element);}}function handleEscape(e){if(e.key==='Escape'){cleanup();}}document.addEventListener('keypress',handleKeyPress);document.addEventListener('keydown',handleEscape);})();"
+
+# Method 4: Activate Chrome Emacs on all text fields in viewport
+map ,ea openUrl url="javascript:(function(){const fields=document.querySelectorAll('input[type=text],input[type=search],textarea,[contenteditable=true]');const visibleFields=Array.from(fields).filter(f=>{const r=f.getBoundingClientRect();return r.width>0&&r.height>0&&r.top<window.innerHeight&&r.bottom>0;});if(visibleFields.length>0){visibleFields[0].focus();visibleFields[0].click();console.log('Focused first visible field. Now trigger Chrome Emacs manually.');}else{alert('No visible text fields found');}})();"
+
+# Alternative approach using pass-through mode
+# First enter insert mode, then use Chrome Emacs shortcut
+map <c-e> enterInsertMode
+
+# Instructions for use:
+# 1. ge - Shows hints on all text fields, select one to focus
+# 2. gE - Shows custom hints for Chrome Emacs activation  
+# 3. ,e - Activates Chrome Emacs on currently focused field
+# 4. ,ea - Focuses first visible text field
+# 5. <c-e> - Enter insert mode to use Chrome Emacs shortcuts directly
+
+# After focusing a field with ge or gE, you can:
+# - Click the Chrome Emacs extension icon
+# - Use your Chrome Emacs keyboard shortcut (e.g., Ctrl+Shift+E)
+# - If the extension has a context menu, right-click the field

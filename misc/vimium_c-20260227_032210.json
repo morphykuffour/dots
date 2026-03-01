@@ -1,0 +1,224 @@
+{
+	"name": "Vimium C",
+	"@time": "2/27/2026, 3:22:10 AM",
+	"time": 1772180530562,
+	"environment": {
+		"extension": "2.12.2",
+		"platform": "mac",
+		"chromium": 145
+	},
+	"exclusionRules": [
+		{
+			"passKeys": "",
+			"pattern": ":https://leetcode.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://config.qmk.fm/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://type-fu.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://github.dev/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.keybr.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://monkeytype.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://pwn.college/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://gnusenpai.github.io/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.colemak.academy/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://10fastfingers.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.overleaf.com/"
+		},
+		{
+			"passKeys": "# / ? c d e g i j k l l n p r s u x ",
+			"pattern": ":https://mail.google.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://vportal.procore.prod/"
+		},
+		{
+			"passKeys": "",
+			"pattern": "^https?://192\\.168\\.1\\.73/"
+		},
+		{
+			"passKeys": "",
+			"pattern": "^https?://192\\.168\\.1\\.73/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://localhost:6901/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://glkvm.local/"
+		}
+	],
+	"extAllowList": [
+		"# modified versions of X New Tab and PDF Viewer,",
+		"# NewTab Adapter, and Shortcuts Forwarding Tool",
+		"hdnehngglnbnehkfcidabjckinphnief",
+		"nacjakoppgmdcpemlfnfegmlhipddanj",
+		"cglpcedifkgalfdklahhcchnjepcckfn",
+		"clnalilglegcjmlgenoppklmfppddien",
+		"# EdgeTranslate",
+		"bocbaocobfecmglnmeaeppambideimao",
+		"bfdogplmndidlpjfhoijckpakkdjkkil",
+		"# SalaDict",
+		"cdonnmffkdaoajfknoeeecmchibpmkmg",
+		"idghocbbahafpfhjnfhpbfbmpegphmmp",
+		"",
+		"# The Marvellous Suspender",
+		"noogafoofpebimajpfpamcfhoaifemoa",
+		""
+	],
+	"grabBackFocus": true,
+	"keyMappings": [
+		"#!no-check",
+		"# Move current tab to new window ",
+		"map W moveTabToNewWindow",
+		"# Make a current tab zoom in ",
+		"map z zoomIn",
+		"",
+		"# Make a current tab zoom out ",
+		"map Z zoomOut",
+		"",
+		"# Make a current tab zoom reset to 100%",
+		"map = zoomReset",
+		"",
+		"map f LinkHints.activate",
+		"",
+		"map o Vomnibar.activate",
+		"",
+		"# open image in new tab",
+		"map sx LinkHints.activateOpenImage",
+		"",
+		"run <v-nw> $s#reuse=\"new-wnd\" mask",
+		"run P openCopiedUrlInCurrentTab",
+		"",
+		"# Linkding integration (via Tailscale)",
+		"# Save current page to linkding",
+		"map ,l openUrl reuse=1 url=\"http://raspberrypi:9090/bookmarks/new?url=$U&title=$T&auto_close\"",
+		"# Save current page with selection as description",
+		"map ,L openUrl reuse=1 url=\"http://raspberrypi:9090/bookmarks/new?url=$U&title=$T&description=$S&auto_close\"",
+		"",
+		"# Search linkding bookmarks",
+		"map ,b Vomnibar.activate keyword=\"ld\"",
+		"",
+		"# Toggle picture-in-picture for current video",
+		"map ,p openUrl url=\"javascript:(async\\u0020function(){if(documentPictureInPicture?.window){documentPictureInPicture.window.close()}else\\u0020if(window.documentPictureInPicture){const\\u0020v=document.querySelector('video');if(v){const\\u0020w=640,h=360;const\\u0020pipWindow=await\\u0020documentPictureInPicture.requestWindow({width:w,height:h});pipWindow.moveTo(screen.width-w-20,screen.height-h-100);pipWindow.document.body.style.margin='0';pipWindow.document.body.appendChild(v);const\\u0020style=pipWindow.document.createElement('style');style.textContent='video{width:100%;height:100%}';pipWindow.document.head.appendChild(style);pipWindow.addEventListener('pagehide',()=>{document.body.appendChild(v)})}}else\\u0020if(document.pictureInPictureElement){document.exitPictureInPicture().catch(()=>{})}else{const\\u0020v=document.querySelector('video');if(v){v.requestPictureInPicture().catch(()=>{})}}})();\"",
+		"",
+		"# Quick search keymaps",
+		"map ,s Vomnibar.activate keyword=\"sx\"",
+		"map ,d Vomnibar.activate keyword=\"ddg\"",
+		"map ,y Vomnibar.activate keyword=\"yt\"",
+		"map ,g Vomnibar.activate keyword=\"gh\"",
+		"map ,q Vomnibar.activate keyword=\"qw\"",
+		"",
+		"# SilverBullet notes",
+		"map ,n openUrl reuse=1 url=\"https://optiplex-nixos.tailc585e.ts.net:445\"",
+		"# Custom scroll and vomnibar mappings",
+		"map { scrollPageUp",
+		"map } scrollPageDown",
+		"map : Vomnibar.activateInNewTab",
+		"",
+		"# Go to home page",
+		"map gh openUrl url=\"https://optiplex-nixos.tailc585e.ts.net:445/\"",
+		"# Open home in new tab",
+		"map gH openUrl url=\"https://optiplex-nixos.tailc585e.ts.net:445/\" reuse=\"new-tab\"",
+		"",
+		"",
+		"# Chrome Emacs Integration",
+		"# Simple hint-based focusing (most reliable)",
+		"map ge LinkHints.activate action=\"focus\" clickable=\"input[type=text],input[type=search],input[type=email],input[type=password],textarea,[contenteditable=true]\"",
+		"",
+		"# Advanced hint system with auto-activation",
+		"map gE openUrl url=\"javascript:(function(){const\\u0020editables=document.querySelectorAll('input[type=text],input[type=search],input[type=email],input[type=password],textarea,[contenteditable=true]');if(editables.length===0){alert('No\\u0020editable\\u0020fields\\u0020found');return;}const\\u0020hints=[];const\\u0020hintChars='asdfghjklqwertyuiopzxcvbnm';const\\u0020validEditables=[];editables.forEach((el,idx)=>{const\\u0020rect=el.getBoundingClientRect();if(rect.width>0&&rect.height>0&&rect.top>=0&&rect.left>=0&&rect.bottom<=window.innerHeight&&rect.right<=window.innerWidth){validEditables.push(el);}});validEditables.forEach((el,idx)=>{const\\u0020rect=el.getBoundingClientRect();const\\u0020hint=document.createElement('div');hint.className='vimium-chrome-emacs-hint';hint.style.cssText='position:fixed;z-index:2147483647;background:#ffeb3b;color:black;padding:2px\\u00206px;border:2px\\u0020solid\\u0020black;font-family:monospace;font-size:14px;font-weight:bold;top:'+(rect.top-2)+'px;left:'+(rect.left-2)+'px;pointer-events:none;box-shadow:0\\u00202px\\u00204px\\u0020rgba(0,0,0,0.3);';hint.textContent=hintChars[idx%hintChars.length].toUpperCase();document.body.appendChild(hint);hints.push({hint,element:el,char:hintChars[idx%hintChars.length]});});if(hints.length===0){alert('No\\u0020visible\\u0020text\\u0020fields\\u0020found');return;}function\\u0020cleanup(){hints.forEach(h=>h.hint.remove());document.removeEventListener('keypress',handleKeyPress);document.removeEventListener('keydown',handleEscape);}function\\u0020activateChromeEmacs(element){element.focus();element.click();setTimeout(()=>{element.click();},100);}function\\u0020handleKeyPress(e){const\\u0020match=hints.find(h=>h.char===e.key.toLowerCase());if(match){cleanup();activateChromeEmacs(match.element);}}function\\u0020handleEscape(e){if(e.key==='Escape'){cleanup();}}document.addEventListener('keypress',handleKeyPress);document.addEventListener('keydown',handleEscape);})();\"",
+		""
+	],
+	"newTabUrl": "http://raspberrypi:8888/",
+	"regexFindMode": true,
+	"searchEngines": [
+		"bi: https://cn.bing.com/search?q=$s",
+		"bi|bing: https://www.bing.com/search?q=%s \\",
+		"  blank=https://www.bing.com/ Bing",
+		"b|ba|baidu|百度: https://www.baidu.com/s?ie=utf-8&wd=%s \\",
+		"  blank=https://www.baidu.com/ 百度",
+		"sg|sogou|sougou: https://www.sogou.com/web?ie=UTF-8&query=$s 搜狗",
+		"360|360so|360sou|360ss: https://www.so.com/s?ie=UTF-8&q=$s 360 搜索",
+		"br|brave: https://search.brave.com/search?q=%s Brave",
+		"d|dd|ddg|duckduckgo: https://duckduckgo.com/?q=%s DuckDuckGo",
+		"ec|ecosia: https://www.ecosia.org/search?q=%s Ecosia",
+		"qw|qwant: https://www.qwant.com/?q=%s Qwant",
+		"ya|yd|yandex: https://yandex.com/search/?text=%s Yandex",
+		"yh|yahoo: https://search.yahoo.com/search?p=%s Yahoo",
+		"maru|mailru|mail.ru: https://go.mail.ru/search?q=%s Mail.ru",
+		"",
+		"g.m|gm|g.map|gmap: https://www.google.com/maps?q=%s \\",
+		"  blank=https://www.google.com/maps Google Maps",
+		"b.m|bm|map|b.map|bmap|百度地图: \\",
+		"  https://api.map.baidu.com/geocoder?output=html&address=%s&src=vimium-c \\",
+		"  blank=https://map.baidu.com/",
+		"y|yt: https://www.youtube.com/results?search_query=%s \\",
+		"  blank=https://www.youtube.com/ YouTube",
+		"w|wiki: https://www.wikipedia.org/w/index.php?search=%s Wikipedia",
+		"g.s|gs|gscholar: https://scholar.google.com/scholar?q=$s \\",
+		"  scholar.google.com re=/^(?:\\.[a-z]{2,4})?\\/scholar\\b.*?[#&?]q=([^#&]*)/i \\",
+		"  blank=https://scholar.google.com/ Google Scholar",
+		"",
+		"a|ae|ali|alie|aliexp: https://www.aliexpress.com/wholesale?SearchText=%s \\",
+		"  blank=https://www.aliexpress.com/ AliExpress",
+		"j|jd|jb|joy|joybuy: https://www.joybuy.com/search?keywords=%s \\",
+		"  blank=https://www.joybuy.com/ Joybuy",
+		"az|amazon: https://www.amazon.com/s?k=%s \\",
+		"  blank=https://www.amazon.com/ Amazon",
+		"",
+		"\\:i: vimium://sed/s/^//,lower\\ $S re= Lower case",
+		"v.m|math: vimium://math\\ $S re= Calculate",
+		"v.p: vimium://parse\\ $S re= Redo Search",
+		"gh|github: https://github.com/search?q=$s \\",
+		"  blank=https://github.com/ GitHub Repo",
+		"ge|gitee: https://search.gitee.com/?type=repository&q=$s \\",
+		"  blank=https://gitee.com/ Gitee 仓库",
+		"js\\:|Js: javascript:\\ $S; JavaScript",
+		"",
+		"ld: http://raspberrypi:9090/bookmarks?q=%s linkding",
+		"s|sx|searx|searxng: https://optiplex-nixos.tailc585e.ts.net:8443/?q=%s SearXNG",
+		""
+	],
+	"userDefinedCss": [
+		"/* #ui */",
+		".LH, .D>.LH {",
+		"  background: SteelBlue !important;",
+		"  border: 1px solid black !important;",
+		"  color: black !important;",
+		"  font-weight: bold !important;",
+		"  font-size: 12px !important;",
+		"  text-shadow: none !important;",
+		"}",
+		""
+	]
+}

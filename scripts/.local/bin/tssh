@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Tailscale SSH convenience wrapper
+
+case "$1" in
+    "optiplex"|"server")
+        exec ssh morph@TAILSCALE_IP_1 "${@:2}"
+        ;;
+    "xps17"|"laptop")
+        exec ssh morph@TAILSCALE_IP_2 "${@:2}"
+        ;;
+    "raspberry"|"pi")
+        exec ssh user@TAILSCALE_IP_3 "${@:2}"
+        ;;
+    "truenas"|"nas")
+        exec ssh root@TAILSCALE_IP_4 "${@:2}"
+        ;;
+    "list"|"ls")
+        echo "Available systems:"
+        echo "  optiplex, server   → ssh morph@TAILSCALE_IP_1 ✅"
+        echo "  xps17, laptop      → ssh morph@TAILSCALE_IP_2 ✅"
+        echo "  raspberry, pi      → ssh user@TAILSCALE_IP_3 ✅"
+        echo "  truenas, nas       → ssh root@TAILSCALE_IP_4 ❌"
+        echo ""
+        echo "Systems marked with ❌ need SSH enabled manually"
+        ;;
+    *)
+        echo "Tailscale SSH Helper"
+        echo "Usage: $0 {optiplex|xps17|raspberry|truenas|list} [command]"
+        echo ""
+        echo "Examples:"
+        echo "  $0 optiplex                    # SSH to optiplex-nixos"
+        echo "  $0 server 'systemctl status'  # Run command on server"
+        echo "  $0 list                        # List available systems"
+        ;;
+esac

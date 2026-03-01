@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Test script for Kitty-tmux integration
+
+echo "Testing Kitty-tmux integration..."
+echo "Current environment:"
+echo "TERM: $TERM"
+echo "KITTY_WINDOW_ID: $KITTY_WINDOW_ID"
+echo "TMUX: $TMUX"
+echo ""
+
+if [ "${TERM}" = "xterm-kitty" ]; then
+    echo "✓ Running in Kitty terminal"
+    
+    if [ -n "${KITTY_WINDOW_ID}" ]; then
+        echo "✓ KITTY_WINDOW_ID is set"
+        
+        # Test remote control
+        if kitty @ ls >/dev/null 2>&1; then
+            echo "✓ Kitty remote control is working"
+            
+            # Test our script
+            echo "Testing title update..."
+            "$HOME/dots/tmux/.bin/update_kitty_title"
+            echo "✓ Title update script executed"
+            
+            if [ -n "${TMUX}" ]; then
+                echo "✓ Running inside tmux"
+                session_name=$(tmux display-message -p '#S' 2>/dev/null)
+                window_name=$(tmux display-message -p '#W' 2>/dev/null)
+                window_index=$(tmux display-message -p '#I' 2>/dev/null)
+                echo "Session: $session_name, Window: $window_index:$window_name"
+            else
+                echo "⚠ Not running inside tmux"
+            fi
+        else
+            echo "✗ Kitty remote control not working"
+            echo "Make sure 'allow_remote_control yes' is set in kitty.conf"
+        fi
+    else
+        echo "✗ KITTY_WINDOW_ID not set"
+    fi
+else
+    echo "✗ Not running in Kitty terminal (TERM=$TERM)"
+fi
+
+echo ""
+echo "Integration test complete."

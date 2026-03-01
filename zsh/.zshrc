@@ -7,6 +7,10 @@ if [[ -n $KITTY_INSTALLATION_DIR ]]; then
     unfunction kitty-integration
 fi
 
+# OpenCode session export aliases
+alias opencode-export='~/.opencode/export-sessions.sh'
+alias opencode-sessions='ls -la ~/.opencode/exports/sessions/'
+
 # vterm integration for Emacs
 if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
     alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
@@ -183,48 +187,42 @@ zle -N vi-yank-eol _vi-yank-eol-with-highlight
 zle -N vi-yank-whole-line _vi-yank-whole-line-with-highlight
 
 
-# Cursor shape for vim mode
-function zle-keymap-select {
-if [[ $KEYMAP == vicmd ]] || [[ $1 = 'block' ]]; then
-  echo -ne '\e[1 q'  # Block cursor for normal mode
-elif [[ $KEYMAP == main ]] || [[ $KEYMAP == viins ]] || [[ $KEYMAP = "" ]] || [[ $1 = 'beam' ]]; then
-  echo -ne '\e[5 q'  # Beam cursor for insert mode
-fi
+# Enhanced cursor shape for vim mode (tmux compatible)
+function _cursor_mode() {
+    local cursor_style="$1"
+    # Check if we're in tmux and send proper escape sequences
+    if [[ -n "$TMUX" ]]; then
+        # Wrap cursor sequences for tmux passthrough
+        printf '\ePtmux;\e\e[%s q\e\\' "$cursor_style"
+    else
+        # Direct escape sequence
+        printf '\e[%s q' "$cursor_style"
+    fi
+}
+
+function zle-keymap-select() {
+    case $KEYMAP in
+        vicmd)
+            _cursor_mode 2  # Block cursor for normal mode
+            ;;
+        main|viins|*)
+            _cursor_mode 6  # Beam cursor for insert mode
+            ;;
+    esac
 }
 zle -N zle-keymap-select
 
-# Initialize cursor shape on shell start
-function zle-line-init {
-echo -ne '\e[5 q'  # Beam cursor
+function zle-line-init() {
+    zle -K viins  # Start in insert mode
+    _cursor_mode 6  # Beam cursor
 }
 zle -N zle-line-init
 
-# Reset cursor to beam on command execution
-preexec() {
-echo -ne '\e[5 q'
+# Reset to beam cursor before each command and on startup
+_cursor_mode 6
+preexec() { 
+    _cursor_mode 6
 }
-
-# fix cursor
-# Change cursor shape for different vi modes.
-# function zle-keymap-select {
-# if [[ ${KEYMAP} == vicmd ]] ||
-#    [[ $1 = 'block' ]]; then
-#   echo -ne '\e[1 q'
-# elif [[ ${KEYMAP} == main ]] ||
-#      [[ ${KEYMAP} == viins ]] ||
-#      [[ ${KEYMAP} = '' ]] ||
-#      [[ $1 = 'beam' ]]; then
-#   echo -ne '\e[5 q'
-# fi
-# }
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-}
-zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line
@@ -401,3 +399,18 @@ fi
 export PATH="$PATH:/Users/morph/.lmstudio/bin"
 # End of LM Studio CLI section
 
+source /Users/morph/.stremio_aliases
+export PATH="$HOME/.local/bin:$PATH"
+
+# Tailscale SSH aliases
+alias sshopt='ssh morph@TAILSCALE_IP_1'
+alias sshlaptop='ssh morph@TAILSCALE_IP_2'
+alias sshpi="ssh user@TAILSCALE_IP_3"
+alias sshnas='ssh root@TAILSCALE_IP_4'
+
+# Tailscale SSH helper
+# tssh is now the main command
+alias truenas='ssh root@TAILSCALE_IP_4'
+alias truenas-web='open http://TAILSCALE_IP_4'
+alias ofast="/Users/morph/.opencode-fast"
+alias ocf="/Users/morph/.opencode-fast"
