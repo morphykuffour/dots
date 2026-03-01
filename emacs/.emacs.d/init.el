@@ -1,26 +1,17 @@
 ;;; init.el --- Emacs Configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; emacs os config for writing and productivity
-;; Performance optimized with Kyure-A speedups
-; MacOS X
-; brew tap d12frosted/emacs-plus
-; brew install emacs-plus@31 --with-mailutils --with-modern-black-dragon-icon
+;; Nix-managed Emacs config for writing and productivity
 
 ;;; Code:
 
 ;;; --- DELAYED EXECUTION SYSTEM (from Kyure-A) ---
-;; This system defers low-priority configurations to idle time
 
-(defvar morph/delayed-priority-high-configurations '()
-  "High priority delayed configurations.")
-
-(defvar morph/delayed-priority-low-configurations '()
-  "Low priority delayed configurations (executed during idle time).")
+(defvar morph/delayed-priority-high-configurations '())
+(defvar morph/delayed-priority-low-configurations '())
 
 (defmacro with-delayed-execution (priority &rest body)
-  "Execute BODY with delayed execution based on PRIORITY.
-PRIORITY can be :high or :low."
+  "Execute BODY with delayed execution based on PRIORITY (:high or :low)."
   (declare (indent 1))
   `(cond
     ((eq ,priority :high)
@@ -30,7 +21,6 @@ PRIORITY can be :high or :low."
     (t
      (error "Unknown priority: %s" ,priority))))
 
-;; Execute high priority configs after init (0.1 sec delay)
 (add-hook 'emacs-startup-hook
           (lambda ()
             (run-with-timer 0.1 nil
@@ -38,93 +28,77 @@ PRIORITY can be :high or :low."
                               (dolist (fn (nreverse morph/delayed-priority-high-configurations))
                                 (funcall fn))))))
 
-;; Execute low priority configs during idle time (0.3 sec delay, every 0.001 sec)
 (run-with-timer 0.3 0.001
                 (lambda ()
                   (when morph/delayed-priority-low-configurations
                     (let ((fn (pop morph/delayed-priority-low-configurations)))
                       (when fn (funcall fn))))))
 
-;;; --- STARTUP TIME MEASUREMENT ---
+;;; --- STARTUP TIME ---
 
 (defun morph/display-startup-time ()
-  "Display Emacs startup time in the minibuffer."
-  (message "Emacs loaded in %s with %d garbage collections."
-           (format "%.2f seconds"
-                   (float-time
-                    (time-subtract after-init-time before-init-time)))
+  "Display Emacs startup time."
+  (message "Emacs loaded in %.2f seconds with %d garbage collections."
+           (float-time (time-subtract after-init-time before-init-time))
            gcs-done))
 
 (add-hook 'emacs-startup-hook #'morph/display-startup-time)
 
-;;; --- GCMH (Garbage Collection Magic Hack) ---
-;; Automatically manages GC thresholds for optimal performance
+;;; --- GC ---
 
-;; GC when focus is lost (helps keep things snappy)
 (add-hook 'focus-out-hook #'garbage-collect)
 
 ;;; --- PACKAGE MANAGEMENT ---
-;; Add MELPA for packages not available in Nix
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;;; --- USE-PACKAGE CONFIGURATION ---
-;; Packages are managed by Nix, use-package only configures them
 (require 'use-package)
+(setq use-package-always-defer t
+      use-package-always-ensure nil
+      use-package-expand-minimally t
+      use-package-compute-statistics nil)
 
-;;; --- USE-PACKAGE OPTIMIZATION SETTINGS (from Kyure-A) ---
-;; Defer loading by default for faster startup
-(setq use-package-always-defer t)
-(setq use-package-always-ensure nil)  ; Packages installed by Nix, not use-package
-(setq use-package-expand-minimally t)
-(setq use-package-compute-statistics nil)  ; Disable statistics for speed (enable for debugging)
+;;; --- GCMH ---
 
-;;; --- GCMH PACKAGE (Garbage Collection Magic Hack) ---
-;; Manages GC thresholds automatically for optimal performance
 (use-package gcmh
-  :ensure nil  ; Don't try to install, must be available via Nix
-  :if (locate-library "gcmh")  ; Only load if available
   :demand t
   :config
   (setq gcmh-idle-delay 5
-        gcmh-high-cons-threshold (* 128 1024 1024)  ; 128MB during work
-        gcmh-low-cons-threshold (* 16 1024 1024))   ; 16MB when idle
+        gcmh-high-cons-threshold (* 128 1024 1024)
+        gcmh-low-cons-threshold (* 16 1024 1024))
   (gcmh-mode 1)
-  ;; Restore file-name-handler-alist after GCMH is set up
   (when (boundp 'morph--file-name-handler-alist)
     (setq file-name-handler-alist morph--file-name-handler-alist)))
 
-(use-package org :ensure nil :defer t)  ; Built-in package
+;;; --- TAB BAR ---
 
-;; Tab bar mode with keybindings (built-in, load early)
 (use-package tab-bar
-    :ensure nil  ; Built-in package, no need to ensure
-    :demand t    ; Load immediately so keybindings work
-    :init
-    ;; Unset conflicting keybindings first
-    (dotimes (n 5)
-        (global-unset-key (kbd (format "C-%d" n)))
-        (global-unset-key (kbd (format "M-%d" n))))
-    :config
-    (tab-bar-mode t)
-    ;; Define keybindings in :config to ensure they override defaults
-    (global-set-key (kbd "M-0") 'tab-bar-switch-to-tab)
-    (global-set-key (kbd "M-1") (lambda () (interactive) (tab-bar-select-tab 1)))
-    (global-set-key (kbd "M-2") (lambda () (interactive) (tab-bar-select-tab 2)))
-    (global-set-key (kbd "M-3") (lambda () (interactive) (tab-bar-select-tab 3)))
-    (global-set-key (kbd "M-4") (lambda () (interactive) (tab-bar-select-tab 4))))
+  :ensure nil
+  :demand t
+  :init
+  (dotimes (n 5)
+    (global-unset-key (kbd (format "C-%d" n)))
+    (global-unset-key (kbd (format "M-%d" n))))
+  :config
+  (tab-bar-mode t)
+  (global-set-key (kbd "M-0") 'tab-bar-switch-to-tab)
+  (global-set-key (kbd "M-1") (lambda () (interactive) (tab-bar-select-tab 1)))
+  (global-set-key (kbd "M-2") (lambda () (interactive) (tab-bar-select-tab 2)))
+  (global-set-key (kbd "M-3") (lambda () (interactive) (tab-bar-select-tab 3)))
+  (global-set-key (kbd "M-4") (lambda () (interactive) (tab-bar-select-tab 4))))
+
+;;; --- CONFIG FILE LOADING ---
 
 (defconst user-init-dir
   (cond ((and (boundp 'user-init-file) user-init-file)
          (file-name-directory (file-truename user-init-file)))
         ((boundp 'user-emacs-directory) user-emacs-directory)
-        ((boundp 'user-init-directory) user-init-directory)
         (t "~/.emacs.d/")))
 
-;; Helper function to load config files
 (defun load-user-file (file)
-  "Load a file in current user's configuration directory."
+  "Load FILE from user configuration directory."
   (interactive "f")
   (load-file (expand-file-name file user-init-dir)))
 
@@ -132,32 +106,26 @@ PRIORITY can be :high or :low."
 (load-user-file "config/keymaps.el")
 (load-user-file "config/utils.el")
 (load-user-file "config/vterm-config.el")
-;; (load-user-file "config/modeline.el")
-;; (load-user-file "config/org-mode.el")
 
-;; sensible settings from hrs
-(add-to-list  'load-path (expand-file-name "config" user-init-dir))
+(add-to-list 'load-path (expand-file-name "config" user-init-dir))
 (require 'sensible-defaults)
 (sensible-defaults/use-all-settings)
 (sensible-defaults/use-all-keybindings)
 (sensible-defaults/backup-to-temp-directory)
 
-;; snippets
+;;; --- SNIPPETS ---
+
 (use-package yasnippet
   :diminish yas-minor-mode
   :defer 5
   :config
-  (setq yas-snippet-dirs (list (expand-file-name "~/.emacs.d/snippets" )))
+  (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
   (yas-global-mode 1))
 
-;; Silences the warning when running a snippet with backticks (runs a command in the snippet)
 (require 'warnings)
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
-;; Smex for M-x command history (required by nano-counsel)
-(use-package smex
-  :defer t
-  :commands smex)
+;;; --- COMPLETION (Ivy/Counsel) ---
 
 (use-package counsel
   :demand t
@@ -166,64 +134,39 @@ PRIORITY can be :high or :low."
   ("C-x b" . 'counsel-switch-buffer)
   ("C-x C-f" . 'counsel-find-file)
   ("C-s" . 'swiper)
-
   :config
   (use-package flx)
-
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "(%d/%d) "
+        ivy-initial-inputs-alist nil
+        counsel-M-x-use-fuzzy nil))
 
-  ;; Use exact matching for M-x
-  ;; (setq ivy-re-builders-alist
-  ;;       '((counsel-M-x . ivy--regex-plus)
-  ;;         (swiper . ivy--regex-plus)
-  ;;         (t . ivy--regex-fuzzy)))
-
-  ;; Prioritize exact matches for counsel-M-x
-  ;; (setq ivy-sort-matches-functions-alist
-  ;;       '((counsel-M-x . ivy--prefix-sort)
-  ;;         (t . nil)))
-
-  ;; Disable fuzzy matching for M-x completely (if needed)
-  (setq counsel-M-x-use-fuzzy nil))
-
-;; Counsel-tramp for interactive SSH host selection via TRAMP
-;; Only load if available via Nix
 (use-package counsel-tramp
-  :ensure nil  ; Don't try to install, must be available via Nix
-  :if (locate-library "counsel-tramp")  ; Only load if available
   :defer t
   :commands (counsel-tramp)
   :bind ("C-c r" . counsel-tramp)
   :config
-  ;; Default directory to open on remote host
-  (setq counsel-tramp-default-directory "~/")
-  ;; Customize additional connections if needed
-  (setq counsel-tramp-custom-connections '()))
+  (setq counsel-tramp-default-directory "~/"
+        counsel-tramp-custom-connections '()))
 
-;; Fallback: Custom TRAMP connect function (works without counsel-tramp)
-;; Uses built-in TRAMP functions to parse SSH config
-(defun my/tramp-connect ()
-  "Connect to SSH host interactively using TRAMP.
-Fallback function that works without counsel-tramp package."
-  (interactive)
-  (require 'tramp)
-  (let* ((hosts (delete-dups
-                 (mapcar #'car
-                         (append
-                          (when (file-exists-p "~/.ssh/config")
-                            (tramp-parse-sconfig "~/.ssh/config"))
-                          (when (file-exists-p "/etc/ssh/ssh_config")
-                            (tramp-parse-sconfig "/etc/ssh/ssh_config"))))))
-         (host (completing-read "SSH host: " hosts))
-         (default-directory (format "/ssh:%s:~/" host))
-         (remote-dir (read-directory-name "Remote directory: " default-directory)))
-    (find-file remote-dir)))
-
-;; Bind fallback to C-c r if counsel-tramp is not available
+;; Fallback TRAMP connect if counsel-tramp unavailable
 (unless (locate-library "counsel-tramp")
+  (defun my/tramp-connect ()
+    "Connect to SSH host interactively using TRAMP."
+    (interactive)
+    (require 'tramp)
+    (let* ((hosts (delete-dups
+                   (mapcar #'car
+                           (append
+                            (when (file-exists-p "~/.ssh/config")
+                              (tramp-parse-sconfig "~/.ssh/config"))
+                            (when (file-exists-p "/etc/ssh/ssh_config")
+                              (tramp-parse-sconfig "/etc/ssh/ssh_config"))))))
+           (host (completing-read "SSH host: " hosts))
+           (default-directory (format "/ssh:%s:~/" host))
+           (remote-dir (read-directory-name "Remote directory: " default-directory)))
+      (find-file remote-dir)))
   (global-set-key (kbd "C-c r") 'my/tramp-connect))
 
 (use-package ivy
@@ -240,44 +183,35 @@ Fallback function that works without counsel-tramp package."
   :config
   (ivy-mode 1))
 
-;; ivy-rich loading disabled temporarily - causes init errors
-;; (with-eval-after-load 'ivy
-;;   (require 'ivy-rich)
-;;   (ivy-rich-mode 1))
+;;; --- PDF ---
 
 (use-package pdf-tools
   :defer t
   :mode ("\\.pdf\\'" . pdf-view-mode))
-;; (pdf-tools-install)
+
+;;; --- EVIL ---
 
 (use-package undo-tree
   :defer 2
   :config
-  ;; globally turn on undo-tree (deferred 2 seconds)
   (global-undo-tree-mode))
-
-(setq evil-undo-system 'undo-tree)
 
 (use-package evil
   :demand t
   :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
+  (setq evil-want-integration t
+        evil-want-keybinding nil
+        evil-want-C-u-scroll t
+        evil-want-C-i-jump nil
+        evil-undo-system 'undo-tree)
   :config
   (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-  ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal)
-
-  ;; make C-r redo
   (define-key evil-normal-state-map (kbd "C-r") 'evil-redo)
   (define-key evil-insert-state-map (kbd "C-r") 'evil-redo))
 
@@ -298,110 +232,62 @@ Fallback function that works without counsel-tramp package."
   :config
   (evil-commentary-mode))
 
-;; macOS: Set Alt/Option as Meta, Command as Super
-(setq mac-option-modifier 'meta)
-(setq mac-command-modifier 'super)
+;;; --- macOS ---
 
-;; macOS: Command+Q to quit Emacs (without confirmation)
+(setq mac-option-modifier 'meta
+      mac-command-modifier 'super)
 (global-set-key (kbd "s-q") 'save-buffers-kill-emacs)
 
-;; mu4e extensions - installed via Nix overlay or manually
-;; mu4e-dashboard and mu4e-thread-folding from rougier
+;;; --- UI SETTINGS ---
 
-;; Load experimental modules (theme colors already initialized above)
-;; nano-mu4e is experimental and can cause issues - commented out for stability
-;; Uncomment if you want SVG tags and enhanced mu4e styling
-;; (with-eval-after-load 'mu4e
-;;   (require 'nano-mu4e))
-
-; ;; ui tweaks
 (tooltip-mode -1)
 (column-number-mode)
-; (evil-commentary-mode)
-; (setq visible-bell nil)
-; (tool-bar-mode -1)
-; (set-fringe-mode 10)
-(setq confirm-kill-emacs nil)
-;; (pixel-scroll-precision-mode)
-(setq inhibit-startup-message t)
+(setq confirm-kill-emacs nil
+      inhibit-startup-message t
+      shell-command-switch "-ic"
+      counsel-find-file-at-point t
+      ring-bell-function 'ignore)
 (global-prettify-symbols-mode t)
-(setq shell-command-switch "-ic")
-(setq counsel-find-file-at-point t)
-(setq ring-bell-function 'ignore)
 (global-hl-line-mode)
 (set-window-scroll-bars (minibuffer-window) nil nil)
-(setq frame-title-format '((:eval (projectile-project-name))))
 (setq-default indent-tabs-mode nil)
 (setq save-place-forget-unreadable-files nil)
 (save-place-mode 1)
-;; (set-face-attribute 'mode-line nil :height 80)
-;; (set-face-attribute 'mode-line-inactive nil :height 150)
-(set-face-attribute 'default nil :height 160)
 (global-visual-line-mode t)
 
-;; hide minor modes
-;; (use-package moody
-;;   :demand t
-;;   :custom
-;;   (x-underline-at-descent-line t)
-;;   :config
-;;   (moody-replace-mode-line-buffer-identification)
-;;   (moody-replace-vc-mode))
-;;
-;; (use-package minions
-;;   :config
-;;   (setq minions-mode-line-lighter "?"
-;;         minions-mode-line-delimiters (cons "" ""))
-;;   (minions-mode 1))
-
-;; Disabled doom-modeline in favor of nano-modeline
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :init
-;;   (doom-modeline-mode 1)
-;;   :config
-;;   ;; set the height of the mode-line
-;;   (set-face-attribute 'mode-line nil :height 160)
-;;   (set-face-attribute 'mode-line-inactive nil :height 160))
+;;; --- SEARCH ---
 
 (use-package deadgrep
   :defer t
   :commands (deadgrep)
   :config
   (evil-define-key 'motion deadgrep-mode-map (kbd "C-p") 'project-find-file)
-
   (defun deadgrep--include-args (rg-args)
     (push "--hidden" rg-args)
     (push "--glob=!.git/" rg-args))
-  (advice-add 'deadgrep--arguments
-              :filter-return #'deadgrep--include-args))
+  (advice-add 'deadgrep--arguments :filter-return #'deadgrep--include-args))
 
-;; git
+;;; --- GIT ---
+
 (use-package magit
   :hook (with-editor-mode . evil-insert-state)
   :bind ("C-x g" . magit-status)
-
   :config
   (use-package git-commit)
   (use-package magit-section)
   (use-package with-editor)
-
   (require 'git-rebase)
-
   (setq magit-push-always-verify nil
-        git-commit-summary-max-length 50)
-
-  ;; TRAMP performance optimizations for Magit (from coredumped.dev)
-  (setq magit-commit-show-diff nil          ; Disable diff in commits for speed
-        magit-branch-direct-configure nil    ; Remove git variable display
-        magit-refresh-status-buffer nil      ; Prevent auto-refresh after commands
-        magit-tramp-pipe-stty-settings 'pty)) ; Better async process handling
-
-(use-package magit-popup :demand t)
+        git-commit-summary-max-length 50
+        magit-commit-show-diff nil
+        magit-branch-direct-configure nil
+        magit-refresh-status-buffer nil
+        magit-tramp-pipe-stty-settings 'pty))
 
 (use-package magit-delta
-  ;; :ensure-system-package (delta . "cargo install git-delta")
   :hook (magit-mode . magit-delta-mode))
+
+;;; --- SHELL/PATH ---
 
 (use-package exec-path-from-shell
   :defer 1
@@ -409,34 +295,27 @@ Fallback function that works without counsel-tramp package."
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
+;;; --- TERMINAL ---
+
 (use-package eat
   :config
   (eat-eshell-mode)
   (setq eshell-visual-commands '()))
 
-;; terminal setup
-;; better-shell not available in nixpkgs
-;; (use-package better-shell)
-
-;; eterm-256color marked as broken in nixpkgs
-;; (use-package eterm-256color
-;;   :hook (term-mode . eterm-256color-mode))
-
 (use-package vterm
-  :bind*(:map vterm-mode-map
-  ("C-x C-k" . vterm-copy-mode)
-
-  :map vterm-copy-mode-map
-   ("C-x C-k" . vterm-copy-mode))
-
+  :bind* (:map vterm-mode-map
+          ("C-x C-k" . vterm-copy-mode)
+          :map vterm-copy-mode-map
+          ("C-x C-k" . vterm-copy-mode))
   :config
   (setq vterm-max-scrollback 100000))
 
 (use-package multi-vterm)
 
+;;; --- EDITING HELPERS ---
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
-(require 'rainbow-delimiters)
 
 (use-package which-key
   :demand t
@@ -445,53 +324,30 @@ Fallback function that works without counsel-tramp package."
   (setq which-key-idle-delay 0.3)
   (which-key-mode))
 
-
-(setq hl-todo-keyword-faces
-      '(("TODO"   . "#FF0000")
-        ("FIXME"  . "#FF0000")
-        ("DEBUG"  . "#A020F0")
-        ("GOTCHA" . "#FF4500")
-        ("STUB"   . "#1E90FF")))
-
 (use-package olivetti
   :defer t
   :commands (olivetti-mode))
+
 (auto-image-file-mode 1)
 
-;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383#issuecomment-899157143
+;;; --- DIRED ---
+
 (setq insert-directory-program "gls" dired-use-ls-dired t)
-(setq dired-listing-switches "-al --group-directories-first")
 
 (use-package dired
-  :ensure nil  ; Built-in package
+  :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :config
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-  (defun hrs/dired-slideshow ()
-    (interactive)
-    (start-process "dired-slideshow" nil "s" (dired-current-directory)))
-
   (evil-define-key 'normal dired-mode-map (kbd "o") 'dired-find-file-other-window)
-  (evil-define-key 'normal dired-mode-map (kbd "v") 'hrs/dired-slideshow)
-
-  (setq-default dired-listing-switches
-                (combine-and-quote-strings '("-l" "-v" "-g"
-                                             "--no-group"
-                                             "--human-readable"
-                                             "--time-style=+%Y-%m-%d"
-                                             "--almost-all")))
+  (setq-default dired-listing-switches "-alh --group-directories-first")
   (setq dired-clean-up-buffers-too t
         dired-dwim-target t
         dired-recursive-copies 'always
         delete-by-moving-to-trash t
         dired-recursive-deletes 'top
         global-auto-revert-non-file-buffers t))
-
-
-;; dired-single not available in nixpkgs
-;; (use-package dired-single
-;;   :commands (dired dired-jump))
 
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -500,96 +356,75 @@ Fallback function that works without counsel-tramp package."
     "." 'dired-hide-dotfiles-mode))
 
 (use-package nerd-icons-dired
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+  :hook (dired-mode . nerd-icons-dired-mode))
 
-(use-package vertico
-  :config
-  (vertico-mode))
-
-;; perform dired actions asynchronously
 (use-package async
   :config
   (dired-async-mode 1))
 
-(when (eq system-type 'windows-nt)
-  (setq explicit-shell-file-name "powershell.exe")
-  (setq explicit-powershell.exe-args '()))
+;;; --- THEMES ---
 
-;; Keep gruvbox-theme available as backup
-(use-package autothemer)  ; Required dependency for gruvbox-theme
+(use-package autothemer)
 (use-package gruvbox-theme)
 
 (use-package circadian
   :config
-  ;; Set your location for sunrise/sunset times
-  ;; Find your coordinates at: https://www.latlong.net/
-  (setq calendar-latitude 40.0)   ; Replace with your latitude
-  (setq calendar-longitude -70.0) ; Replace with your longitude
-  (setq circadian-themes '((:sunrise . modus-operandi)
+  (setq calendar-latitude 40.0
+        calendar-longitude -70.0
+        circadian-themes '((:sunrise . modus-operandi)
                            (:sunset  . modus-vivendi)))
-  ;; (setq circadian-themes '((:sunrise . gruvbox-light-medium)
-  ;;                          (:sunset  . gruvbox-dark-hard)))
   (circadian-setup))
 
-;; colemak dh
-;; (use-package evil-colemak-basics
-;;   :init
-;;   (setq evil-colemak-basics-layout-mod 'mod-dh)
-;;   :config
-;;   (global-evil-colemak-basics-mode))
+;;; --- NIX ---
 
 (use-package nix-mode
   :mode "\\.nix\\'")
 
+;;; --- ORG MODE ---
+
 (org-babel-do-load-languages
  'org-babel-load-languages
- '(
-   (R . t)
+ '((R . t)
    (C . t)
    (shell . t)
    (python . t)
    (js . t)
    (emacs-lisp . t)))
 
-(setq org-babel-python-command "python3")
-(setq org-confirm-babel-evaluate nil)
-(setq org-startup-with-inline-images t)
+(setq org-babel-python-command "python3"
+      org-confirm-babel-evaluate nil
+      org-startup-with-inline-images t)
 
-;; https://github.com/org-roam/org-roam/issues/397#issuecomment-611751481
-;; https://github.com/org-roam/org-roam-ui/issues/213
 (use-package org-roam
   :custom
   (org-roam-directory (file-truename "~/Org/zettelkasten"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n a" . org-roam-alias-add)
+         ("C-c n a" . org-roam-alias-add)
          ("C-c n f" . org-roam-node-find)
-	 ("C-c n g" . org-roam-ui-open)
+         ("C-c n g" . org-roam-ui-open)
          ("C-c n j" . org-roam-jump-to-index)
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)
          ("C-c n d" . org-roam-dailies-capture-today))
   :config
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (setq org-roam-node-display-template
+        (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
   (require 'org-roam-protocol))
 
 (use-package org-roam-ui
   :after org-roam
-;;  :hook (after-init . org-roam-ui-mode)
   :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
+
+;;; --- ORG AGENDA ---
 
 (setq org-default-notes-file "~/Org/agenda/tasks.org")
-;; (load-user-file "config/agenda.el")
 
 (require 'org-agenda)
-
-(setq org-default-notes-file "~/Org/agenda/tasks.org")
 
 (setq org-return-follows-link t
       org-agenda-tags-column 75
@@ -602,163 +437,124 @@ Fallback function that works without counsel-tramp package."
 
 (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
 
-;; agenda files
 (setq org-agenda-files
       '("~/Org/agenda/tasks.org"
-	"~/Org/agenda/school.org"
-	"~/Org/agenda/birthdays.org"
-	"~/Org/agenda/habits.org"))
+        "~/Org/agenda/school.org"
+        "~/Org/agenda/birthdays.org"
+        "~/Org/agenda/habits.org"))
 
-(setq initial-major-mode 'org-mode)
-;; org-agenda setup
-(setq calendar-week-start-day 1)
-(setq org-startup-folded t)
+(setq initial-major-mode 'org-mode
+      calendar-week-start-day 1
+      org-startup-folded t)
 
 (defun my-org-ret-at-col-0 ()
-  "In Org buffers, disable auto‑indent on RET and always insert newline at col 0."
-  (electric-indent-local-mode -1)        ; turn off electric-indent just here
-  (setq-local org-adapt-indentation nil) ; don’t auto-indent text under headings
-  ;; Make RET in insert-state just do a raw newline (no indent)
+  "In Org buffers, disable auto-indent on RET and insert newline at col 0."
+  (electric-indent-local-mode -1)
+  (setq-local org-adapt-indentation nil)
   (when (boundp 'evil-insert-state-map)
     (define-key evil-insert-state-local-map (kbd "RET") #'newline)))
 
 (add-hook 'org-mode-hook #'my-org-ret-at-col-0)
 
-;; icloud syncing
+;; iCloud syncing
 (setq auto-save-default t
       auto-revert-use-notify nil
       auto-revert-verbose nil)
 (global-auto-revert-mode 1)
 
-(defun reset-org-config ()
-  "Reset all org-mode global variables to their default state."
-  (interactive)
-  (org-reset-all-org-global-variables))
-
-;; ls $(brew --prefix)/share/emacs/site-lisp/mu/mu4e
-;; find $(brew --prefix) -type d -name "mu4e"
-;; sudo ln -s $(brew --prefix)/share/emacs/site-lisp/mu/mu4e /usr/local/share/emacs/site-lisp/mu/mu4e
-;; (use-package mu4e
-;;   :load-path  "/usr/local/share/emacs/site-lisp/mu/mu4e/")
+;;; --- EMAIL (mu4e) ---
 
 (use-package mu4e
-  :load-path  "/usr/local/share/emacs/site-lisp/mu/mu4e/"
-  :ensure nil  ; Installed via system (brew/nix)
+  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e/"
+  :ensure nil
   :commands (mu4e)
   :config
-
-  ;; Set your email address (consider using custom.el or environment variable)
-  ;; (setq user-mail-address "your-email@protonmail.com")
   (setq user-mail-address (or (getenv "EMAIL") user-mail-address))
 
-  (setq mu4e-change-filenames-when-moving t ; avoid sync conflicts
-      mu4e-update-interval (* 5 60) ; check mail every 5 minutes (faster updates)
-      mu4e-compose-format-flowed t ; re-flow mail so it's not hard wrapped
-      mu4e-get-mail-command "mbsync --config ~/.mbsyncrc protonmail"
-      mu4e-maildir "~/mail/protonmail"
-      ;; Performance optimizations
-      mu4e-index-cleanup nil ; don't cleanup on every index (faster)
-      mu4e-index-lazy-check t ; only check maildirs that have changed
-      mu4e-headers-skip-duplicates t ; faster header view
-      mu4e-headers-include-related nil ; don't include related messages (faster)
-      mu4e-headers-results-limit 500 ; limit results for faster rendering
-      mu4e-search-results-limit 500 ; limit search results
-      mu4e-attachment-dir "~/Downloads" ; faster attachment handling
-      ;; Error handling - don't show annoying errors
-      mu4e-hide-index-messages t ; hide indexing messages
-      mu4e-update-mail-and-index-run-in-background t) ; run updates in background
+  (setq mu4e-change-filenames-when-moving t
+        mu4e-update-interval (* 5 60)
+        mu4e-compose-format-flowed t
+        mu4e-get-mail-command "mbsync --config ~/.mbsyncrc protonmail"
+        mu4e-maildir "~/mail/protonmail"
+        mu4e-index-cleanup nil
+        mu4e-index-lazy-check t
+        mu4e-headers-skip-duplicates t
+        mu4e-headers-include-related nil
+        mu4e-headers-results-limit 500
+        mu4e-search-results-limit 500
+        mu4e-attachment-dir "~/Downloads"
+        mu4e-hide-index-messages t
+        mu4e-update-mail-and-index-run-in-background t)
 
   (setq mu4e-drafts-folder "/Drafts"
-      mu4e-sent-folder   "/Sent"
-      mu4e-refile-folder "/All Mail"
-      mu4e-trash-folder  "/Trash")
+        mu4e-sent-folder "/Sent"
+        mu4e-refile-folder "/All Mail"
+        mu4e-trash-folder "/Trash")
 
-   (setq mu4e-headers-auto-update t                ; avoid to type `g' to update
-      mu4e-view-show-images t                   ; show images in the view buffer
-      mu4e-use-fancy-chars nil                  ; disable fancy chars for better compatibility
-      mu4e-compose-signature-auto-include nil   ; I don't want a message signature
-      mu4e-compose-reply-ignore-address `("no-?reply" ,user-mail-address)
-      ;; Async mail fetching
-      mu4e-index-update-in-background t ; update index in background
-      mu4e-hide-index-messages t ; hide indexing messages for cleaner UI
-      mu4e-modeline-support t ; show sync status in modeline
-      ;; HTML email rendering - prefer text when possible
-      mu4e-view-prefer-html nil ; prefer plain text over HTML
-      mu4e-view-show-addresses t) ; show full email addresses
+  (setq mu4e-headers-auto-update t
+        mu4e-view-show-images t
+        mu4e-use-fancy-chars nil
+        mu4e-compose-signature-auto-include nil
+        mu4e-compose-reply-ignore-address `("no-?reply" ,user-mail-address)
+        mu4e-index-update-in-background t
+        mu4e-modeline-support t
+        mu4e-view-prefer-html nil
+        mu4e-view-show-addresses t)
 
-    ;; signature
-   (setq message-signature "bgc")
+  (setq message-signature "bgc")
 
-   (setq mu4e-maildir-shortcuts
-       '(("/INBOX"     . ?i)
-         ("/Sent"      . ?s)
-         ("/Trash"     . ?t)
-         ("/Drafts"    . ?d)
-         ("/All Mail"  . ?a)))
+  (setq mu4e-maildir-shortcuts
+        '(("/INBOX"     . ?i)
+          ("/Sent"      . ?s)
+          ("/Trash"     . ?t)
+          ("/Drafts"    . ?d)
+          ("/All Mail"  . ?a)))
 
-   (setq mu4e-bookmarks
-     '((:name  "Unread messages"
-        :query "flag:unread and maildir:/INBOX"
-        :key   ?u)
-       (:name  "Today's messages"
-        :query "date:today..now"
-        :key ?t)
-       (:name  "Last 7 days"
-        :query "date:7d..now"
-        :key ?7)
-       (:name  "Messages with Word docs"
-        :query "mime:application/msword OR mime:application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        :key ?w)
-       (:name  "Messages with PDF"
-        :query "mime:application/pdf"
-        :key ?p)
-       (:name  "Messages with calendar event"
-        :query "mime:text/calendar"
-        :key ?e)))
+  (setq mu4e-bookmarks
+        '((:name "Unread messages"
+           :query "flag:unread and maildir:/INBOX"
+           :key ?u)
+          (:name "Today's messages"
+           :query "date:today..now"
+           :key ?t)
+          (:name "Last 7 days"
+           :query "date:7d..now"
+           :key ?7)
+          (:name "Messages with PDF"
+           :query "mime:application/pdf"
+           :key ?p)))
 
-   (setq message-send-mail-function 'smtpmail-send-it
-       auth-sources '("~/.authinfo.gpg") ;need to use gpg version but only local smtp stored for now
-       smtpmail-smtp-server "127.0.0.1"
-       smtpmail-smtp-service 1025
-       smtpmail-stream-type  'starttls)
+  (setq message-send-mail-function 'smtpmail-send-it
+        auth-sources '("~/.authinfo.gpg")
+        smtpmail-smtp-server "127.0.0.1"
+        smtpmail-smtp-service 1025
+        smtpmail-stream-type 'starttls)
 
-  ;; Async mail fetching function with error handling
   (defun my-mu4e-update-mail-async ()
     "Update mail asynchronously without blocking Emacs."
     (interactive)
-    (let ((proc (start-process "mbsync" "*mbsync-output*" "mbsync" "--config" (expand-file-name "~/.mbsyncrc") "protonmail")))
+    (let ((proc (start-process "mbsync" "*mbsync-output*" "mbsync"
+                               "--config" (expand-file-name "~/.mbsyncrc") "protonmail")))
       (set-process-sentinel
        proc
        (lambda (process event)
          (cond
           ((string= event "finished\n")
-           (message "✓ Mail synced")
-           (mu4e-update-index nil)
-           (when (and (boundp 'mu4e-headers-mode) mu4e-headers-mode)
-             (mu4e-headers-rerun-search)))
+           (message "Mail synced")
+           (mu4e-update-index nil))
           (t
-           (with-current-buffer "*mbsync-output*"
-             (let ((output (buffer-string)))
-               (if (string-match "gpg\\|agent\\|timeout" output)
-                   (message "⚠ GPG issue - run: gpg-connect-agent reloadagent /bye")
-                 (message "⚠ Sync failed - check *mbsync-output* buffer"))))))))
-      (message "Syncing mail...")))
+           (message "Sync failed - check *mbsync-output* buffer")))))
+    (message "Syncing mail...")))
 
-  ;; Hook to auto-update after sync
   (add-hook 'mu4e-index-updated-hook 'mu4e-headers-rerun-search)
 
-  ;; Use mu server for faster queries (if available)
   (when (executable-find "mu")
     (setq mu4e-mu-binary (executable-find "mu")))
 
-  ;; Keybinding for async mail update
   (when (boundp 'mu4e-main-mode-map)
     (define-key mu4e-main-mode-map (kbd "U") 'my-mu4e-update-mail-async))
   (when (boundp 'mu4e-headers-mode-map)
-    (define-key mu4e-headers-mode-map (kbd "U") 'my-mu4e-update-mail-async))
-
-  )
-
+    (define-key mu4e-headers-mode-map (kbd "U") 'my-mu4e-update-mail-async)))
 
 (use-package org-msg
   :after mu4e
@@ -766,89 +562,64 @@ Fallback function that works without counsel-tramp package."
   (setq mail-user-agent 'mu4e-user-agent)
   (require 'org-msg)
   (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-      org-msg-startup "hidestars indent inlineimages"
-      org-msg-default-alternatives '((new		. (text html))
-                                     (reply-to-html	. (text html))
-                                     (reply-to-text	. (text)))
-      org-msg-convert-citation t)
+        org-msg-startup "hidestars indent inlineimages"
+        org-msg-default-alternatives '((new          . (text html))
+                                       (reply-to-html . (text html))
+                                       (reply-to-text . (text)))
+        org-msg-convert-citation t)
   (org-msg-mode))
 
-;; EAF removed - was causing issues with Emacs 31
-
-;; (use-package markdown-mode
-;;   :ensure t
-;;   :mode ("README\\.md\\'" . gfm-mode)
-;;   :init
-;;   (setq markdown-command "multimarkdown")
-;;   (setq markdown-header-scaling nil)
-;;   :bind (:map markdown-mode-map
-;;          ("C-c C-e" . markdown-do)))
+;;; --- MARKDOWN ---
 
 (use-package markdown-mode
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode))
   :init
-  (setq markdown-header-scaling nil)   ;; don't let markdown-mode scale headers
-  (setq markdown-fontify-code-blocks-natively nil))  ;; disable syntax highlighting in code blocks
+  (setq markdown-header-scaling nil
+        markdown-fontify-code-blocks-natively nil))
 
-;; hledger-mode for plain text accounting
+;;; --- FINANCE ---
+
 (use-package hledger-mode
   :mode ("\\.\\(h?ledger\\|journal\\|j\\)\\'" . hledger-mode)
   :commands (hledger-mode)
   :init
-  (setq hledger-jfile "~/Documents/hledger/main.journal") ; Adjust path as needed
+  (setq hledger-jfile "~/Documents/hledger/main.journal")
   :config
-  ;; Auto-completion for account names
   (add-hook 'hledger-mode-hook
             (lambda ()
               (company-mode)
               (setq-local company-backends '(hledger-company)))))
 
-;; AI Financial Assistant - Local AI-powered transaction categorization
-;; Uses Ollama with Mistral model for local inference
 (when (file-exists-p "~/ai-financial-assistant/emacs/ai-financial-working.el")
   (load-file "~/ai-financial-assistant/emacs/ai-financial-working.el")
-  ;; Optional: Auto-enable for hledger files
   (add-hook 'hledger-mode-hook
             (lambda ()
               (local-set-key (kbd "C-c f c") 'ai-financial-categorize-line)
               (local-set-key (kbd "C-c f C") 'ai-financial-categorize-all)
-              (local-set-key (kbd "C-c f a") 'ai-financial-quick-analysis)
-              (message "AI Financial Assistant ready. C-c f c to categorize."))))
+              (local-set-key (kbd "C-c f a") 'ai-financial-quick-analysis))))
 
-(use-package slime)
-(setq slime-contribs '(slime-fancy))
-(setq slime-net-coding-system 'utf-8-unix)
+;;; --- LISP ---
 
-;; helper to connect to your RISC-V VM’s Swank
-(defun my/slime-connect-riscv ()
-  "Connect to SBCL/Swank on localhost:4005 (RISC-V VM)."
-  (interactive)
-  (slime-connect "localhost" 4005))
+(use-package slime
+  :config
+  (setq slime-contribs '(slime-fancy)
+        slime-net-coding-system 'utf-8-unix))
+
+;;; --- CUSTOM (managed by Customize) ---
+
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8" default))
- '(org-agenda-files
-   '("~/dots/emacs/.emacs.d/init.el" "~/Sync/Org/Todo.org" "~/Org/agenda/tasks.org"
-     "~/Org/agenda/school.org" "~/Org/agenda/birthdays.org"
-     "~/Org/agenda/habits.org"))
  '(package-selected-packages
    '(async atomic-chrome circadian counsel deadgrep dired-hide-dotfiles eat
            evil-collection evil-commentary evil-org exec-path-from-shell flx
-           gcmh git-commit gruvbox-theme hledger-mode ivy-rich magit-delta
-           magit-popup markdown-mode modus-themes multi-vterm nerd-icons-dired
+           gcmh git-commit gruvbox-theme hledger-mode magit-delta
+           markdown-mode modus-themes multi-vterm nerd-icons-dired
            nix-mode olivetti org-msg org-roam-ui pdf-tools rainbow-delimiters
-           slime smex undo-tree use-package vertico which-key yasnippet))
+           slime undo-tree use-package which-key yasnippet))
  '(send-mail-function 'smtpmail-send-it))
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(italic ((t (:slant italic))))
  '(markdown-code-face ((t (:inherit default))))
  '(markdown-header-face ((t (:inherit default :weight normal))))
@@ -861,90 +632,141 @@ Fallback function that works without counsel-tramp package."
  '(markdown-inline-code-face ((t (:inherit default))))
  '(markdown-pre-face ((t (:inherit default)))))
 
+;;; --- PERFORMANCE ---
 
-
-;;; Performance optimizations (additional to early-init.el)
-
-;; Make scrolling smoother
 (setq scroll-step 1
       scroll-conservatively 10000
       auto-window-vscroll nil
       scroll-margin 0
-      scroll-preserve-screen-position t)
+      scroll-preserve-screen-position t
+      read-process-output-max (* 1024 1024)
+      idle-update-delay 1.0
+      inhibit-compacting-font-caches t
+      process-adaptive-read-buffering nil)
 
-;; Improve LSP performance
-(setq read-process-output-max (* 1024 1024)) ; 1mb
+;;; --- TRAMP ---
 
-;; Reduce unnecessary work
-(setq idle-update-delay 1.0)  ; Update UI less frequently when idle
-
-;; Don't compact font caches during GC
-(setq inhibit-compacting-font-caches t)
-
-;; Process handling for better performance
-(setq process-adaptive-read-buffering nil)
-
-;;; TRAMP Configuration & Optimization (from coredumped.dev)
-;; https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
-
-;; Basic performance settings
 (setq remote-file-name-inhibit-locks t
       tramp-use-scp-direct-remote-copying t
-      remote-file-name-inhibit-auto-save-visited t)
-
-;; File copy optimization - inline is faster up to about 2MB
-(setq tramp-copy-size-limit (* 1024 1024)  ; 1MB
+      remote-file-name-inhibit-auto-save-visited t
+      tramp-copy-size-limit (* 1024 1024)
       tramp-verbose 2)
 
-;; Direct async process configuration - reuses connections instead of creating new ones
 (with-eval-after-load 'tramp
   (connection-local-set-profile-variables
    'remote-direct-async-process
    '((tramp-direct-async-process . t)))
-
   (connection-local-set-profiles
    '(:application tramp :protocol "scp")
-   'remote-direct-async-process))
-
-;; SSH connection sharing for compilation - avoid password re-entry
-(with-eval-after-load 'tramp
+   'remote-direct-async-process)
   (with-eval-after-load 'compile
     (remove-hook 'compilation-mode-hook
                  #'tramp-compile-disable-ssh-controlmaster-options)))
 
-;; Disable VC for tramp - prevents unnecessary remote operations
 (setq vc-ignore-dir-regexp
       (format "\\(%s\\)\\|\\(%s\\)"
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
 
-;; LSP conditional enablement - disable LSP on remote hosts due to latency
 (defun $lsp-unless-remote ()
-  "Start LSP only if not on a remote host. Disables eldoc and completion on remote."
+  "Start LSP only if not on a remote host."
   (if (file-remote-p buffer-file-name)
       (progn (eldoc-mode -1)
              (setq-local completion-at-point-functions nil))
     (lsp)))
 
-;; Chrome Emacs - Browser extension support
-;; Provides atomic-chrome server for the "Chrome Emacs" browser extension
-;; https://github.com/KarimAziev/chrome-emacs
+;;; --- CHROME EMACS ---
+
 (use-package atomic-chrome
   :demand t
   :config
   (setq atomic-chrome-extension-type-list '(atomic-chrome))
-  (setq atomic-chrome-buffer-open-style 'frame)  ; Open in new frame (or 'split, 'full)
+  (setq atomic-chrome-buffer-open-style 'frame)
   (setq atomic-chrome-default-major-mode 'markdown-mode)
+  (setq atomic-chrome-auto-remove-file t)
   (setq atomic-chrome-url-major-mode-alist
         '(("github\\.com" . gfm-mode)
           ("gitlab\\.com" . gfm-mode)
           ("reddit\\.com" . markdown-mode)
           ("stackoverflow\\.com" . markdown-mode)
-          ("" . markdown-mode)))  ; Default fallback
-  ;; Start the WebSocket server on port 64292 (Chrome Emacs default)
-  (atomic-chrome-start-server)
+          ("us-east-2\\.console\\.aws\\.amazon\\.com" . yaml-ts-mode)
+          ("leetcode\\.com" . typescript-ts-mode)
+          ("" . markdown-mode)))
 
-  ;; Load keybindings
-  (load-file (expand-file-name "config/chrome-emacs-keybindings.el" user-emacs-directory)))
+  ;; Frame transparency (50%)
+  (defun atomic-chrome--set-frame-alpha (frame)
+    "Set FRAME to 50% transparency."
+    (when (framep frame)
+      (set-frame-parameter frame 'alpha '(50 . 50))))
+
+  (defun atomic-chrome--apply-frame-settings (orig-fn buffer title)
+    "Apply transparency to newly created atomic-chrome frame."
+    (let ((frame (funcall orig-fn buffer title)))
+      (when (framep frame)
+        (atomic-chrome--set-frame-alpha frame))
+      frame))
+  (advice-add 'atomic-chrome-show-edit-buffer
+              :around #'atomic-chrome--apply-frame-settings)
+
+  ;; Fix :wq breaking the server
+  (defun atomic-chrome--evil-save-and-close ()
+    "Save text to browser and close atomic-chrome buffer properly."
+    (interactive)
+    (when (bound-and-true-p atomic-chrome-edit-mode)
+      (atomic-chrome-send-buffer-text)
+      (atomic-chrome-close-current-buffer)))
+
+  (with-eval-after-load 'evil
+    (evil-define-command atomic-chrome--evil-write-quit ()
+      "Save to browser and close atomic-chrome buffer, or normal :wq."
+      :repeat nil
+      (if (bound-and-true-p atomic-chrome-edit-mode)
+          (atomic-chrome--evil-save-and-close)
+        (evil-save-and-close)))
+
+    (evil-define-command atomic-chrome--evil-quit ()
+      "Close atomic-chrome buffer, or normal :q."
+      :repeat nil
+      (if (bound-and-true-p atomic-chrome-edit-mode)
+          (atomic-chrome-close-current-buffer)
+        (evil-quit)))
+
+    (evil-ex-define-cmd "wq" 'atomic-chrome--evil-write-quit)
+    (evil-ex-define-cmd "q" 'atomic-chrome--evil-quit))
+
+  ;; Server auto-restart safety net
+  (defun atomic-chrome--server-alive-p ()
+    "Return non-nil if the atomic-chrome websocket server is alive."
+    (and (boundp 'atomic-chrome-server-atomic-chrome)
+         atomic-chrome-server-atomic-chrome
+         (processp atomic-chrome-server-atomic-chrome)
+         (process-live-p atomic-chrome-server-atomic-chrome)))
+
+  (defun atomic-chrome--ensure-server (&rest _)
+    "Restart the atomic-chrome server if it has died."
+    (unless (atomic-chrome--server-alive-p)
+      (ignore-errors
+        (atomic-chrome-start-server)
+        (message "atomic-chrome: server restarted"))))
+
+  (add-hook 'delete-frame-functions
+            (lambda (_frame)
+              (run-with-timer 0.5 nil #'atomic-chrome--ensure-server)))
+
+  (add-hook 'focus-in-hook #'atomic-chrome--ensure-server)
+
+  ;; Keybindings
+  (define-key atomic-chrome-edit-mode-map (kbd "C-c C-c") 'atomic-chrome-close-current-buffer)
+  (define-key atomic-chrome-edit-mode-map (kbd "C-c C-k") 'atomic-chrome-close-current-buffer)
+  (define-key atomic-chrome-edit-mode-map (kbd "C-x C-s") 'atomic-chrome-send-buffer-text)
+
+  (global-set-key (kbd "C-c a s")
+                  (lambda () (interactive)
+                    (atomic-chrome-stop-server)
+                    (sit-for 0.3)
+                    (atomic-chrome-start-server)
+                    (message "atomic-chrome: server restarted on port 64292")))
+
+  (atomic-chrome-start-server))
 
 ;;; init.el ends here
