@@ -4,28 +4,97 @@
 #
 # See 'info stow' section "4 Ignore Lists" for more information
 
+# Version Control Systems
 RCS
 .+,v
-
 CVS
 \.\#.+       # CVS conflict files / emacs lock files
-\.cvsignore \.svn _darcs
+\.cvsignore
+\.svn
+_darcs
 \.hg
-
 \.git
 \.gitignore
+\.gitmodules
 
+# Editor backup and temporary files
 .+~          # emacs backup files
 \#.*\#       # emacs autosave files
+\.swp        # vim swap files
+\.swo        # vim swap files
+\.tmp        # temporary files
+\.bak        # backup files
+\.orig       # merge conflict backup files
+auto-save-list # emacs auto-save list
 
+# OS generated files
+\.DS_Store   # macOS
+Thumbs\.db   # Windows
+desktop\.ini # Windows
+\.Spotlight-V100 # macOS
+\.Trashes    # macOS
+\.fseventsd  # macOS
+
+# Binary files and executables
+.*\.o        # object files
+.*\.so       # shared objects
+.*\.dylib    # dynamic libraries (macOS)
+.*\.dll      # dynamic libraries (Windows)
+.*\.a        # static libraries
+.*\.exe      # executables
+.*\.bin      # binary files
+.*\.com      # DOS executables
+.*\.class    # Java class files
+.*\.dex      # Android Dalvik executables
+
+# Programming language artifacts
+__pycache__  # Python cache
+.*\.pyc      # Python compiled
+.*\.pyo      # Python optimized
+\.pytest_cache # pytest cache
+node_modules # Node.js modules
+\.npm        # npm cache
+\.yarn       # yarn cache
+target       # Rust/Java build directory
+build        # build directory
+dist         # distribution directory
+\.venv       # Python virtual env
+venv         # Python virtual env
+\.tox        # Python tox
+\.mypy_cache # mypy cache
+\.coverage   # coverage files
+
+# IDE and editor files
+\.vscode     # VS Code settings
+\.idea       # IntelliJ IDEA
+\.eclipse    # Eclipse
+\.netbeans   # NetBeans
+\.vim.*      # vim runtime files
+
+# Log files and temporary data
+.*\.log      # log files
+.*\.out      # output files
+.*\.err      # error files
+.*\.pid      # process id files
+.*\.lock     # lock files
+\.cache      # cache directories
+
+# Documentation and meta files
 ^/README.*
 ^/LICENSE.*
 ^/COPYING
+^/CHANGELOG.*
+^/TODO.*
+^/INSTALL.*
 
-
+# Project specific directories
 ^/git 
 ^/font 
 ^/gdb 
 ^/install 
 ^/notes.* 
-^/program 
+^/program
+^/docs
+^/test
+^/tests
+^/spec 
