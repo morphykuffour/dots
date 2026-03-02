@@ -402,7 +402,7 @@ fi
 export PATH="$PATH:/Users/morph/.lmstudio/bin"
 # End of LM Studio CLI section
 
-source /Users/morph/.stremio_aliases
+# source /Users/morph/.stremio_aliases
 export PATH="$HOME/.local/bin:$PATH"
 
 # Tailscale SSH aliases
