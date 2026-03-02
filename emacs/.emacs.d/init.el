@@ -731,25 +731,27 @@ end if"))
   ;; Hook into atomic-chrome's own done hook for any close path
   (add-hook 'atomic-chrome-edit-done-hook #'atomic-chrome--focus-browser)
 
-  ;; --- Evil :wq / :q overrides ---
+  ;; --- Evil :wq / :q overrides (only in atomic-chrome buffers) ---
   (with-eval-after-load 'evil
-    (evil-define-command atomic-chrome--evil-write-quit ()
-      :repeat nil
+    ;; Advice functions to handle atomic-chrome vs normal buffers
+    (defun atomic-chrome--advice-evil-save-and-close (orig-fn &rest args)
+      "Advice for evil-save-and-close to handle atomic-chrome buffers."
       (if (bound-and-true-p atomic-chrome-edit-mode)
           (atomic-chrome--close-and-refocus)
-        (evil-save-and-close)))
+        (apply orig-fn args)))
 
-    (evil-define-command atomic-chrome--evil-quit ()
-      :repeat nil
+    (defun atomic-chrome--advice-evil-quit (orig-fn &rest args)
+      "Advice for evil-quit to handle atomic-chrome buffers."
       (if (bound-and-true-p atomic-chrome-edit-mode)
           (progn
             (atomic-chrome-close-current-buffer)
             (run-with-timer 0.3 nil #'atomic-chrome--ensure-server)
             (run-with-timer 0.1 nil #'atomic-chrome--focus-browser))
-        (evil-quit)))
+        (apply orig-fn args)))
 
-    (evil-ex-define-cmd "wq" 'atomic-chrome--evil-write-quit)
-    (evil-ex-define-cmd "q" 'atomic-chrome--evil-quit))
+    ;; Apply advice to Evil's save-and-close and quit functions
+    (advice-add 'evil-save-and-close :around #'atomic-chrome--advice-evil-save-and-close)
+    (advice-add 'evil-quit :around #'atomic-chrome--advice-evil-quit))
 
   ;; --- Robust server lifecycle ---
   (defun atomic-chrome--server-alive-p ()
