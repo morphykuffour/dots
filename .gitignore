@@ -116,3 +116,5 @@ emacs/vimium-chrome-emacs*
 emacs/.emacs.d/places
 emacs/.emacs.d/smex-items
 emacs/.emacs.d/test.journal
+
+scripts/.local/bin/zeroclaw
