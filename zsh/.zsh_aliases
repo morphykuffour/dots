@@ -4,6 +4,8 @@
 alias dots="cd ~/dots"
 alias jorg="cd ~/Org"
 alias jnix="cd ~/nix"
+alias jpmd="cd /Users/morph/Library/CloudStorage/ProtonDrive-REDACTED_EMAIL-folder"
+
 # alias open="xdg-open"
 # alias o="open"  # Now using cross-platform function in .zsh_functions
 alias ls="exa"
