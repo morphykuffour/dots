@@ -118,3 +118,4 @@ emacs/.emacs.d/smex-items
 emacs/.emacs.d/test.journal
 
 scripts/.local/bin/zeroclaw
+zsh/logs
