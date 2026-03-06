@@ -330,7 +330,7 @@ _source_compiled $HOME/.zsh_functions
 [ -d $HOME/.zsh/completions/nix-zsh-completions ] && fpath=($HOME/.zsh/completions/nix-zsh-completions $fpath)
 
 # ------------------------------- ZSH PLUGINS ---------------------------------
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+# STARSHIP_CONFIG is set in .zsh_exports
 
 # Cache directory for init scripts
 _zsh_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
@@ -405,15 +405,7 @@ export PATH="$PATH:/Users/morph/.lmstudio/bin"
 # source /Users/morph/.stremio_aliases
 export PATH="$HOME/.local/bin:$PATH"
 
-# Tailscale SSH aliases
-alias sshopt='ssh morph@TAILSCALE_IP_1'
-alias sshlaptop='ssh morph@TAILSCALE_IP_2'
-alias sshpi="ssh user@TAILSCALE_IP_3"
-alias sshnas='ssh root@TAILSCALE_IP_4'
-
-# Tailscale SSH helper
-# tssh is now the main command
-alias truenas='ssh root@TAILSCALE_IP_4'
-alias truenas-web='open http://TAILSCALE_IP_4'
+# Tailscale SSH aliases - loaded from ~/.zshenv.local for privacy
+# Use: tssh list - to see available hosts
 alias ofast="/Users/morph/.opencode-fast"
 alias ocf="/Users/morph/.opencode-fast"

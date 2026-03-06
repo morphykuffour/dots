@@ -1,0 +1,22 @@
+#!/bin/bash
+# macOS Zathura print helper - opens document in Preview for native print dialog
+# Usage: zathura-print <file>
+
+if [ -z "$1" ]; then
+    echo "Usage: zathura-print <file>"
+    exit 1
+fi
+
+FILE="$1"
+
+# Open in Preview and trigger print dialog
+osascript -e "
+tell application \"Preview\"
+    activate
+    open POSIX file \"$FILE\"
+    delay 0.5
+    tell application \"System Events\"
+        keystroke \"p\" using command down
+    end tell
+end tell
+"

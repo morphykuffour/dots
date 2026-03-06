@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# Personal information
-export EMAIL="your-email@example.com"
-export FULL_NAME="REDACTED_NAME"
+# Personal information - loaded from ~/.zshenv.local
+# export EMAIL and FULL_NAME are set in ~/.zshenv.local
 
 # colored man pages
 export LESS_TERMCAP_mb=$'\e[1;32m'
@@ -37,12 +36,9 @@ export TERMINAL=kitty
 export FILE=ranger
 
 export PATH=$HOME/.cargo/bin:$PATH
-export PATH=$HOME/.local/share/go/bin:$PATH
-# export GOPATH=$HOME/.local/share/go
-
+# Go configuration (single source of truth)
 export GOPATH=$HOME/go
-# export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+export PATH="$PATH:${GOPATH}/bin"
 
 # andriod tools
 export PATH="$HOME/tmp/platform-tools:$PATH"
@@ -68,7 +64,7 @@ export GEM_HOME="$HOME/.local/share/gem/ruby/2.7.0"
 export ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 export LESSHISTFILE=-
 export MCFLY_KEY_SCHEME=vim
-export STARSHIP_CONFIG='$HOME/.config/starship/starship.toml'
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
 # macOS-specific PKG_CONFIG_PATH with Cellar and X11
 if [[ "$(uname -s)" == "Darwin" ]]; then
@@ -145,8 +141,7 @@ typeset -g ZSH_SYSTEM_CLIPBOARD_TMUX_SUPPORT='true'
 # nix
 export NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1
 
-# emacs
-export INSIDE_EMACS=t
+# emacs - INSIDE_EMACS is set by emacs itself, not here
 
 # pdflatex - macOS-specific path
 if [[ "$(uname -s)" == "Darwin" ]]; then

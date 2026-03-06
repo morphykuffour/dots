@@ -1,6 +1,6 @@
 #! /bin/bash
 
-dots=$HOME/dotfiles
+dots=$HOME/dots
 config=$HOME/.config
 
 set -x

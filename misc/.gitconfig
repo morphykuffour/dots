@@ -1,10 +1,10 @@
-# NOTE: Git doesn't support env vars in [user] section directly
-# Either:
-# 1. Edit this file manually with your info, OR
-# 2. Run: git config --global user.email "$EMAIL" && git config --global user.name "$FULL_NAME"
-[user]
-	email = REDACTED_EMAIL
-	name = REDACTED_NAME
+# User info loaded from ~/.gitconfig.local (not tracked in dotfiles)
+# Create ~/.gitconfig.local with:
+#   [user]
+#     email = your@email.com
+#     name = Your Name
+[include]
+    path = ~/.gitconfig.local
 
 # [push]
 #     default = simple

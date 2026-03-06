@@ -56,11 +56,14 @@ fi
 
 # install McFly CTRL + R
 curl -LSfs https://raw.githubusercontent.com/cantino/mcfly/master/ci/install.sh | sudo sh -s -- --git cantino/mcfly
-libx11-dev
-libxinerama-dev
-libxft-dev
-libx11-xcb-dev
-libxcb-res0-dev
+
+# X11 development libraries (for suckless tools)
+sudo apt install -y \
+    libx11-dev \
+    libxinerama-dev \
+    libxft-dev \
+    libx11-xcb-dev \
+    libxcb-res0-dev
 # }}} 
 
 # install Zsh

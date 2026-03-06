@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
 # -------------------------------- FUNCTIONS ---------------------------------
 
@@ -13,7 +13,6 @@ _expand_alias() {
     # Check if the command is an alias
     if expanded=$(alias "$cmd" 2>/dev/null); then
         # Extract just the expansion part (after the '=')
-        # Handle both 'alias gca="git add .; git commit"' and 'gca="git add .; git commit"'
         expanded="${expanded#*=}"
         # Remove surrounding quotes if present
         expanded="${expanded#[\'\"]}"
@@ -39,9 +38,7 @@ _expand_command_for_display() {
     local expanded
     if expanded=$(_expand_alias "$first_word"); then
         # For compound aliases like "git add .; git commit", just show the main action
-        # Extract the most meaningful part
         if [[ "$expanded" == *";"* ]] || [[ "$expanded" == *"&&"* ]]; then
-            # For chains, show a summary: "git add+commit"
             local primary_cmd="${expanded%%;*}"
             primary_cmd="${primary_cmd%%&&*}"
             primary_cmd="${primary_cmd## }"
@@ -56,429 +53,211 @@ _expand_command_for_display() {
 }
 
 # Preexec hook - runs before each command
-# Updates tmux window name with expanded alias
 _tmux_expand_alias_preexec() {
-    # Only run if we're in tmux
     [[ -z "$TMUX" ]] && return
-
     local cmd="$1"
-
-    # Skip if command is empty or just whitespace
     [[ -z "${cmd// }" ]] && return
 
-    # Expand the command
     local expanded=$(_expand_command_for_display "$cmd")
-
-    # Truncate if too long (keep first 30 chars)
     if [[ ${#expanded} -gt 30 ]]; then
         expanded="${expanded:0:27}..."
     fi
-
-    # Set the tmux window name
-    # Using automatic-rename off ensures our name sticks
     tmux rename-window "$expanded" 2>/dev/null
 }
 
-# Precmd hook - runs before prompt is displayed (after command finishes)
-# Resets window name to shell or path
+# Precmd hook - runs before prompt is displayed
 _tmux_expand_alias_precmd() {
-    # Only run if we're in tmux
     [[ -z "$TMUX" ]] && return
-
-    # Reset to a sensible default (current directory basename)
     tmux rename-window "${PWD##*/}" 2>/dev/null
 }
 
-# Register hooks (only if in zsh)
+# Register hooks
 if [[ -n "$ZSH_VERSION" ]]; then
     autoload -Uz add-zsh-hook
     add-zsh-hook preexec _tmux_expand_alias_preexec
     add-zsh-hook precmd _tmux_expand_alias_precmd
 fi
 
-# -------------------------------- END TMUX ALIAS EXPANSION ---------------------------------
+# -------------------------------- FILE SOURCING ---------------------------------
 
-# Function to source files if they exist
 zsh_add_file() {
     [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
-}
-
-# source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
-function vif() {
-    local fname
-    local current_dir=$PWD
-    cd ~/dotfiles || exit
-    fname=$(fzf --preview 'bat {} ') || return
-    nvim "$fname"
-    cd $current_dir
-}
-
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
-bindkey -s '^p' 'vif^M'
-
-# vim to go line
-function vgol ()
-{
-    rg --vimgrep $1 | nvim -q /dev/stdin
-}
-
-function vao() {
-    fname=$(fd --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always {}') || return
-    nvim "$fname"
-}
-bindkey -s '^f' 'vao^M'
-
-function search() {
-    fname=$(fzf --preview 'bat {}' --multi --bind 'enter:select-all+accept') || return
-    nvim "$fname"
-}
-bindkey -s '^s' 'search^M'
-
-function fz() {
-    local sels=( "${(@f)$(fd --color=always . "${@:2}" | fzf -m --height=25% --reverse --ansi)}" )
-    [ -n "$sels" ] && print -z -- "$1 ${sels[@]:q:q}"
-}
-bindkey -s '^t' 'fz^M'
-
-# source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dotfiles/zsh/autoload/vif
-function nif() {
-    local fname
-    local current_dir=$PWD
-    cd ~/nix || exit
-    fname=$(fzf --preview 'bat {} ') || return
-    nvim "$fname"
-    cd $current_dir
-}
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
-bindkey -s '^n' 'nif^M'
-
-# neovim-docker
-dv () {
-	sudo docker run \
-	-it -v `pwd`:/mnt/volume\
-        -v $HOME/.config/nvim:/home/neovim/.config/nvim \
-	--workdir=/mnt/volume \
-	anatolelucet/neovim:stable \
-        "$@"
-}
-
-# Bash Function To Extract File Archives Of Various Types
-extract () {
-     if [ -f $1 ] ; then
-         case $1 in
-             *.tar.bz2)   tar xjf $1     ;;
-             *.tar.gz)    tar xzf $1     ;;
-             *.tar.xz)    tar xf  $1     ;;
-             *.bz2)       bunzip2 $1     ;;
-             *.rar)       unar    $1     ;;
-             *.gz)        gunzip  $1     ;;
-             *.tar)       tar xf  $1     ;;
-             *.tbz2)      tar xjf $1     ;;
-             *.tgz)       tar xzf $1     ;;
-             *.zip)       unzip   $1     ;;
-             *.Z)         uncompress $1  ;;
-             *.7z)        7z x    $1     ;;
-             *.zst)       unzstd  $1     ;;
-             *)           echo "'$1' cannot be extracted via extract()" ;;
-         esac
-     else
-         echo "'$1' is not a valid file"
-     fi
 }
 
 zsh_add_plugin() {
-  PLUGIN_NAME=$(basename "$1" | cut -f 1 -d '.')
-    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
-        # For plugins
+    PLUGIN_NAME=$(basename "$1" | cut -f 1 -d '.')
+    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
-        git clone $1 "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        git clone "$1" "$ZDOTDIR/plugins/$PLUGIN_NAME"
     fi
 }
 
-# ranger change dir
-# ranger-cd() {
-#     tmp="$(mktemp)"
-#     ranger --choosedir="$tmp" "$@"
-#     if [ -f "$tmp" ]; then
-#         dir="$(cat "$tmp")"
-#         rm -f "$tmp"
-#         if [ -d "$dir" ]; then
-#             if [ "$dir" != "$(pwd)" ]; then
-#                 cd "$dir"
-#             fi
-#         fi
-#     fi
-# }
-# alias rcd=ranger-cd
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
-bindkey -s '^o' 'lf^M'
+# -------------------------------- FZF FUNCTIONS ---------------------------------
 
-addToPath() {
-    if [[ "$PATH" != *"$1"* ]]; then
-        export PATH=$PATH:$1
-    fi
-}
-
-addToPathFront() {
-    if [[ "$PATH" != *"$1"* ]]; then
-        export PATH=$1:$PATH
-    fi
-}
-
-# create a new script, automatically populating the shebang line, editing the script, and making it executable.
-shebang() {
-# $ shebang perl test.pl
-    if i=$(which $1);
-    then
-        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
-    else
-        echo "'which' could not find $1, is it in your \$PATH?";
-    fi;
-    rehash
-}
-
-commitDotFiles() {
-    cd "$HOME"/dotfiles || exit
-    git add .
-    git commit 
-    # git push 
-}
-
-mkd() {
-  if [ -z "$1" ]; then
-    echo "Enter a directory name"
-  elif [ -d "$1" ]; then
-    echo "\`$1' already exists"
-  else
-    mkdir "$1" && cd "$1" || exit
-  fi
-}
-
-change_background() {
-    ls $HOME/Dropbox/Pictures/wallpapers | fzf --preview="feh --bg-scale $HOME/iCloud/Pictures/wallpapers/{}" | xargs -I {} feh --bg-scale $HOME/iCloud/Pictures/wallpapers/{}
-}
-
-# change_background() {
-#     feh --randomize --bg-scale --no-xinerama $HOME/iCloud/Pictures/wallpapers/$(realpath $HOME/iCloud/Pictures/wallpapers/* | fzf --preview 'sxiv {}')
-# }
-
-#Enhanced rm
-function fzf-rm() {
-  if [[ "$#" -eq 0 ]]; then
-    local files
-    files=$(find . -maxdepth 1 -type f | fzf --multi)
-    echo $files | xargs -I '{}' rm {} #we use xargs so that filenames to capture filenames with spaces in them properly
-  else
-    command rm "$@"
-  fi
-}
-
-#Eval commands on the fly
-fzf-eval() {
-   echo | fzf -q "$*" --preview-window=up:99% --preview="eval {q}"
-}
-
-## Search list of your aliases and functions
-fzf-aliases-functions() {
-    CMD=$(
-        (
-            (alias)
-            (functions | grep "()" | cut -d ' ' -f1 | grep -v "^_" )
-        ) | fzf | cut -d '=' -f1
-    );
-
-    eval $CMD
-}
-
-## File Finder (Open in $EDITOR)
-fzf-find-files() {
-  local file=$(fzf --multi --reverse) #get file from fzf
-  if [[ $file ]]; then
-    for prog in $(echo $file); #open all the selected files
-    do; $EDITOR $prog; done;
-  else
-    echo "cancelled fzf"
-  fi
-}
-
-
-# Find Dirs
-fzf-cd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-  ls
-}
-
-# Find Dirs + Hidden
-function fzf-cd-incl-hidden() {
-  local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
-  ls
-}
-
-# cd into the directory of the selected file
-function fzf-cd-to-file() {
-   local file
-   local dir
-   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
-   ls
-}
-
-# fdr - cd to selected parent directory
-function fzf-cd-to-parent() {
-  local declare dirs=()
-  get_parent_dirs() {
-    if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
-    if [[ "${1}" == '/' ]]; then
-      for _dir in "${dirs[@]}"; do echo $_dir; done
-    else
-      get_parent_dirs $(dirname "$1")
-    fi
-  }
-  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
-  cd "$DIR"
-  ls
-}
-
-# Search env variables
-function fzf-env-vars() {
-  local out
-  out=$(env | fzf)
-  echo $(echo $out | cut -d= -f2)
-}
-
-
-# Kill process
-function fzf-kill-processes() {
-  local pid
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-
-  if [ "x$pid" != "x" ]
-  then
-    echo $pid | xargs kill -${1:-9}
-  fi
-}
-# from: http://www.jaakkoluttinen.fi/blog/conda-on-nixos/
-function conda-shell {
-    nix-shell ~/.conda-shell.nix
-}
-
-
-# Function to source files if they exist
-zsh_add_file() {
-    [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
-}
-
-# source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dots/zsh/autoload/vif
+# Edit dotfiles with fzf
 function vif() {
     local fname
     local current_dir=$PWD
     cd ~/dots || exit
     fname=$(fzf --preview 'bat {} ') || return
     nvim "$fname"
-    cd $current_dir
+    cd "$current_dir"
 }
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
 bindkey -s '^p' 'vif^M'
 
-function vao() {
-    fname=$(fd --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always {}') || return
-    nvim "$fname"
-}
-bindkey -s '^f' 'vao^M'
-
-function fz() {
-    local sels=( "${(@f)$(fd --color=always . "${@:2}" | fzf -m --height=25% --reverse --ansi)}" )
-    [ -n "$sels" ] && print -z -- "$1 ${sels[@]:q:q}"
-}
-bindkey -s '^s' 'fz^M'
-
-# source:https://stackoverflow.com/a/65375231/2571881
-# ~/.dots/zsh/autoload/vif
+# Edit nix files with fzf
 function nif() {
     local fname
     local current_dir=$PWD
     cd ~/nix || exit
     fname=$(fzf --preview 'bat {} ') || return
     nvim "$fname"
-    cd $current_dir
+    cd "$current_dir"
 }
-# https://jdhao.github.io/2019/06/13/zsh_bind_keys/
 bindkey -s '^n' 'nif^M'
 
-# Bash Function To Extract File Archives Of Various Types
-extract () {
-     if [ -f $1 ] ; then
-         case $1 in
-             *.tar.bz2)   tar xjf $1     ;;
-             *.tar.gz)    tar xzf $1     ;;
-             *.tar.xz)    tar xf  $1     ;;
-             *.bz2)       bunzip2 $1     ;;
-             *.rar)       unar    $1     ;;
-             *.gz)        gunzip  $1     ;;
-             *.tar)       tar xf  $1     ;;
-             *.tbz2)      tar xjf $1     ;;
-             *.tgz)       tar xzf $1     ;;
-             *.zip)       unzip   $1     ;;
-             *.Z)         uncompress $1  ;;
-             *.7z)        7z x    $1     ;;
-             *.zst)       unzstd  $1     ;;
-             *.xz)        unxz    $1     ;;
-             *)           echo "'$1' cannot be extracted via extract()" ;;
-         esac
-     else
-         echo "'$1' is not a valid file"
-     fi
+# Find and open files
+function vao() {
+    fname=$(fd --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always {}') || return
+    nvim "$fname"
+}
+bindkey -s '^f' 'vao^M'
+
+# Search and open files
+function search() {
+    fname=$(fzf --preview 'bat {}' --multi --bind 'enter:select-all+accept') || return
+    nvim "$fname"
 }
 
-zsh_add_plugin() {
-  PLUGIN_NAME=$(basename "$1" | cut -f 1 -d '.')
-    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
-        # For plugins
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+# fzf with command
+function fz() {
+    local sels=( "${(@f)$(fd --color=always . "${@:2}" | fzf -m --height=25% --reverse --ansi)}" )
+    [ -n "$sels" ] && print -z -- "$1 ${sels[@]:q:q}"
+}
+
+# vim to go line (ripgrep to quickfix)
+function vgol() {
+    rg --vimgrep "$1" | nvim -q /dev/stdin
+}
+
+# Enhanced rm with fzf
+function fzf-rm() {
+    if [[ "$#" -eq 0 ]]; then
+        local files
+        files=$(find . -maxdepth 1 -type f | fzf --multi)
+        echo "$files" | xargs -I '{}' rm {}
     else
-        git clone $1 "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        command rm "$@"
     fi
 }
 
-# ranger change dir
-# ranger-cd() {
-#     tmp="$(mktemp)"
-#     ranger --choosedir="$tmp" "$@"
-#     if [ -f "$tmp" ]; then
-#         dir="$(cat "$tmp")"
-#         rm -f "$tmp"
-#         if [ -d "$dir" ]; then
-#             if [ "$dir" != "$(pwd)" ]; then
-#                 cd "$dir"
-#             fi
-#         fi
-#     fi
-# }
-# alias rcd=ranger-cd
-# USE LF TO SWITCH DIRECTORIES AND BIND IT TO CTRL-O
-lfcd () {
-    tmp="$(mktemp)"
-    lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+# Search list of aliases and functions
+fzf-aliases-functions() {
+    CMD=$(
+        (
+            (alias)
+            (functions | grep "()" | cut -d ' ' -f1 | grep -v "^_" )
+        ) | fzf | cut -d '=' -f1
+    )
+    eval "$CMD"
+}
+
+# File Finder (Open in $EDITOR)
+fzf-find-files() {
+    local file=$(fzf --multi --reverse)
+    if [[ $file ]]; then
+        for prog in $(echo $file); do
+            $EDITOR "$prog"
+        done
+    else
+        echo "cancelled fzf"
     fi
 }
-bindkey -s '^o' 'lfcd\n'
-# bindkey -s '^O' "lf\n"
-# bindkey -s '^o' 'nvim $(fzf)^M'
-# bindkey -s '^o' "rcd\n"
 
+# Find directories
+fzf-cd() {
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+    ls
+}
+
+# Find directories including hidden
+function fzf-cd-incl-hidden() {
+    local dir
+    dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+    ls
+}
+
+# cd into directory of selected file
+function fzf-cd-to-file() {
+    local file dir
+    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+    ls
+}
+
+# cd to selected parent directory
+function fzf-cd-to-parent() {
+    local declare dirs=()
+    get_parent_dirs() {
+        if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+        if [[ "${1}" == '/' ]]; then
+            for _dir in "${dirs[@]}"; do echo "$_dir"; done
+        else
+            get_parent_dirs $(dirname "$1")
+        fi
+    }
+    local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+    cd "$DIR"
+    ls
+}
+
+# Search env variables
+function fzf-env-vars() {
+    local out
+    out=$(env | fzf)
+    echo $(echo "$out" | cut -d= -f2)
+}
+
+# Kill process with fzf
+function fzf-kill-processes() {
+    local pid
+    pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    if [ "x$pid" != "x" ]; then
+        echo "$pid" | xargs kill -${1:-9}
+    fi
+}
+
+# -------------------------------- UTILITIES ---------------------------------
+
+# Extract archives
+extract() {
+    if [ -f "$1" ]; then
+        case $1 in
+            *.tar.bz2)   tar xjf "$1"     ;;
+            *.tar.gz)    tar xzf "$1"     ;;
+            *.tar.xz)    tar xf  "$1"     ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.rar)       unar    "$1"     ;;
+            *.gz)        gunzip  "$1"     ;;
+            *.tar)       tar xf  "$1"     ;;
+            *.tbz2)      tar xjf "$1"     ;;
+            *.tgz)       tar xzf "$1"     ;;
+            *.zip)       unzip   "$1"     ;;
+            *.Z)         uncompress "$1"  ;;
+            *.7z)        7z x    "$1"     ;;
+            *.zst)       unzstd  "$1"     ;;
+            *.xz)        unxz    "$1"     ;;
+            *)           echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Add to PATH (avoid duplicates)
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then
         export PATH=$PATH:$1
@@ -491,154 +270,51 @@ addToPathFront() {
     fi
 }
 
-# create a new script, automatically populating the shebang line, editing the script, and making it executable.
+# Create new script with shebang
 shebang() {
-# $ shebang perl test.pl
-    if i=$(which $1);
-    then
-        printf '#!/usr/bin/env %s\n\n' $1 > $2 && chmod 755 $2 && vim + $2 && chmod 755 $2;
+    if i=$(which "$1"); then
+        printf '#!/usr/bin/env %s\n\n' "$1" > "$2" && chmod 755 "$2" && vim + "$2" && chmod 755 "$2"
     else
-        echo "'which' could not find $1, is it in your \$PATH?";
-    fi;
+        echo "'which' could not find $1, is it in your \$PATH?"
+    fi
     rehash
 }
 
+# Commit dotfiles
 commitDotFiles() {
     cd "$HOME"/dots || exit
     git add .
-    git commit 
-    # git push 
+    git commit
 }
 
+# Make directory and cd into it
 mkd() {
-  if [ -z "$1" ]; then
-    echo "Enter a directory name"
-  elif [ -d "$1" ]; then
-    echo "\`$1' already exists"
-  else
-    mkdir "$1" && cd "$1" || exit
-  fi
-}
-
-# change_background() {
-#     ls $HOME/Dropbox/Pictures/wallpapers | fzf --preview="feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}" | xargs -I {} feh --bg-scale $HOME/Dropbox/Pictures/wallpapers/{}
-# }
-
-change_background() {
-    feh --randomize --bg-scale --no-xinerama $HOME/Pictures/wallpapers/$(ls $HOME/Pictures/wallpapers | fzf --preview 'sxiv {}')
-}
-
-#Enhanced rm
-function fzf-rm() {
-  if [[ "$#" -eq 0 ]]; then
-    local files
-    files=$(find . -maxdepth 1 -type f | fzf --multi)
-    echo $files | xargs -I '{}' rm {} #we use xargs so that filenames to capture filenames with spaces in them properly
-  else
-    command rm "$@"
-  fi
-}
-
-#Eval commands on the fly
-fzf-eval() {
-   echo | fzf -q "$*" --preview-window=up:99% --preview="eval {q}"
-}
-
-## Search list of your aliases and functions
-fzf-aliases-functions() {
-    CMD=$(
-        (
-            (alias)
-            (functions | grep "()" | cut -d ' ' -f1 | grep -v "^_" )
-        ) | fzf | cut -d '=' -f1
-    );
-
-    eval $CMD
-}
-
-## File Finder (Open in $EDITOR)
-fzf-find-files() {
-  local file=$(fzf --multi --reverse) #get file from fzf
-  if [[ $file ]]; then
-    for prog in $(echo $file); #open all the selected files
-    do; $EDITOR $prog; done;
-  else
-    echo "cancelled fzf"
-  fi
-}
-
-
-# Find Dirs
-fzf-cd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-  ls
-}
-
-# Find Dirs + Hidden
-function fzf-cd-incl-hidden() {
-  local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
-  ls
-}
-
-# cd into the directory of the selected file
-function fzf-cd-to-file() {
-   local file
-   local dir
-   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
-   ls
-}
-
-# fdr - cd to selected parent directory
-function fzf-cd-to-parent() {
-  local declare dirs=()
-  get_parent_dirs() {
-    if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
-    if [[ "${1}" == '/' ]]; then
-      for _dir in "${dirs[@]}"; do echo $_dir; done
+    if [ -z "$1" ]; then
+        echo "Enter a directory name"
+    elif [ -d "$1" ]; then
+        echo "\`$1' already exists"
     else
-      get_parent_dirs $(dirname "$1")
+        mkdir "$1" && cd "$1" || exit
     fi
-  }
-  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
-  cd "$DIR"
-  ls
 }
 
-# Search env variables
-function fzf-env-vars() {
-  local out
-  out=$(env | fzf)
-  echo $(echo $out | cut -d= -f2)
+# Change wallpaper with fzf (Linux)
+change_background() {
+    feh --randomize --bg-scale --no-xinerama "$HOME/Pictures/wallpapers/$(ls "$HOME/Pictures/wallpapers" | fzf --preview 'sxiv {}')"
 }
 
-
-# Kill process
-function fzf-kill-processes() {
-  local pid
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-
-  if [ "x$pid" != "x" ]
-  then
-    echo $pid | xargs kill -${1:-9}
-  fi
-}
-# from: http://www.jaakkoluttinen.fi/blog/conda-on-nixos/
+# Conda shell for NixOS
 function conda-shell {
     nix-shell ~/.conda-shell.nix
 }
 
-# Set brightness of external display
-# Reference material for https://youtu.be/_Vy7m-LhGEc episode
+# Set brightness of external display (macOS with m1ddc)
 function b() {
-  if [ -z "$1" ] || [ "$1" = "--help" ]; then
-    printf "%s\n" "Usage: b integer"
-    return 0
-  fi
-  m1ddc set luminance $1 > /dev/null
+    if [ -z "$1" ] || [ "$1" = "--help" ]; then
+        printf "%s\n" "Usage: b integer"
+        return 0
+    fi
+    m1ddc set luminance "$1" > /dev/null
 }
 
 # Cross-platform open command
@@ -650,18 +326,14 @@ function o() {
 
     case "$OSTYPE" in
         darwin*)
-            # macOS
             open "$@"
             ;;
         linux*)
-            # Linux
             if command -v xdg-open &> /dev/null; then
                 xdg-open "$@" &> /dev/null
             elif command -v wslview &> /dev/null; then
-                # WSL with wslu installed
                 wslview "$@"
             elif [[ -f /proc/sys/fs/binfmt_misc/WSLInterop ]]; then
-                # WSL without wslu - use Windows explorer
                 explorer.exe "$@"
             else
                 echo "Error: No suitable 'open' command found for Linux"
@@ -669,7 +341,6 @@ function o() {
             fi
             ;;
         msys*|cygwin*|win32)
-            # Windows Git Bash/Cygwin
             start "$@"
             ;;
         *)
@@ -679,12 +350,10 @@ function o() {
     esac
 }
 
-# open last downloaded file
+# Open last downloaded file
 function ord() {
     downloads_dir="$HOME/Downloads"
-
     latest_file=$(\ls -t "$downloads_dir" | head -n 1)
-
     if [[ -n $latest_file ]]; then
         full_path="$downloads_dir/$latest_file"
         echo "Latest downloaded file: $latest_file"
@@ -695,7 +364,6 @@ function ord() {
 }
 
 # Edit agenix secrets (must be run from ~/nix)
-# Usage: agenix-edit secrets/openai.age
 function agenix-edit() {
     local current_dir="$PWD"
     local secret_file="${1:-secrets/openai.age}"
@@ -711,25 +379,48 @@ function edit-openai-key() {
     agenix-edit secrets/openai.age
 }
 
-# download youtube videos
+# Download youtube videos
 function ytdl() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: ytdl <URL> [output-name]"
+        echo "Downloads video in 1080p (fallback to 720p) with best audio"
+        return 1
+    fi
 
-  if [[ -z "$1" ]]; then
-      echo "Usage: ytdl <URL> [output-name]"
-      echo "Downloads video in 1080p (fallback to 720p) with best audio"
-      return 1
-  fi
+    local url="$1"
+    local output="${2:-%(title)s.%(ext)s}"
 
-  local url="$1"
-  local output="${2:-%(title)s.%(ext)s}"
-
-  yt-dlp \
-      -f "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio/bestvideo
-[height<=720]+bestaudio/best" \
-      --merge-output-format mp4 \
-      --embed-thumbnail \
-      --embed-metadata \
-      -o "$output" \
-      "$url"
+    yt-dlp \
+        -f "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio/bestvideo[height<=720]+bestaudio/best" \
+        --merge-output-format mp4 \
+        --embed-thumbnail \
+        --embed-metadata \
+        -o "$output" \
+        "$url"
 }
 
+# -------------------------------- FILE MANAGER (lf) ---------------------------------
+
+# lf with directory change
+lfcd() {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+bindkey -s '^o' 'lfcd\n'
+
+# -------------------------------- DOCKER ---------------------------------
+
+# neovim in docker
+dv() {
+    sudo docker run \
+        -it -v "$(pwd)":/mnt/volume \
+        -v "$HOME/.config/nvim":/home/neovim/.config/nvim \
+        --workdir=/mnt/volume \
+        anatolelucet/neovim:stable \
+        "$@"
+}

@@ -1,130 +1,77 @@
 #!/bin/sh
 
-# Easier navigation: .., ..., ~ and -
+# -------------------------------- NAVIGATION ---------------------------------
 alias dots="cd ~/dots"
 alias jorg="cd ~/Org"
 alias jnix="cd ~/nix"
-alias jpmd="cd /Users/morph/Library/CloudStorage/ProtonDrive-REDACTED_EMAIL-folder"
+# jpmd alias moved to ~/.zshenv.local (contains email in path)
 
-# alias open="xdg-open"
-# alias o="open"  # Now using cross-platform function in .zsh_functions
-alias ls="exa"
-alias cd..="cd .."
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias cd..="cd .."
-alias cd...="cd ../.."
-alias cd....="cd ../../.."
-alias cd.....="cd ../../../.."
 alias -- -="cd -"
 alias ~="cd ~"
 alias d="dirs -v"
-alias cls="clear"
-# alias bundle="bundle-2.7"
-alias za="$EDITOR ~/dots/zsh/.zsh_aliases"
-alias cz="cat >"
-# alias o="thunar"
 
-# Colorize grep output (good for log files)
+# -------------------------------- FILE LISTING ---------------------------------
+alias ls="exa"
+alias ll='ls -la'
+alias la='ls -a'
+alias l='ls -F'
+
+# -------------------------------- COMMON COMMANDS ---------------------------------
+# Colorize output
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
+alias ip='ip --color=auto'
 
-# confirm before overwriting something
-alias cp="cp -i"
-alias mv='mv -i'
+# Confirm before overwriting
+alias cp="cp -iv"
+alias mv='mv -iv'
 alias rm='rm -i'
 
-# easier to read disk
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
+# Human-readable sizes
+alias df='df -h'
+alias free='free -m'
 
-# # get top process eating memory
-# alias psmem='ps auxf | sort -nr -k 4 | head -5'
-#
-# # get top process eating cpu ##
-# alias pscpu='ps auxf | sort -nr -k 3 | head -5'
-#
-# # systemd
-# alias list_systemctl="systemctl list-unit-files --state=enabled"
-
-# Set personal aliases
-alias dots="cd $HOME/dots"
-# WSL-specific: Windows explorer (only works in WSL)
-if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
-    alias explorer='/mnt/c/Windows/explorer.exe'
-fi
+# Misc
+alias cls="clear"
 alias rd="rmdir"
-alias ip='ip -color=auto'
-alias grep='grep --color=auto'
-# alias pip='pip3'
 alias python='python3'
 alias py="python3"
 alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 alias weather='curl wttr.in'
-# alias bat="\bat"
 alias lsb="lsb_release -a"
-alias nvdir="cd $HOME/.config/nvim"
-# alias lua="lua5.4"
 alias h="history"
-alias v="nvim"
-# alias emacs="emacsclient -c -a 'emacs' &"
-# alias ed="emacsclient -c -a 'emacs' &"
-alias :e="$EDITOR ."
-alias e="$EDITOR"
-alias v.="$EDITOR ."
-alias t='tmux'
+alias q="exit"
 alias :q='exit'
-alias td='todoist --color'
+alias m='make'
+alias news='newsboat'
 
-# Distro-specific: apt update (only for Debian/Ubuntu, not NixOS)
-if command -v apt &> /dev/null; then
-    alias sau="sudo apt update"
-fi
-alias icat="kitty +kitten icat"
-alias zet="cd $HOME/Dropbox/Zettelkasten/"
-alias erc="emacsclient -c -a 'emacs' &  $HOME/dots/emacs/.emacs.d/init.el"
-# alias nyxt="xterm -e 'xhost +127.0.0.1; docker run -it -p 4006:4006 -v /Users/morp:/root/ --rm bigdeddu/nyxt:2.2.1'"
-alias rars="java -jar ~/bin/rars_533d3c0.jar"
-alias vim='nvim'
-alias sv="sudo $EDITOR"
-alias tmux="tmux -2"
-alias t="tmux -2"
+# -------------------------------- EDITORS ---------------------------------
 alias v="nvim"
+alias vim='nvim'
+alias e="$EDITOR"
+alias :e="$EDITOR ."
+alias v.="$EDITOR ."
+alias sv="sudo $EDITOR"
 
-# Edit config files
-alias zrc="$EDITOR $HOME/dots/zsh/.zshrc"
-alias zrca="$EDITOR $HOME/dots/zsh/.zsh_aliases"
-alias zrca="$EDITOR $HOME/dots/zsh/.zsh_exports"
-# alias vrc="$EDITOR  $HOME/.config/nvim/init.lua"
+# Config files
+alias za="$EDITOR ~/dots/zsh/.zsh_aliases"
 alias zrc="nvim $HOME/dots/zsh/.zshrc"
 alias zra="nvim $HOME/dots/zsh/.zsh_aliases"
 alias zrf="nvim $HOME/dots/zsh/.zsh_functions"
 alias vrc="nvim $HOME/.config/nvim/init.lua"
 alias nrc="nvim $HOME/nix/flake.nix"
+alias nvdir="cd $HOME/.config/nvim"
 
-# system management aliases
-alias hibernate="systemctl suspend"
-# Arch-specific: yay alias (only for Arch-based systems, not NixOS)
-if command -v yay &> /dev/null; then
-    alias pacman="yay"
-fi
+# -------------------------------- TMUX ---------------------------------
+alias t="tmux -2"
+alias tmux="tmux -2"
 
-# system keybindings
-alias ks='pkill -f keyd-application-mapper; sudo systemctl restart keyd && setxkbmap -option compose:menu && keyd-application-mapper -d'
-# alias ks="sudo systemctl restart keyd && sudo systemctl enable keyd && sudo systemctl start keyd && setxkbmap -option compose:menu && keyd-application-mapper -d"
-
-# utility commands
-alias q="exit"
-alias mypw="pwgen -c -n -s -y 16 -1"
-alias ndate="date \"+%d-%m-%y\""
-
-# easy reload of zsh stuff
-alias rl="exec zsh -l"
-
-# git configs
+# -------------------------------- GIT ---------------------------------
 alias g="git"
 alias gca="git add .; git commit"
 alias gco="git checkout"
@@ -132,48 +79,10 @@ alias gs="git status"
 alias gp="git push -u origin HEAD"
 alias gpull="git pull --rebase"
 
-alias ..='cd ..'
-alias cp='cp -v'
-alias mv='mv -iv'
-alias xclip='xclip -selection c'
-command -v vim > /dev/null && alias vi='vim'
-# alias cat='bat'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-# alias diff='diff --color=auto'
-alias ip='ip --color=auto'
-alias ll='ls -la'
-alias la='ls -a'
-alias l='ls -F'
-# alias bat='bat --theme=ansi' && \
-# alias cat='bat --pager=never' && \
-alias less='bat'
-alias batcat='bat --theme=ansi' && \
-# alias cat='bat --pager=never' && \
-alias less='batcat'
-alias m='make'
-alias news='newsboat'
-
-# zshmarks
-alias gt="jump"
-# alias b="bookmark"
-alias d="deletemark"
-alias s="showmarks"
-
-# nix
-alias ni='nix-env -iA'
-alias ns='nix-env -qaP'
-# alias nix-shell="nix-shell -p zsh --run zsh"
-
-# toggle picom
-alias psa="systemctl --user start picom"
-alias pst="systemctl --user stop picom"
-
+# -------------------------------- EMACS ---------------------------------
 # Emacs daemon aliases - cross-platform
 case "$(uname -s)" in
     Darwin)
-        # macOS with Homebrew
         if [[ -f /opt/homebrew/opt/emacs-plus@31/bin/emacsclient ]]; then
             alias emacs="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c -a ''"
             alias ec="/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c -a ''"
@@ -183,21 +92,67 @@ case "$(uname -s)" in
         fi
         ;;
     Linux)
-        # Linux/NixOS - use system emacsclient
         alias emacs="emacsclient -c -a ''"
         alias ec="emacsclient -c -a ''"
         ;;
 esac
-# Common aliases for all platforms
 alias ekill="emacsclient -e '(kill-emacs)'"
+alias erc="emacsclient -c -a 'emacs' &  $HOME/dots/emacs/.emacs.d/init.el"
+
+# -------------------------------- TOOLS ---------------------------------
+alias less='bat'
+alias icat="kitty +kitten icat"
+alias xclip='xclip -selection c'
+alias mypw="pwgen -c -n -s -y 16 -1"
+alias ndate="date \"+%d-%m-%y\""
+alias rl="exec zsh -l"
+alias td='todoist --color'
+
+# -------------------------------- NIX ---------------------------------
+alias ni='nix-env -iA'
+alias ns='nix-env -qaP'
+
+# -------------------------------- SYSTEM ---------------------------------
+alias hibernate="systemctl suspend"
+
+# Distro-specific aliases
+if command -v apt &> /dev/null; then
+    alias sau="sudo apt update"
+fi
+if command -v yay &> /dev/null; then
+    alias pacman="yay"
+fi
+
+# WSL-specific
+if [[ -n "$IS_WSL" || -n "$WSL_DISTRO_NAME" ]]; then
+    alias explorer='/mnt/c/Windows/explorer.exe'
+fi
+
+# -------------------------------- HARDWARE (Linux) ---------------------------------
+# keyd restart
+alias ks='pkill -f keyd-application-mapper; sudo systemctl restart keyd && setxkbmap -option compose:menu && keyd-application-mapper -d'
 
 # Touchpad control for XPS 17
 alias killtouchpad="xinput disable 'DELL098F:00 04F3:311C Touchpad'"
 alias revivetouchpad="xinput enable 'DELL098F:00 04F3:311C Touchpad'"
 
-# Keyboard layer switching
+# Keyboard layer switching (QMK)
 alias qw='echo "n" | nc -U /tmp/rawtalk.sock'  # Switch to QWERTY
 alias wq='echo "i" | nc -U /tmp/rawtalk.sock'  # Switch to Colemak-DH
 
+# picom toggle
+alias psa="systemctl --user start picom"
+alias pst="systemctl --user stop picom"
+
+# -------------------------------- MISC TOOLS ---------------------------------
+alias zet="cd $HOME/Dropbox/Zettelkasten/"
+alias rars="java -jar ~/bin/rars_533d3c0.jar"
+
+# zshmarks
+alias gt="jump"
+alias s="showmarks"
+
+# opencode
 alias oc="opencode"
 alias ocf="/Users/morph/.opencode-fast"
+alias ofast="/Users/morph/.opencode-fast"

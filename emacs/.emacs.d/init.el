@@ -193,8 +193,17 @@
 
 (use-package undo-tree
   :defer 2
+  :init
+  ;; Store undo history centrally, not in working directories
+  (setq undo-tree-history-directory-alist
+        `(("." . ,(expand-file-name "undo-tree-history/" user-emacs-directory))))
+  (setq undo-tree-auto-save-history t)
   :config
-  (global-undo-tree-mode))
+  ;; Don't enable globally - enable per major mode to avoid cluttering directories
+  ;; Enable for prog-mode and text-mode (covers most editing)
+  :hook ((prog-mode . undo-tree-mode)
+         (text-mode . undo-tree-mode)
+         (conf-mode . undo-tree-mode)))
 
 (use-package evil
   :demand t
@@ -609,17 +618,26 @@
 ;;; --- CUSTOM (managed by Customize) ---
 
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8" default))
+   '("8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378"
+     "871b064b53235facde040f6bdfa28d03d9f4b966d8ce28fb1725313731a2bcc8" default))
  '(package-selected-packages
    '(async atomic-chrome circadian counsel deadgrep dired-hide-dotfiles eat
            evil-collection evil-commentary evil-org exec-path-from-shell flx
-           gcmh git-commit gruvbox-theme hledger-mode magit-delta
-           markdown-mode modus-themes multi-vterm nerd-icons-dired
-           nix-mode olivetti org-msg org-roam-ui pdf-tools rainbow-delimiters
-           slime undo-tree use-package which-key yasnippet))
+           gcmh git-commit gruvbox-theme hledger-mode magit-delta markdown-mode
+           modus-themes multi-vterm nerd-icons-dired nix-mode olivetti org-msg
+           org-roam-ui pdf-tools rainbow-delimiters slime undo-tree use-package
+           which-key yasnippet))
  '(send-mail-function 'smtpmail-send-it))
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(italic ((t (:slant italic))))
  '(markdown-code-face ((t (:inherit default))))
  '(markdown-header-face ((t (:inherit default :weight normal))))
