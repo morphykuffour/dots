@@ -102,16 +102,110 @@
   (interactive "f")
   (load-file (expand-file-name file user-init-dir)))
 
-(load-user-file "config/font-resize.el")
-(load-user-file "config/keymaps.el")
+;; keymaps.el is read-only (Nix); keybindings consolidated below
+;; (load-user-file "config/keymaps.el")
 (load-user-file "config/utils.el")
-(load-user-file "config/vterm-config.el")
+;; vterm-config.el keybindings moved below for consistency
+;; (load-user-file "config/vterm-config.el")
+
+;;; --- CONSOLIDATED KEYBINDINGS ---
+;; All keybindings in one place for easy management.
+;; Prefix key organization:
+;;   C-c e - Emacs/editing commands
+;;   C-c n - Notes (org-roam) - MUST use global-set-key, not :bind
+;;   C-c t - Terminal (vterm)
+;;   C-c g - Git
+;;   C-c f - Files/utilities
+;;   C-c d - Date/time
+;;   C-c a - Applications (atomic-chrome)
+;;   C-c r - Remote (TRAMP)
+
+;; General
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key [C-mouse-wheel-up-event]   'text-scale-increase)
+(global-set-key [C-mouse-wheel-down-event] 'text-scale-decrease)
+
+;; C-c e - Emacs/Editing
+(global-set-key (kbd "C-c e i") (lambda () (interactive)
+                                  (find-file (expand-file-name "init.el" user-emacs-directory))))
+(global-set-key (kbd "C-c e k") (lambda () (interactive)
+                                  (find-file (expand-file-name "init.el" user-emacs-directory))
+                                  (goto-char (point-min))
+                                  (search-forward "CONSOLIDATED KEYBINDINGS" nil t)))
+(global-set-key (kbd "C-c e R") 'reload-config)
+(global-set-key (kbd "C-c e p") 'package-install)
+(global-set-key (kbd "C-c e t") 'counsel-load-theme)
+(global-set-key (kbd "C-c e m") 'mu4e)
+(global-set-key (kbd "C-c e o") 'olivetti-mode)
+(global-set-key (kbd "C-c e b") 'eval-buffer)
+(global-set-key (kbd "C-c e e") 'eval-region)
+(global-set-key (kbd "C-c e r") 'org-babel-execute-src-block)
+
+;; C-c t - Terminal (vterm)
+(defun my/vterm-window-split ()
+  "Split window and open vterm in the bottom split."
+  (interactive)
+  (split-window-below -15)
+  (other-window 1)
+  (vterm))
+
+(global-set-key (kbd "C-c t t") 'multi-vterm)
+(global-set-key (kbd "C-c t s") 'my/vterm-window-split)
+(global-set-key (kbd "C-c t n") 'multi-vterm-next)
+(global-set-key (kbd "C-c t p") 'multi-vterm-prev)
+
+;; C-c g - Git
+(global-set-key (kbd "C-c g g") 'magit-status)
+(global-set-key (kbd "C-c g p") 'git-timemachine-show-previous-revision)
+(global-set-key (kbd "C-c g n") 'git-timemachine-show-next-revision)
+(global-set-key (kbd "C-c g c") 'git-timemachine-show-current-revision)
+
+;; C-c f - Files/utilities
+(global-set-key (kbd "C-c f y") 'copy-filename)
+(global-set-key (kbd "C-c f s") 'org-screenshot)
+(global-set-key (kbd "C-c f g") 'deadgrep)
+(global-set-key (kbd "C-c f f") 'project-find-file)
+
+;; C-c d - Date/time
+(global-set-key (kbd "C-c d i") 'insert-current-date)
+
+;; C-c n - Notes (org-roam)
+;; Using same pattern as C-c e which works
+(autoload 'org-roam-node-find "org-roam" nil t)
+(autoload 'org-roam-node-insert "org-roam" nil t)
+(autoload 'org-roam-capture "org-roam" nil t)
+(autoload 'org-roam-buffer-toggle "org-roam" nil t)
+(autoload 'org-roam-alias-add "org-roam" nil t)
+(autoload 'org-roam-ui-open "org-roam-ui" nil t)
+(autoload 'org-roam-dailies-capture-today "org-roam-dailies" nil t)
+
+(defun org-roam-jump-to-index ()
+  "Jump to the org-roam index file."
+  (interactive)
+  (require 'org-roam)
+  (org-roam-node-find nil "Index"))
+
+;; Direct bindings like C-c e (which works)
+(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+(global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+(global-set-key (kbd "C-c n c") #'org-roam-capture)
+(global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+(global-set-key (kbd "C-c n a") #'org-roam-alias-add)
+(global-set-key (kbd "C-c n g") #'org-roam-ui-open)
+(global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
+(global-set-key (kbd "C-c n j") #'org-roam-jump-to-index)
+
+;; Legacy bindings (muscle memory)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (add-to-list 'load-path (expand-file-name "config" user-init-dir))
 (require 'sensible-defaults)
 (sensible-defaults/use-all-settings)
 (sensible-defaults/use-all-keybindings)
 (sensible-defaults/backup-to-temp-directory)
+
+;; Load font-resize AFTER sensible-defaults to override its font keybindings
+(load-user-file "config/font-resize.el")
 
 ;;; --- SNIPPETS ---
 
@@ -172,7 +266,8 @@
 (use-package ivy
   :demand t
   :diminish
-  :bind (("C-f" . swiper)
+  :bind (;; Removed C-f binding - conflicts with Evil page-down
+         ;; Use C-s for swiper instead (already bound in counsel)
          :map ivy-minibuffer-map
          ("ESC" . ivy-alt-done)
          :map ivy-switch-buffer-map
@@ -228,7 +323,16 @@
   :after evil
   :demand t
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  ;; Re-bind C-c n after evil-collection to ensure it's not overwritten
+  (global-set-key (kbd "C-c n f") #'org-roam-node-find)
+  (global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+  (global-set-key (kbd "C-c n c") #'org-roam-capture)
+  (global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+  (global-set-key (kbd "C-c n a") #'org-roam-alias-add)
+  (global-set-key (kbd "C-c n g") #'org-roam-ui-open)
+  (global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
+  (global-set-key (kbd "C-c n j") #'org-roam-jump-to-index))
 
 (use-package evil-org
   :after org
@@ -407,14 +511,6 @@
 (use-package org-roam
   :custom
   (org-roam-directory (file-truename "~/Org/zettelkasten"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n a" . org-roam-alias-add)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-ui-open)
-         ("C-c n j" . org-roam-jump-to-index)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ("C-c n d" . org-roam-dailies-capture-today))
   :config
   (setq org-roam-node-display-template
         (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
@@ -434,6 +530,16 @@
 (setq org-default-notes-file "~/Org/agenda/tasks.org")
 
 (require 'org-agenda)
+
+;; Re-establish C-c n bindings after org-agenda loads (org may override C-c n)
+(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+(global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+(global-set-key (kbd "C-c n c") #'org-roam-capture)
+(global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+(global-set-key (kbd "C-c n a") #'org-roam-alias-add)
+(global-set-key (kbd "C-c n g") #'org-roam-ui-open)
+(global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
+(global-set-key (kbd "C-c n j") #'org-roam-jump-to-index)
 
 (setq org-return-follows-link t
       org-agenda-tags-column 75
@@ -600,13 +706,14 @@
               (company-mode)
               (setq-local company-backends '(hledger-company)))))
 
-(when (file-exists-p "~/ai-financial-assistant/emacs/ai-financial-working.el")
-  (load-file "~/ai-financial-assistant/emacs/ai-financial-working.el")
+(when (file-exists-p "~/Sync/projects/ai-financial-assistant/emacs/ai-financial-working.el")
+  (load-file "~/Sync/projects/ai-financial-assistant/emacs/ai-financial-working.el")
   (add-hook 'hledger-mode-hook
             (lambda ()
-              (local-set-key (kbd "C-c f c") 'ai-financial-categorize-line)
-              (local-set-key (kbd "C-c f C") 'ai-financial-categorize-all)
-              (local-set-key (kbd "C-c f a") 'ai-financial-quick-analysis))))
+              ;; C-c $ - Finance/money (local to hledger-mode)
+              (local-set-key (kbd "C-c $ c") 'ai-financial-categorize-line)
+              (local-set-key (kbd "C-c $ C") 'ai-financial-categorize-all)
+              (local-set-key (kbd "C-c $ a") 'ai-financial-quick-analysis))))
 
 ;;; --- LISP ---
 
@@ -812,5 +919,25 @@ end if"))
 
   ;; Start the server
   (atomic-chrome-start-server))
+
+;;; --- FINAL KEYBINDING SETUP ---
+;; These run last to ensure nothing overwrites them
+
+(defun morph/setup-final-keybindings ()
+  "Set up keybindings that must survive all package loading."
+  ;; C-c n - org-roam (must be set after org-mode, evil-collection, etc.)
+  (global-set-key (kbd "C-c n f") #'org-roam-node-find)
+  (global-set-key (kbd "C-c n i") #'org-roam-node-insert)
+  (global-set-key (kbd "C-c n c") #'org-roam-capture)
+  (global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
+  (global-set-key (kbd "C-c n a") #'org-roam-alias-add)
+  (global-set-key (kbd "C-c n g") #'org-roam-ui-open)
+  (global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
+  (global-set-key (kbd "C-c n j") #'org-roam-jump-to-index))
+
+;; Run after init completes
+(add-hook 'emacs-startup-hook #'morph/setup-final-keybindings 100)
+;; Also run after a short delay to catch any deferred loading
+(run-with-idle-timer 1 nil #'morph/setup-final-keybindings)
 
 ;;; init.el ends here
