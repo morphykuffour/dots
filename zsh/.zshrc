@@ -70,9 +70,7 @@ TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 autoload -Uz compinit
 setopt EXTENDEDGLOB
 local zcompdump="${ZDOTDIR:-$HOME}/.cache/zsh/zcompdump"
-if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
-  zcompile "$zcompdump"
-fi
+# Disabled zwc compilation - minimal benefit on modern SSDs
 # Only check cache once per day
 if [[ -n ${zcompdump}(#qNmh-24) ]]; then
   compinit -C -d "$zcompdump"
@@ -310,20 +308,10 @@ esac
 
 export ZDOTDIR=$HOME/.zsh
 
-# Helper to compile and source zsh files for faster loading
-_source_compiled() {
-    local file="$1"
-    [[ -f "$file" ]] || return 1
-    # Recompile if source is newer than compiled version
-    if [[ ! -f "${file}.zwc" || "$file" -nt "${file}.zwc" ]]; then
-        zcompile "$file" 2>/dev/null
-    fi
-    source "$file"
-}
-
-_source_compiled $HOME/.zsh_aliases
-_source_compiled $HOME/.zsh_exports
-_source_compiled $HOME/.zsh_functions
+# Source zsh config files (zwc compilation disabled - minimal benefit on SSDs)
+[ -f $HOME/.zsh_aliases ] && source $HOME/.zsh_aliases
+[ -f $HOME/.zsh_exports ] && source $HOME/.zsh_exports
+[ -f $HOME/.zsh_functions ] && source $HOME/.zsh_functions
 
 # Add completions to fpath if they exist
 [ -d $HOME/.zsh/completions ] && fpath+=$HOME/.zsh/completions
@@ -350,8 +338,6 @@ _cache_eval() {
     # Regenerate cache if binary is newer or cache doesn't exist
     if [[ ! -s "$cache_file" || "$bin_path" -nt "$cache_file" ]]; then
         eval "$cmd" > "$cache_file" 2>/dev/null
-        # Compile for faster loading
-        zcompile "$cache_file" 2>/dev/null
     fi
 
     source "$cache_file"
