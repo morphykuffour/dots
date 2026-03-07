@@ -15,7 +15,8 @@ alias ~="cd ~"
 alias d="dirs -v"
 
 # -------------------------------- FILE LISTING ---------------------------------
-alias ls="exa"
+# Use eza (maintained fork of exa)
+alias ls="eza"
 alias ll='ls -la'
 alias la='ls -a'
 alias l='ls -F'
@@ -145,7 +146,8 @@ alias psa="systemctl --user start picom"
 alias pst="systemctl --user stop picom"
 
 # -------------------------------- MISC TOOLS ---------------------------------
-alias zet="cd $HOME/Dropbox/Zettelkasten/"
+# Zettelkasten moved to Syncthing - update path if you recreate it
+# alias zet="cd $HOME/Sync/zettelkasten/"
 alias rars="java -jar ~/bin/rars_533d3c0.jar"
 
 # zshmarks
@@ -154,5 +156,5 @@ alias s="showmarks"
 
 # opencode
 alias oc="opencode"
-alias ocf="/Users/morph/.opencode-fast"
-alias ofast="/Users/morph/.opencode-fast"
+alias ocf="$HOME/.opencode-fast"
+alias ofast="$HOME/.opencode-fast"

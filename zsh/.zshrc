@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
+
+# Set ZDOTDIR early so it's available for all config files
+export ZDOTDIR=$HOME/.zsh
+
 # kitty integration
 if [[ -n $KITTY_INSTALLATION_DIR ]]; then
     export KITTY_SHELL_INTEGRATION="enabled"
@@ -286,15 +290,22 @@ zstyle ':fzf-tab:*' switch-group ',' '.'
 
 # BROWSER is configured in .zsh_exports with better cross-platform detection
 
-# open vscode from terminal in Mac OS
+# Autojump - check Nix path first, then Homebrew
+if [ -f /etc/profiles/per-user/$USER/etc/profile.d/autojump.sh ]; then
+    . /etc/profiles/per-user/$USER/etc/profile.d/autojump.sh
+elif [ -f /opt/homebrew/etc/profile.d/autojump.sh ]; then
+    . /opt/homebrew/etc/profile.d/autojump.sh
+elif [ -f $HOME/.zsh/completions/autojump.zsh ]; then
+    source $HOME/.zsh/completions/autojump.zsh
+fi
+
+# OS-specific settings
 case "$(uname -s)" in
   Darwin)
-    [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
     code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
-    alias o="open"
+    # o() function in .zsh_functions handles cross-platform open
     ;;
   Linux)
-    [ -f $HOME/.zsh/completions/autojump.zsh ] && source $HOME/.zsh/completions/autojump.zsh
     # source $HOME/.zsh/completions/home-manager.zsh
     [ -f $HOME/.zsh/completions/gh.zsh ] && source $HOME/.zsh/completions/gh.zsh
     # open () { xdg-open "$*" &}
@@ -305,8 +316,6 @@ case "$(uname -s)" in
   *)
     ;;
 esac
-
-export ZDOTDIR=$HOME/.zsh
 
 # Source zsh config files (zwc compilation disabled - minimal benefit on SSDs)
 [ -f $HOME/.zsh_aliases ] && source $HOME/.zsh_aliases
@@ -371,7 +380,7 @@ else
 fi
 
 # ------------------------------- ZSH APPS ------------------------------------
-export MCFLY_KEY_SCHEME=vim
+# MCFLY_KEY_SCHEME is set in .zsh_exports
 
 # Mcfly (cached and deferred for faster startup)
 if (( $+functions[zsh-defer] )); then
@@ -389,9 +398,8 @@ export PATH="$PATH:/Users/morph/.lmstudio/bin"
 # End of LM Studio CLI section
 
 # source /Users/morph/.stremio_aliases
-export PATH="$HOME/.local/bin:$PATH"
+# PATH additions are in .zsh_exports and .zprofile
 
 # Tailscale SSH aliases - loaded from ~/.zshenv.local for privacy
 # Use: tssh list - to see available hosts
-alias ofast="/Users/morph/.opencode-fast"
-alias ocf="/Users/morph/.opencode-fast"
+# opencode aliases are in .zsh_aliases
