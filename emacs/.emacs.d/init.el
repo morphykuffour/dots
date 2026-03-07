@@ -120,57 +120,20 @@
 ;;   C-c a - Applications (atomic-chrome)
 ;;   C-c r - Remote (TRAMP)
 
-;; General
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key [C-mouse-wheel-up-event]   'text-scale-increase)
-(global-set-key [C-mouse-wheel-down-event] 'text-scale-decrease)
-
-;; C-c e - Emacs/Editing
-(global-set-key (kbd "C-c e i") (lambda () (interactive)
-                                  (find-file (expand-file-name "init.el" user-emacs-directory))))
-(global-set-key (kbd "C-c e k") (lambda () (interactive)
-                                  (find-file (expand-file-name "init.el" user-emacs-directory))
-                                  (goto-char (point-min))
-                                  (search-forward "CONSOLIDATED KEYBINDINGS" nil t)))
-(global-set-key (kbd "C-c e R") 'reload-config)
-(global-set-key (kbd "C-c e p") 'package-install)
-(global-set-key (kbd "C-c e t") 'counsel-load-theme)
-(global-set-key (kbd "C-c e m") 'mu4e)
-(global-set-key (kbd "C-c e o") 'olivetti-mode)
-(global-set-key (kbd "C-c e b") 'eval-buffer)
-(global-set-key (kbd "C-c e e") 'eval-region)
-(global-set-key (kbd "C-c e r") 'org-babel-execute-src-block)
-
-;; C-c t - Terminal (vterm)
-(defun my/vterm-window-split ()
-  "Split window and open vterm in the bottom split."
-  (interactive)
-  (split-window-below -15)
-  (other-window 1)
-  (vterm))
-
-(global-set-key (kbd "C-c t t") 'multi-vterm)
-(global-set-key (kbd "C-c t s") 'my/vterm-window-split)
-(global-set-key (kbd "C-c t n") 'multi-vterm-next)
-(global-set-key (kbd "C-c t p") 'multi-vterm-prev)
-
-;; C-c g - Git
-(global-set-key (kbd "C-c g g") 'magit-status)
-(global-set-key (kbd "C-c g p") 'git-timemachine-show-previous-revision)
-(global-set-key (kbd "C-c g n") 'git-timemachine-show-next-revision)
-(global-set-key (kbd "C-c g c") 'git-timemachine-show-current-revision)
-
-;; C-c f - Files/utilities
-(global-set-key (kbd "C-c f y") 'copy-filename)
-(global-set-key (kbd "C-c f s") 'org-screenshot)
-(global-set-key (kbd "C-c f g") 'deadgrep)
-(global-set-key (kbd "C-c f f") 'project-find-file)
-
-;; C-c d - Date/time
-(global-set-key (kbd "C-c d i") 'insert-current-date)
-
-;; C-c n - Notes (org-roam)
-;; Using same pattern as C-c e which works
+;; Autoloads for deferred packages
+(autoload 'counsel-load-theme "counsel" nil t)
+(autoload 'mu4e "mu4e" nil t)
+(autoload 'olivetti-mode "olivetti" nil t)
+(autoload 'vterm "vterm" nil t)
+(autoload 'multi-vterm "multi-vterm" nil t)
+(autoload 'multi-vterm-next "multi-vterm" nil t)
+(autoload 'multi-vterm-prev "multi-vterm" nil t)
+(autoload 'magit-status "magit" nil t)
+(autoload 'git-timemachine-show-previous-revision "git-timemachine" nil t)
+(autoload 'git-timemachine-show-next-revision "git-timemachine" nil t)
+(autoload 'git-timemachine-show-current-revision "git-timemachine" nil t)
+(autoload 'deadgrep "deadgrep" nil t)
+(autoload 'project-find-file "project" nil t)
 (autoload 'org-roam-node-find "org-roam" nil t)
 (autoload 'org-roam-node-insert "org-roam" nil t)
 (autoload 'org-roam-capture "org-roam" nil t)
@@ -179,24 +142,76 @@
 (autoload 'org-roam-ui-open "org-roam-ui" nil t)
 (autoload 'org-roam-dailies-capture-today "org-roam-dailies" nil t)
 
+;; Helper functions (must be defined before keybindings)
+(defun my/vterm-window-split ()
+  "Split window and open vterm in the bottom split."
+  (interactive)
+  (split-window-below -15)
+  (other-window 1)
+  (vterm))
+
 (defun org-roam-jump-to-index ()
   "Jump to the org-roam index file."
   (interactive)
   (require 'org-roam)
   (org-roam-node-find nil "Index"))
 
-;; Direct bindings like C-c e (which works)
-(global-set-key (kbd "C-c n f") #'org-roam-node-find)
-(global-set-key (kbd "C-c n i") #'org-roam-node-insert)
-(global-set-key (kbd "C-c n c") #'org-roam-capture)
-(global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-(global-set-key (kbd "C-c n a") #'org-roam-alias-add)
-(global-set-key (kbd "C-c n g") #'org-roam-ui-open)
-(global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
-(global-set-key (kbd "C-c n j") #'org-roam-jump-to-index)
+;; Define a prefix keymap for C-c to ensure prefixes are properly established
+(defvar morph/leader-map (make-sparse-keymap)
+  "Keymap for custom C-c prefixed commands.")
+
+;; Set up all keybindings in the prefix map
+(define-key morph/leader-map (kbd "e i") (lambda () (interactive)
+                                           (find-file (expand-file-name "init.el" user-emacs-directory))))
+(define-key morph/leader-map (kbd "e k") (lambda () (interactive)
+                                           (find-file (expand-file-name "init.el" user-emacs-directory))
+                                           (goto-char (point-min))
+                                           (search-forward "CONSOLIDATED KEYBINDINGS" nil t)))
+(define-key morph/leader-map (kbd "e R") #'reload-config)
+(define-key morph/leader-map (kbd "e p") #'package-install)
+(define-key morph/leader-map (kbd "e t") #'counsel-load-theme)
+(define-key morph/leader-map (kbd "e m") #'mu4e)
+(define-key morph/leader-map (kbd "e o") #'olivetti-mode)
+(define-key morph/leader-map (kbd "e b") #'eval-buffer)
+(define-key morph/leader-map (kbd "e e") #'eval-region)
+(define-key morph/leader-map (kbd "e r") #'org-babel-execute-src-block)
+
+(define-key morph/leader-map (kbd "t t") #'multi-vterm)
+(define-key morph/leader-map (kbd "t s") #'my/vterm-window-split)
+(define-key morph/leader-map (kbd "t n") #'multi-vterm-next)
+(define-key morph/leader-map (kbd "t p") #'multi-vterm-prev)
+
+(define-key morph/leader-map (kbd "g g") #'magit-status)
+(define-key morph/leader-map (kbd "g p") #'git-timemachine-show-previous-revision)
+(define-key morph/leader-map (kbd "g n") #'git-timemachine-show-next-revision)
+(define-key morph/leader-map (kbd "g c") #'git-timemachine-show-current-revision)
+
+(define-key morph/leader-map (kbd "f y") #'copy-filename)
+(define-key morph/leader-map (kbd "f s") #'org-screenshot)
+(define-key morph/leader-map (kbd "f g") #'deadgrep)
+(define-key morph/leader-map (kbd "f f") #'project-find-file)
+
+(define-key morph/leader-map (kbd "d i") #'insert-current-date)
+
+(define-key morph/leader-map (kbd "n f") #'org-roam-node-find)
+(define-key morph/leader-map (kbd "n i") #'org-roam-node-insert)
+(define-key morph/leader-map (kbd "n c") #'org-roam-capture)
+(define-key morph/leader-map (kbd "n l") #'org-roam-buffer-toggle)
+(define-key morph/leader-map (kbd "n a") #'org-roam-alias-add)
+(define-key morph/leader-map (kbd "n g") #'org-roam-ui-open)
+(define-key morph/leader-map (kbd "n d") #'org-roam-dailies-capture-today)
+(define-key morph/leader-map (kbd "n j") #'org-roam-jump-to-index)
+
+;; Bind the prefix map to C-c in global-map
+(global-set-key (kbd "C-c") morph/leader-map)
+
+;; General keybindings (not under C-c prefix)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key [C-mouse-wheel-up-event]   'text-scale-increase)
+(global-set-key [C-mouse-wheel-down-event] 'text-scale-decrease)
 
 ;; Legacy bindings (muscle memory)
-(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x g") #'magit-status)
 
 (add-to-list 'load-path (expand-file-name "config" user-init-dir))
 (require 'sensible-defaults)
@@ -239,13 +254,16 @@
 (use-package counsel-tramp
   :defer t
   :commands (counsel-tramp)
-  :bind ("C-c r" . counsel-tramp)
   :config
   (setq counsel-tramp-default-directory "~/"
         counsel-tramp-custom-connections '()))
 
-;; Fallback TRAMP connect if counsel-tramp unavailable
-(unless (locate-library "counsel-tramp")
+;; C-c r - Remote (TRAMP) - add to leader map
+(if (locate-library "counsel-tramp")
+    (progn
+      (autoload 'counsel-tramp "counsel-tramp" nil t)
+      (define-key morph/leader-map (kbd "r") #'counsel-tramp))
+  ;; Fallback TRAMP connect if counsel-tramp unavailable
   (defun my/tramp-connect ()
     "Connect to SSH host interactively using TRAMP."
     (interactive)
@@ -261,7 +279,7 @@
            (default-directory (format "/ssh:%s:~/" host))
            (remote-dir (read-directory-name "Remote directory: " default-directory)))
       (find-file remote-dir)))
-  (global-set-key (kbd "C-c r") 'my/tramp-connect))
+  (define-key morph/leader-map (kbd "r") #'my/tramp-connect))
 
 (use-package ivy
   :demand t
@@ -317,22 +335,41 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal)
   (define-key evil-normal-state-map (kbd "C-r") 'evil-redo)
-  (define-key evil-insert-state-map (kbd "C-r") 'evil-redo))
+  (define-key evil-insert-state-map (kbd "C-r") 'evil-redo)
+
+  ;; Ensure new emacsclient frames start with scratch buffer and Evil active
+  (defun morph/setup-new-frame (frame)
+    "Set up new FRAME with scratch buffer and Evil normal state."
+    (run-with-timer
+     0.1 nil
+     (lambda ()
+       (with-selected-frame frame
+         (switch-to-buffer "*scratch*")
+         (org-mode)
+         (evil-normal-state)
+         (select-frame-set-input-focus frame)
+         (force-mode-line-update t)
+         (redraw-frame frame)))))
+  (add-hook 'after-make-frame-functions #'morph/setup-new-frame)
+
+  ;; Also handle server-visit for emacsclient
+  (add-hook 'server-after-make-frame-hook
+            (lambda ()
+              (run-with-timer
+               0.1 nil
+               (lambda ()
+                 (switch-to-buffer "*scratch*")
+                 (org-mode)
+                 (evil-normal-state)
+                 (select-frame-set-input-focus (selected-frame))
+                 (force-mode-line-update t)
+                 (redraw-frame))))))
 
 (use-package evil-collection
   :after evil
   :demand t
   :config
-  (evil-collection-init)
-  ;; Re-bind C-c n after evil-collection to ensure it's not overwritten
-  (global-set-key (kbd "C-c n f") #'org-roam-node-find)
-  (global-set-key (kbd "C-c n i") #'org-roam-node-insert)
-  (global-set-key (kbd "C-c n c") #'org-roam-capture)
-  (global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-  (global-set-key (kbd "C-c n a") #'org-roam-alias-add)
-  (global-set-key (kbd "C-c n g") #'org-roam-ui-open)
-  (global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
-  (global-set-key (kbd "C-c n j") #'org-roam-jump-to-index))
+  (evil-collection-init))
 
 (use-package evil-org
   :after org
@@ -531,16 +568,6 @@
 
 (require 'org-agenda)
 
-;; Re-establish C-c n bindings after org-agenda loads (org may override C-c n)
-(global-set-key (kbd "C-c n f") #'org-roam-node-find)
-(global-set-key (kbd "C-c n i") #'org-roam-node-insert)
-(global-set-key (kbd "C-c n c") #'org-roam-capture)
-(global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-(global-set-key (kbd "C-c n a") #'org-roam-alias-add)
-(global-set-key (kbd "C-c n g") #'org-roam-ui-open)
-(global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
-(global-set-key (kbd "C-c n j") #'org-roam-jump-to-index)
-
 (setq org-return-follows-link t
       org-agenda-tags-column 75
       org-deadline-warning-days 30
@@ -562,6 +589,16 @@
       calendar-week-start-day 1
       org-startup-folded t)
 
+;; Ensure scratch buffer uses org-mode and Evil starts in normal state
+(setq initial-buffer-choice
+      (lambda ()
+        (let ((buf (get-buffer-create "*scratch*")))
+          (with-current-buffer buf
+            (org-mode)
+            (when (fboundp 'evil-normal-state)
+              (evil-normal-state)))
+          buf)))
+
 (defun my-org-ret-at-col-0 ()
   "In Org buffers, disable auto-indent on RET and insert newline at col 0."
   (electric-indent-local-mode -1)
@@ -580,8 +617,8 @@
 ;;; --- EMAIL (mu4e) ---
 
 (use-package mu4e
-  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e/"
-  :ensure nil
+  :if (executable-find "mu")  ; Only load if mu is installed
+  :ensure nil  ; mu4e comes bundled with the mu package
   :commands (mu4e)
   :config
   (setq user-mail-address (or (getenv "EMAIL") user-mail-address))
@@ -910,34 +947,28 @@ end if"))
   (define-key atomic-chrome-edit-mode-map (kbd "C-c C-k") 'atomic-chrome--close-and-refocus)
   (define-key atomic-chrome-edit-mode-map (kbd "C-x C-s") 'atomic-chrome-send-buffer-text)
 
-  (global-set-key (kbd "C-c a s")
-                  (lambda () (interactive)
-                    (ignore-errors (atomic-chrome-stop-server))
-                    (sit-for 0.3)
-                    (atomic-chrome-start-server)
-                    (message "atomic-chrome: server restarted on port 64292")))
+  ;; C-c a s - restart atomic-chrome server (add to leader map)
+  (define-key morph/leader-map (kbd "a s")
+              (lambda () (interactive)
+                (ignore-errors (atomic-chrome-stop-server))
+                (sit-for 0.3)
+                (atomic-chrome-start-server)
+                (message "atomic-chrome: server restarted on port 64292")))
 
   ;; Start the server
   (atomic-chrome-start-server))
 
 ;;; --- FINAL KEYBINDING SETUP ---
-;; These run last to ensure nothing overwrites them
+;; Keybindings are now consolidated in morph/leader-map above.
+;; This section ensures the C-c prefix map persists after all packages load.
 
-(defun morph/setup-final-keybindings ()
-  "Set up keybindings that must survive all package loading."
-  ;; C-c n - org-roam (must be set after org-mode, evil-collection, etc.)
-  (global-set-key (kbd "C-c n f") #'org-roam-node-find)
-  (global-set-key (kbd "C-c n i") #'org-roam-node-insert)
-  (global-set-key (kbd "C-c n c") #'org-roam-capture)
-  (global-set-key (kbd "C-c n l") #'org-roam-buffer-toggle)
-  (global-set-key (kbd "C-c n a") #'org-roam-alias-add)
-  (global-set-key (kbd "C-c n g") #'org-roam-ui-open)
-  (global-set-key (kbd "C-c n d") #'org-roam-dailies-capture-today)
-  (global-set-key (kbd "C-c n j") #'org-roam-jump-to-index))
+(defun morph/ensure-leader-map ()
+  "Ensure morph/leader-map is bound to C-c after all packages load."
+  (global-set-key (kbd "C-c") morph/leader-map))
 
 ;; Run after init completes
-(add-hook 'emacs-startup-hook #'morph/setup-final-keybindings 100)
+(add-hook 'emacs-startup-hook #'morph/ensure-leader-map 100)
 ;; Also run after a short delay to catch any deferred loading
-(run-with-idle-timer 1 nil #'morph/setup-final-keybindings)
+(run-with-idle-timer 1 nil #'morph/ensure-leader-map)
 
 ;;; init.el ends here
