@@ -394,6 +394,74 @@ keymap("n", "<F12>", function()
   vim.fn.winrestview(save)
 end, { desc = "Remove trailing whitespace" })
 
+-- Built-in commenting (replaces vim-commentary)
+-- Simple implementation using Neovim's Lua API
+local function toggle_comment()
+  local line = vim.api.nvim_get_current_line()
+  local cs = vim.bo.commentstring
+  if cs == "" then
+    cs = "# %s"  -- fallback
+  end
+  
+  local comment_start = cs:match("^(.-)%%s") or cs:match("^(.-) .*") or "#"
+  comment_start = vim.trim(comment_start)
+  
+  local is_commented = line:match("^%s*" .. vim.pesc(comment_start))
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  
+  if is_commented then
+    -- Uncomment: remove comment prefix
+    local new_line = line:gsub("^(%s*)" .. vim.pesc(comment_start) .. "%s?", "%1")
+    vim.api.nvim_set_current_line(new_line)
+  else
+    -- Comment: add comment prefix after leading whitespace
+    local indent, content = line:match("^(%s*)(.*)")
+    local new_line = indent .. comment_start .. " " .. content
+    vim.api.nvim_set_current_line(new_line)
+  end
+  
+  vim.api.nvim_win_set_cursor(0, cursor_pos)
+end
+
+local function toggle_comment_visual()
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+  
+  for i = start_line, end_line do
+    vim.api.nvim_win_set_cursor(0, {i, 0})
+    toggle_comment()
+  end
+end
+
+-- Comment keymaps (vim-commentary style)
+keymap("n", "gcc", toggle_comment, { desc = "Comment toggle current line" })
+keymap("n", "gc", function()
+  vim.o.operatorfunc = "v:lua.require'morpheus.keymaps'.comment_operator"
+  return "g@"
+end, { expr = true, desc = "Comment operator" })
+keymap("v", "gc", toggle_comment_visual, { desc = "Comment toggle visual selection" })
+
+-- Alternative commenting keymaps
+keymap("n", "<leader>/", toggle_comment, { desc = "Comment toggle current line" })
+keymap("v", "<leader>/", toggle_comment_visual, { desc = "Comment toggle visual selection" })
+
+-- Export comment operator function for gc operator
+_G.comment_operator = function(type)
+  local start_line, end_line
+  if type == "line" then
+    start_line = vim.fn.line("'[")
+    end_line = vim.fn.line("']")
+  elseif type == "char" then
+    start_line = vim.fn.line("'[")
+    end_line = vim.fn.line("']")
+  end
+  
+  for i = start_line, end_line do
+    vim.api.nvim_win_set_cursor(0, {i, 0})
+    toggle_comment()
+  end
+end
+
 -- Custom gf for quoted file paths
 local function open_quoted_file()
   local line = vim.api.nvim_get_current_line()

@@ -41,10 +41,7 @@ require('lazy').setup({
   -- Git related plugins
   { 'tpope/vim-fugitive', cmd = { 'Git', 'G', 'Gdiffsplit', 'Gvdiffsplit' } },
   { 'tpope/vim-rhubarb', dependencies = { 'tpope/vim-fugitive' } },
-  'tpope/vim-sleuth',
 
-  -- comment
-  'tpope/vim-commentary',
 
   -- quickfix window
   { 'kevinhwang91/nvim-bqf', ft = 'qf' },
@@ -108,7 +105,7 @@ require('lazy').setup({
           },
         },
       },
-      'folke/neodev.nvim',
+
     },
     config = function()
       require 'morpheus.lsp'
@@ -150,18 +147,7 @@ require('lazy').setup({
     end,
   },
 
-  -- AI assistant
-  {
-    'olimorris/codecompanion.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-treesitter/nvim-treesitter',
-    },
-    cmd = { 'CodeCompanion', 'CodeCompanionChat' },
-    config = function()
-      require('morpheus.plugins.ai')
-    end,
-  },
+
 
   -- Git signs
   {
@@ -325,6 +311,8 @@ require('lazy').setup({
     end,
   },
 
+
+
   -- Diffview
   {
     'sindrets/diffview.nvim',
@@ -390,6 +378,9 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- Enable true colors
 vim.o.termguicolors = true
+
+-- Enable EditorConfig support (replaces vim-sleuth)
+vim.g.editorconfig = true
 
 -- Disable space in normal/visual mode (leader key)
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })

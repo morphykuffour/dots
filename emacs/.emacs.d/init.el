@@ -156,54 +156,69 @@
   (require 'org-roam)
   (org-roam-node-find nil "Index"))
 
-;; Define a prefix keymap for C-c to ensure prefixes are properly established
-(defvar morph/leader-map (make-sparse-keymap)
-  "Keymap for custom C-c prefixed commands.")
+;; Define nested prefix keymaps for C-c
+;; Each prefix (e, t, g, f, d, n) needs its own keymap for proper nesting
+(defvar morph/emacs-map (make-sparse-keymap) "C-c e - Emacs/editing commands")
+(defvar morph/terminal-map (make-sparse-keymap) "C-c t - Terminal commands")
+(defvar morph/git-map (make-sparse-keymap) "C-c g - Git commands")
+(defvar morph/file-map (make-sparse-keymap) "C-c f - File utilities")
+(defvar morph/date-map (make-sparse-keymap) "C-c d - Date/time commands")
+(defvar morph/notes-map (make-sparse-keymap) "C-c n - Notes (org-roam)")
 
-;; Set up all keybindings in the prefix map
-(define-key morph/leader-map (kbd "e i") (lambda () (interactive)
-                                           (find-file (expand-file-name "init.el" user-emacs-directory))))
-(define-key morph/leader-map (kbd "e k") (lambda () (interactive)
-                                           (find-file (expand-file-name "init.el" user-emacs-directory))
-                                           (goto-char (point-min))
-                                           (search-forward "CONSOLIDATED KEYBINDINGS" nil t)))
-(define-key morph/leader-map (kbd "e R") #'reload-config)
-(define-key morph/leader-map (kbd "e p") #'package-install)
-(define-key morph/leader-map (kbd "e t") #'counsel-load-theme)
-(define-key morph/leader-map (kbd "e m") #'mu4e)
-(define-key morph/leader-map (kbd "e o") #'olivetti-mode)
-(define-key morph/leader-map (kbd "e b") #'eval-buffer)
-(define-key morph/leader-map (kbd "e e") #'eval-region)
-(define-key morph/leader-map (kbd "e r") #'org-babel-execute-src-block)
+;; C-c e - Emacs/editing commands
+(define-key morph/emacs-map (kbd "i") (lambda () (interactive)
+                                         (find-file (expand-file-name "init.el" user-emacs-directory))))
+(define-key morph/emacs-map (kbd "k") (lambda () (interactive)
+                                         (find-file (expand-file-name "init.el" user-emacs-directory))
+                                         (goto-char (point-min))
+                                         (search-forward "CONSOLIDATED KEYBINDINGS" nil t)))
+(define-key morph/emacs-map (kbd "R") #'reload-config)
+(define-key morph/emacs-map (kbd "p") #'package-install)
+(define-key morph/emacs-map (kbd "t") #'counsel-load-theme)
+(define-key morph/emacs-map (kbd "m") #'mu4e)
+(define-key morph/emacs-map (kbd "o") #'olivetti-mode)
+(define-key morph/emacs-map (kbd "b") #'eval-buffer)
+(define-key morph/emacs-map (kbd "e") #'eval-region)
+(define-key morph/emacs-map (kbd "r") #'org-babel-execute-src-block)
 
-(define-key morph/leader-map (kbd "t t") #'multi-vterm)
-(define-key morph/leader-map (kbd "t s") #'my/vterm-window-split)
-(define-key morph/leader-map (kbd "t n") #'multi-vterm-next)
-(define-key morph/leader-map (kbd "t p") #'multi-vterm-prev)
+;; C-c t - Terminal commands
+(define-key morph/terminal-map (kbd "t") #'multi-vterm)
+(define-key morph/terminal-map (kbd "s") #'my/vterm-window-split)
+(define-key morph/terminal-map (kbd "n") #'multi-vterm-next)
+(define-key morph/terminal-map (kbd "p") #'multi-vterm-prev)
 
-(define-key morph/leader-map (kbd "g g") #'magit-status)
-(define-key morph/leader-map (kbd "g p") #'git-timemachine-show-previous-revision)
-(define-key morph/leader-map (kbd "g n") #'git-timemachine-show-next-revision)
-(define-key morph/leader-map (kbd "g c") #'git-timemachine-show-current-revision)
+;; C-c g - Git commands
+(define-key morph/git-map (kbd "g") #'magit-status)
+(define-key morph/git-map (kbd "p") #'git-timemachine-show-previous-revision)
+(define-key morph/git-map (kbd "n") #'git-timemachine-show-next-revision)
+(define-key morph/git-map (kbd "c") #'git-timemachine-show-current-revision)
 
-(define-key morph/leader-map (kbd "f y") #'copy-filename)
-(define-key morph/leader-map (kbd "f s") #'org-screenshot)
-(define-key morph/leader-map (kbd "f g") #'deadgrep)
-(define-key morph/leader-map (kbd "f f") #'project-find-file)
+;; C-c f - File utilities
+(define-key morph/file-map (kbd "y") #'copy-filename)
+(define-key morph/file-map (kbd "s") #'org-screenshot)
+(define-key morph/file-map (kbd "g") #'deadgrep)
+(define-key morph/file-map (kbd "f") #'project-find-file)
 
-(define-key morph/leader-map (kbd "d i") #'insert-current-date)
+;; C-c d - Date/time
+(define-key morph/date-map (kbd "i") #'insert-current-date)
 
-(define-key morph/leader-map (kbd "n f") #'org-roam-node-find)
-(define-key morph/leader-map (kbd "n i") #'org-roam-node-insert)
-(define-key morph/leader-map (kbd "n c") #'org-roam-capture)
-(define-key morph/leader-map (kbd "n l") #'org-roam-buffer-toggle)
-(define-key morph/leader-map (kbd "n a") #'org-roam-alias-add)
-(define-key morph/leader-map (kbd "n g") #'org-roam-ui-open)
-(define-key morph/leader-map (kbd "n d") #'org-roam-dailies-capture-today)
-(define-key morph/leader-map (kbd "n j") #'org-roam-jump-to-index)
+;; C-c n - Notes (org-roam)
+(define-key morph/notes-map (kbd "f") #'org-roam-node-find)
+(define-key morph/notes-map (kbd "i") #'org-roam-node-insert)
+(define-key morph/notes-map (kbd "c") #'org-roam-capture)
+(define-key morph/notes-map (kbd "l") #'org-roam-buffer-toggle)
+(define-key morph/notes-map (kbd "a") #'org-roam-alias-add)
+(define-key morph/notes-map (kbd "g") #'org-roam-ui-open)
+(define-key morph/notes-map (kbd "d") #'org-roam-dailies-capture-today)
+(define-key morph/notes-map (kbd "j") #'org-roam-jump-to-index)
 
-;; Bind the prefix map to C-c in global-map
-(global-set-key (kbd "C-c") morph/leader-map)
+;; Bind prefix maps to C-c using global-set-key
+(global-set-key (kbd "C-c e") morph/emacs-map)
+(global-set-key (kbd "C-c t") morph/terminal-map)
+(global-set-key (kbd "C-c g") morph/git-map)
+(global-set-key (kbd "C-c f") morph/file-map)
+(global-set-key (kbd "C-c d") morph/date-map)
+(global-set-key (kbd "C-c n") morph/notes-map)
 
 ;; General keybindings (not under C-c prefix)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -258,11 +273,11 @@
   (setq counsel-tramp-default-directory "~/"
         counsel-tramp-custom-connections '()))
 
-;; C-c r - Remote (TRAMP) - add to leader map
+;; C-c r - Remote (TRAMP)
 (if (locate-library "counsel-tramp")
     (progn
       (autoload 'counsel-tramp "counsel-tramp" nil t)
-      (define-key morph/leader-map (kbd "r") #'counsel-tramp))
+      (global-set-key (kbd "C-c r") #'counsel-tramp))
   ;; Fallback TRAMP connect if counsel-tramp unavailable
   (defun my/tramp-connect ()
     "Connect to SSH host interactively using TRAMP."
@@ -279,7 +294,7 @@
            (default-directory (format "/ssh:%s:~/" host))
            (remote-dir (read-directory-name "Remote directory: " default-directory)))
       (find-file remote-dir)))
-  (define-key morph/leader-map (kbd "r") #'my/tramp-connect))
+  (global-set-key (kbd "C-c r") #'my/tramp-connect))
 
 (use-package ivy
   :demand t
@@ -305,18 +320,15 @@
 ;;; --- EVIL ---
 
 (use-package undo-tree
-  :defer 2
+  :demand t  ;; Evil needs undo-tree loaded immediately
   :init
   ;; Store undo history centrally, not in working directories
   (setq undo-tree-history-directory-alist
         `(("." . ,(expand-file-name "undo-tree-history/" user-emacs-directory))))
   (setq undo-tree-auto-save-history t)
   :config
-  ;; Don't enable globally - enable per major mode to avoid cluttering directories
-  ;; Enable for prog-mode and text-mode (covers most editing)
-  :hook ((prog-mode . undo-tree-mode)
-         (text-mode . undo-tree-mode)
-         (conf-mode . undo-tree-mode)))
+  ;; Enable globally for Evil undo/redo to work everywhere
+  (global-undo-tree-mode 1))
 
 (use-package evil
   :demand t
@@ -947,28 +959,37 @@ end if"))
   (define-key atomic-chrome-edit-mode-map (kbd "C-c C-k") 'atomic-chrome--close-and-refocus)
   (define-key atomic-chrome-edit-mode-map (kbd "C-x C-s") 'atomic-chrome-send-buffer-text)
 
-  ;; C-c a s - restart atomic-chrome server (add to leader map)
-  (define-key morph/leader-map (kbd "a s")
-              (lambda () (interactive)
-                (ignore-errors (atomic-chrome-stop-server))
-                (sit-for 0.3)
-                (atomic-chrome-start-server)
-                (message "atomic-chrome: server restarted on port 64292")))
-
   ;; Start the server
   (atomic-chrome-start-server))
 
-;;; --- FINAL KEYBINDING SETUP ---
-;; Keybindings are now consolidated in morph/leader-map above.
-;; This section ensures the C-c prefix map persists after all packages load.
+;; C-c a - Applications prefix map
+(defvar morph/apps-map (make-sparse-keymap) "C-c a - Application commands")
+(define-key morph/apps-map (kbd "s")
+            (lambda () (interactive)
+              (require 'atomic-chrome)
+              (ignore-errors (atomic-chrome-stop-server))
+              (sit-for 0.3)
+              (atomic-chrome-start-server)
+              (message "atomic-chrome: server restarted on port 64292")))
+(global-set-key (kbd "C-c a") morph/apps-map)
 
-(defun morph/ensure-leader-map ()
-  "Ensure morph/leader-map is bound to C-c after all packages load."
-  (global-set-key (kbd "C-c") morph/leader-map))
+;;; --- FINAL KEYBINDING SETUP ---
+;; Keybindings are consolidated in prefix keymaps above.
+;; This section ensures the C-c prefix maps persist after all packages load.
+
+(defun morph/ensure-keybindings ()
+  "Re-bind all C-c prefix keymaps after packages load."
+  (global-set-key (kbd "C-c e") morph/emacs-map)
+  (global-set-key (kbd "C-c t") morph/terminal-map)
+  (global-set-key (kbd "C-c g") morph/git-map)
+  (global-set-key (kbd "C-c f") morph/file-map)
+  (global-set-key (kbd "C-c d") morph/date-map)
+  (global-set-key (kbd "C-c n") morph/notes-map)
+  (global-set-key (kbd "C-c a") morph/apps-map))
 
 ;; Run after init completes
-(add-hook 'emacs-startup-hook #'morph/ensure-leader-map 100)
+(add-hook 'emacs-startup-hook #'morph/ensure-keybindings 100)
 ;; Also run after a short delay to catch any deferred loading
-(run-with-idle-timer 1 nil #'morph/ensure-leader-map)
+(run-with-idle-timer 1 nil #'morph/ensure-keybindings)
 
 ;;; init.el ends here

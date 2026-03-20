@@ -131,9 +131,6 @@ local servers = {
   },
 }
 
--- Setup neovim lua configuration
-require('neodev').setup()
-
 -- nvim-cmp supports additional completion capabilities
 -- Check if global capabilities are set by cmp module
 local capabilities = vim.g.lsp_capabilities or vim.lsp.protocol.make_client_capabilities()

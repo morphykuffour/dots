@@ -120,3 +120,7 @@ emacs/.emacs.d/test.journal
 scripts/.local/bin/zeroclaw
 zsh/logs
 logs/
+
+# agtx (multi-session AI coding terminal manager)
+agtx/.agtx/
+agtx/.config/agtx/local.toml
